@@ -1,0 +1,3 @@
+RemoteRepoName,LocalRepoName,RemoteRepoURL,TargetDirectory
+vs.ide,ide,https://git@bitbucket.org/davidhary/vs.ide.git,libraries\vs\core
+dn.iot.tcp,tcp,https://github.com/ATECoder/dn.iot.tcp.git,lib\vs\iot

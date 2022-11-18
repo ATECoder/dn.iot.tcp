@@ -1,0 +1,44 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33110.190
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "isr.Iot.Tcp.Session", "libs\session\isr.Iot.Tcp.Session.csproj", "{A892E8DC-BEC9-43A3-BE8F-97B80B0AC107}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "~items", "~items", "{8B4FEC3B-046C-4901-A752-CA942E7AF535}"
+	ProjectSection(SolutionItems) = preProject
+		..\CHANGELOG.md = ..\CHANGELOG.md
+		isr.Iot.Tcp.sln.vsspell = isr.Iot.Tcp.sln.vsspell
+		..\README.md = ..\README.md
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "isr.Iot.Tcp.Server", "libs\server\isr.Iot.Tcp.Server.csproj", "{DEEE1C7A-2F00-43E0-9332-1893A825203E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "isr.Iot.Tcp.Session.MSTest", "libs\session.MSTest\isr.Iot.Tcp.Session.MSTest.csproj", "{56F18B1C-9A61-47D8-857E-4570C8849FAB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A892E8DC-BEC9-43A3-BE8F-97B80B0AC107}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A892E8DC-BEC9-43A3-BE8F-97B80B0AC107}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A892E8DC-BEC9-43A3-BE8F-97B80B0AC107}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A892E8DC-BEC9-43A3-BE8F-97B80B0AC107}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DEEE1C7A-2F00-43E0-9332-1893A825203E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DEEE1C7A-2F00-43E0-9332-1893A825203E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DEEE1C7A-2F00-43E0-9332-1893A825203E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DEEE1C7A-2F00-43E0-9332-1893A825203E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56F18B1C-9A61-47D8-857E-4570C8849FAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56F18B1C-9A61-47D8-857E-4570C8849FAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56F18B1C-9A61-47D8-857E-4570C8849FAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56F18B1C-9A61-47D8-857E-4570C8849FAB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CC623295-B8D4-44EC-B5C9-C995382990E3}
+	EndGlobalSection
+EndGlobal

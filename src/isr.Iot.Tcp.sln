@@ -22,6 +22,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "isr.Iot.Tcp.Session.Helper"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "isr.Iot.Tcp.Session.ConsoleApp", "libs\session.console\isr.Iot.Tcp.Session.ConsoleApp.csproj", "{12E7D7ED-D4AA-40D1-A9CB-E14DFC35636E}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "isr.Iot.Tcp.Session.Wpf.Concept", "libs\wpf.concept\isr.Iot.Tcp.Session.Wpf.Concept.csproj", "{15AA3D60-6838-4693-91CC-6D757A28A309}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "isr.Iot.Tcp.Session.WinForms.Concept", "libs\winforms.concept\isr.Iot.Tcp.Session.WinForms.Concept.csproj", "{31DFFFFF-38F7-4D59-8BC6-441BE6727AFE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -54,6 +58,14 @@ Global
 		{12E7D7ED-D4AA-40D1-A9CB-E14DFC35636E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{12E7D7ED-D4AA-40D1-A9CB-E14DFC35636E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{12E7D7ED-D4AA-40D1-A9CB-E14DFC35636E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15AA3D60-6838-4693-91CC-6D757A28A309}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15AA3D60-6838-4693-91CC-6D757A28A309}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15AA3D60-6838-4693-91CC-6D757A28A309}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15AA3D60-6838-4693-91CC-6D757A28A309}.Release|Any CPU.Build.0 = Release|Any CPU
+		{31DFFFFF-38F7-4D59-8BC6-441BE6727AFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31DFFFFF-38F7-4D59-8BC6-441BE6727AFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31DFFFFF-38F7-4D59-8BC6-441BE6727AFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31DFFFFF-38F7-4D59-8BC6-441BE6727AFE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

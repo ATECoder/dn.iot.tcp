@@ -5,12 +5,13 @@ using isr.Iot.Tcp.Session.Helper;
 
 public partial class MainPage : ContentPage
 {
-    private int _count = 0;
 
     public MainPage()
     {
         this.InitializeComponent();
     }
+
+    private int _count = 0;
 
     private void OnCounterClicked( object sender, EventArgs e )
     {

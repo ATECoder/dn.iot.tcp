@@ -262,7 +262,7 @@ public partial class TcpSession : ObservableObject, IDisposable
     /// <returns>   True if data is available; otherwise, false . </returns>
     public bool DataAvailable()
     {
-        return this._netStream.DataAvailable;
+        return this._netStream is not null && this._netStream.DataAvailable;
     }
 
     /// <summary>
@@ -275,11 +275,12 @@ public partial class TcpSession : ObservableObject, IDisposable
     public async Task<bool> DataAvailable( TimeSpan timeout )
     {
         DateTime endTime = DateTime.Now.Add( timeout );
-        while ( DateTime.Now < endTime || !this.DataAvailable() )
+        if ( this.DataAvailable() ) return true;
+        do
         {
             await Task.Yield();
-            Thread.Sleep(1) ;
-        }
+            Thread.Sleep( 1 );
+        } while ( DateTime.Now < endTime || !this.DataAvailable() );
         return this.DataAvailable();
     }
 
@@ -401,9 +402,9 @@ public partial class TcpSession : ObservableObject, IDisposable
     /// <remarks>   2022-11-04. </remarks>
     /// <param name="timeout">  The timeout. </param>
     /// <returns>   True if data is available; otherwise, false . </returns>
-    public async Task<bool> DataAvailableAsync( TimeSpan timeout )
+    public async Task<bool> DataAvailableAsync( TimeSpan timeout, CancellationToken ct )
     {
-        return await Task<bool>.Run( () => this.DataAvailable( timeout ) );
+        return await Task<bool>.Run( () => this.DataAvailable( timeout ), ct );
     }
 
     /// <summary>   Read asynchronously until no characters are available in the stream. </summary>
@@ -489,9 +490,25 @@ public partial class TcpSession : ObservableObject, IDisposable
 
         // wait for available data.
         // This task times out when called from .NET MAUI APP.
+#if false
+        // works for the console application and unit testing.
         Task<bool> delayTask = this.DataAvailable( readDelay );
         var completed_ = delayTask.Wait( readDelay );
         var hasData = delayTask.Result;
+#else
+        // works for the .NET MAUI, Wpf and Win Forms applications.
+        CancellationTokenSource cancelTask = new();
+        Task<bool> delayTask = this.DataAvailableAsync( readDelay, cancelTask.Token );
+        var completed = delayTask.Wait( readDelay );
+        if ( !completed ) cancelTask.Cancel();
+        var hasData = this.DataAvailable();
+        // this delay is required for the MAUI application: not tested for WPF or Windows Forms.
+        System.Threading.Thread.Sleep( 1 );
+
+        // Clearly, the desired solution is to figure out how to implement
+        // the loop that waits for data availability. 
+        // We might have to borrow from the TCP Server example!
+#endif
 
         // we ignore the delay task result in order to simplify the code as this
         // would return no data if the stream has no available data.
@@ -517,6 +534,6 @@ public partial class TcpSession : ObservableObject, IDisposable
     /// <value> Any leftover message in the stream. </value>
     public string Orphan { get; private set; }
 
-    #endregion
+#endregion
 
 }

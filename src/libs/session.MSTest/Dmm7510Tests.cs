@@ -21,9 +21,9 @@ public class Dmm7510Tests
         while ( repeatCount > 0 )
         {
             repeatCount--;
-            string respnonse = string.Empty;
-            _ = session.QueryLine( command, 1024, ref respnonse, trimEnd ); 
-            Assert.AreEqual( identity, respnonse, $"@count = {count - repeatCount}" );
+            string response = string.Empty;
+            _ = session.QueryLine( command, 1024, ref response, trimEnd ); 
+            Assert.AreEqual( identity, response, $"@count = {count - repeatCount}" );
         }
     }
 

@@ -272,11 +272,13 @@ public partial class TcpSession : ObservableObject, IDisposable
     /// <remarks>   2022-11-04. </remarks>
     /// <param name="timeout">  The timeout. </param>
     /// <returns>   True if data is available; otherwise, false . </returns>
-    public bool DataAvailable( TimeSpan timeout )
+    public async Task<bool> DataAvailable( TimeSpan timeout )
     {
         DateTime endTime = DateTime.Now.Add( timeout );
-        while ( DateTime.Now < endTime && this.DataAvailable() )
+        while ( DateTime.Now < endTime || !this.DataAvailable() )
         {
+            await Task.Yield();
+            Thread.Sleep(1) ;
         }
         return this.DataAvailable();
     }
@@ -322,7 +324,7 @@ public partial class TcpSession : ObservableObject, IDisposable
     /// <param name="byteCount">    Number of bytes. </param>
     /// <param name="reply">        [in,out] The reply. </param>
     /// <param name="trimEnd">      True to trim the <see cref="_readTermination"/>. </param>
-    /// <returns>   An int. </returns>
+    /// <returns>   the number of received characters. </returns>
     public int Query( string message, int byteCount, ref string reply, bool trimEnd )
     {
         if ( string.IsNullOrEmpty( message ) ) return 0;
@@ -486,8 +488,10 @@ public partial class TcpSession : ObservableObject, IDisposable
         sendTask.Wait();
 
         // wait for available data.
-        Task<bool> delayTask = this.DataAvailableAsync( readDelay );
-        delayTask.Wait();
+        // This task times out when called from .NET MAUI APP.
+        Task<bool> delayTask = this.DataAvailable( readDelay );
+        var completed_ = delayTask.Wait( readDelay );
+        var hasData = delayTask.Result;
 
         // we ignore the delay task result in order to simplify the code as this
         // would return no data if the stream has no available data.

@@ -1,0 +1,8 @@
+﻿<maui:MauiWinUIApplication
+    x:Class="isr.Iot.Tcp.Session.Maui.Concept.WinUI.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:maui="using:Microsoft.Maui"
+    xmlns:local="using:isr.Iot.Tcp.Session.Maui.Concept.WinUI">
+
+</maui:MauiWinUIApplication>

@@ -30,7 +30,7 @@ public class Dmm7510AsyncTests
     private static string QueryLine( TcpSession session, string command, TimeSpan readDelay, bool trimEnd )
     {
         var task = session.QueryLineAsync( command, 1024, readDelay, trimEnd, session.CancellationToken );
-        task.Wait();
+        task.Wait( session.CancellationToken );
         return task.Result;
     }
 
@@ -51,8 +51,8 @@ public class Dmm7510AsyncTests
         while ( repeatCount > 0 )
         {
             repeatCount--;
-            string respnonse = QueryLine( session, command, readDelay, trimEnd ); 
-            Assert.AreEqual( identity, respnonse, $"@count = {count - repeatCount}" );
+            string response = QueryLine( session, command, readDelay, trimEnd ); 
+            Assert.AreEqual( identity, response, $"@count = {count - repeatCount}" );
         }
     }
 

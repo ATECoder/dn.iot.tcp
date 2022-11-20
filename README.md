@@ -3,6 +3,8 @@
 TCP Socket-based control and communication library for LXI-based instruments. 
 
 - [Description](#Description)
+- [Status](#Status)
+- [Issues](#Issues)
 - [Supported .Net Releases](#Supported-.Net-Releases)
 - [Source Code](#Source-Code)
   - [Repositories](#Repositories)
@@ -30,6 +32,11 @@ Taking advantage of the Keithley code, I aim at separating the instrument-specif
 
 To this end, I will use the user interface of the DMM7510 digitizer but with a single instrument.
  
+## Issues
+
+### Async query fails on the Maui concept application
+the loop for checking for data availability does not terminate. If awaited with time out, the loop seems to continue attempting to read from a disposed socket.
+
 ## Supported .NET Releases
 
 * .NET Standard 2.0 - source code framework)

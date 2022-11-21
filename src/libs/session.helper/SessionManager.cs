@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using System.Threading;
 
 using isr.Iot.Tcp.Client;
 
@@ -16,6 +17,10 @@ public static class SessionManager
 {
     private static readonly Dictionary<string, (int ReadAfterWriteDelay, int InterQqueryDelay, string IPAddress)> _instrumentInfo;
 
+    /// <summary>   Gets the cancellation token source. </summary>
+    /// <value> The cancellation token source. </value>
+    public static CancellationTokenSource CancellationTokenSource { get; private set; }
+
     static SessionManager()
     {
         _instrumentInfo = new() {
@@ -25,6 +30,7 @@ public static class SessionManager
         { InstrumentId.K6510.ToString(), (0, 0, "192.168.0.154") },
         { InstrumentId.K7510.ToString(), (0, 0, "192.168.0.144") }
         };
+        CancellationTokenSource = new ();
     }
 
     /// <summary>   Gets or sets information describing the query. </summary>
@@ -146,8 +152,8 @@ public static class SessionManager
     {
         try
         {
-            var task = session.QueryLineAsync( command, byteCount, readDelay, trimEnd, session.CancellationToken );
-            task.Wait( session.CancellationToken );
+            var task = session.QueryLineAsync( command, byteCount, readDelay, trimEnd, CancellationTokenSource );
+            task.Wait( CancellationTokenSource.Token );
             return task.Result;
         }
         catch ( ApplicationException ex )

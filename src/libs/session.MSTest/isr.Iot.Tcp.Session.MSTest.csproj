@@ -6,6 +6,10 @@
     <RootNamespace>isr.Iot.Tcp.Session.MSTest</RootNamespace>
     <Nullable>enable</Nullable>
 
+    <!-- Versions -->
+    <ApplicationDisplayVersion>1.0.8360</ApplicationDisplayVersion>
+    <ApplicationVersion>1</ApplicationVersion>
+
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 

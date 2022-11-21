@@ -14,7 +14,7 @@
     <ApplicationId>cc.isr.tcp.session</ApplicationId>
 
     <!-- Versions -->
-    <ApplicationDisplayVersion>1.0.8357</ApplicationDisplayVersion>
+    <ApplicationDisplayVersion>1.0.8360</ApplicationDisplayVersion>
     <ApplicationVersion>1</ApplicationVersion>
 
   </PropertyGroup>

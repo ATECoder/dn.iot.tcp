@@ -5,6 +5,11 @@
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+
+    <!-- Versions -->
+    <ApplicationDisplayVersion>1.0.8360</ApplicationDisplayVersion>
+    <ApplicationVersion>1</ApplicationVersion>
+
   </PropertyGroup>
 
   <ItemGroup>

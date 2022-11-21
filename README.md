@@ -3,7 +3,6 @@
 TCP Socket-based control and communication library for LXI-based instruments. 
 
 - [Description](#Description)
-- [Status](#Status)
 - [Issues](#Issues)
 - [Supported .Net Releases](#Supported-.Net-Releases)
 - [Source Code](#Source-Code)
@@ -24,25 +23,19 @@ The ISR IOT TCP classes provide rudimentary methods for communicating with LXI i
 
 Unlike VXI-11 or HiSlip, these classes do not implement the bus level method for issuing device clear, reading service requests or responding to instrument initiated event. While  control ports for these methods are available in some Keysight instruments, these ports are not part of the standard LXI framework.
 
-## Status
-
-isr.VI.Lite encountered delay issues. Code received from Keithley, which uses the same TCP client API encountered no such issues when using the synchronous API of the TCP client.
-
-Taking advantage of the Keithley code, I aim at separating the instrument-specific (e.g., DMM) functions from then TCP client API. Thereafter, I will try to restore the Asynchronous calls aiming to identify the source of the delay issues.
-
-To this end, I will use the user interface of the DMM7510 digitizer but with a single instrument.
- 
 ## Issues
 
-### Async query fails on the Maui concept application
-the loop for checking for data availability does not terminate. If awaited with time out, the loop seems to continue attempting to read from a disposed socket.
+### read after write delay is required  for Async methods
+A delay of 1 ms is required for implementing the asynchronous query method using the TCP Client write and read asynchronous methods. Neither the console nor unit tests are succeptible to this issue. 
 
 ## Supported .NET Releases
 
 * .NET Standard 2.0 - source code framework)
 * .NET 6.0
 * .NET 7.0
-* .NET MAUI - not tested yet.
+* .NET MAUI
+* Windows Forms
+* WPF
 
 <a name="Source-Code"></a>
 ## Source Code

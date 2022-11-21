@@ -14,23 +14,25 @@ public class Dmm7510AsyncTests
     /// <param name="command">  The command. </param>
     /// <returns>   An int. </returns>
     [System.Diagnostics.CodeAnalysis.SuppressMessage( "CodeQuality", "IDE0051:Remove unused private members", Justification = "<Pending>" )]
-    private static int WriteLine( TcpSession session, string command )
+    private static int WriteLine( TcpSession session, string command, CancellationToken token )
     {
-        var task = session.WriteLineAsync( command, session.CancellationToken );
+        var task = session.WriteLineAsync( command, token );
         task.Wait();
         return task.Result;
     }
 
     /// <summary>   Queries a line. </summary>
     /// <remarks>   2022-11-16. </remarks>
-    /// <param name="session">  The session. </param>
-    /// <param name="command">  The command. </param>
-    /// <param name="trimEnd">  True to trim end. </param>
+    /// <param name="session">      The session. </param>
+    /// <param name="command">      The command. </param>
+    /// <param name="readDelay">    The read delay. </param>
+    /// <param name="trimEnd">      True to trim end. </param>
+    /// <param name="tokenSource">  The cancellation token source. </param>
     /// <returns>   The line. </returns>
-    private static string QueryLine( TcpSession session, string command, TimeSpan readDelay, bool trimEnd )
+    private static string QueryLine( TcpSession session, string command, TimeSpan readDelay, bool trimEnd, CancellationTokenSource tokenSource )
     {
-        var task = session.QueryLineAsync( command, 1024, readDelay, trimEnd, session.CancellationToken );
-        task.Wait( session.CancellationToken );
+        var task = session.QueryLineAsync( command, 1024, readDelay, trimEnd, tokenSource );
+        task.Wait( tokenSource.Token );
         return task.Result;
     }
 
@@ -41,6 +43,7 @@ public class Dmm7510AsyncTests
     /// <param name="repeatCount">  Number of repeats. </param>
     private static void AssertIdentityShouldQuery( string ipv4Address, TimeSpan readDelay, int repeatCount )
     {
+        using CancellationTokenSource cancellationTokenSource = new ();    
         using TcpSession session = new ( ipv4Address );
         string identity = string.Empty;
         string command = "*IDN?";
@@ -51,7 +54,7 @@ public class Dmm7510AsyncTests
         while ( repeatCount > 0 )
         {
             repeatCount--;
-            string response = QueryLine( session, command, readDelay, trimEnd ); 
+            string response = QueryLine( session, command, readDelay, trimEnd, cancellationTokenSource ); 
             Assert.AreEqual( identity, response, $"@count = {count - repeatCount}" );
         }
     }

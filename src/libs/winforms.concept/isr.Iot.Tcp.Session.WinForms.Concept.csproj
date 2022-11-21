@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -6,6 +6,9 @@
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
+    <!-- Versions -->
+    <ApplicationDisplayVersion>1.0.8360</ApplicationDisplayVersion>
+    <ApplicationVersion>1</ApplicationVersion>
   </PropertyGroup>
 
   <ItemGroup>

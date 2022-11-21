@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using System.Diagnostics;
 
 namespace isr.Iot.Tcp.Client;
 
@@ -260,28 +261,9 @@ public partial class TcpSession : ObservableObject, IDisposable
     /// </summary>
     /// <remarks>   2022-11-15. </remarks>
     /// <returns>   True if data is available; otherwise, false . </returns>
-    public bool DataAvailable()
+    public bool QueryDataAvailable()
     {
         return this._netStream is not null && this._netStream.DataAvailable;
-    }
-
-    /// <summary>
-    /// Query if data was received from the network and is available to be read during the <paramref name="timeout"/>
-    /// period.
-    /// </summary>
-    /// <remarks>   2022-11-04. </remarks>
-    /// <param name="timeout">  The timeout. </param>
-    /// <returns>   True if data is available; otherwise, false . </returns>
-    public async Task<bool> DataAvailable( TimeSpan timeout )
-    {
-        DateTime endTime = DateTime.Now.Add( timeout );
-        if ( this.DataAvailable() ) return true;
-        do
-        {
-            await Task.Yield();
-            Thread.Sleep( 1 );
-        } while ( DateTime.Now < endTime || !this.DataAvailable() );
-        return this.DataAvailable();
     }
 
     /// <summary>   Sends a message. </summary>
@@ -394,17 +376,35 @@ public partial class TcpSession : ObservableObject, IDisposable
 
     #region " ASYNCHRONOUS I/O "
 
-    /// <summary>   Gets the cancellation token. </summary>
-    /// <value> The cancellation token. </value>
-    public CancellationToken CancellationToken { get; } = new CancellationToken();
-
     /// <summary>   Query if data was received from the network and is available to be read. </summary>
     /// <remarks>   2022-11-04. </remarks>
     /// <param name="timeout">  The timeout. </param>
     /// <returns>   True if data is available; otherwise, false . </returns>
-    public async Task<bool> DataAvailableAsync( TimeSpan timeout, CancellationToken ct )
+    public async Task<bool> StartQueryDataAvailable( TimeSpan timeout, CancellationToken token )
     {
-        return await Task<bool>.Run( () => this.DataAvailable( timeout ), ct );
+        return await Task.Run( () => this.QueryDataAvailable( timeout ), token );
+    }
+
+    /// <summary>
+    /// Query if data was received from the network and is available to be read during the <paramref name="timeout"/>
+    /// period.
+    /// </summary>
+    /// <remarks>   2022-11-04. The cancellation token was used here because
+    /// the task calling this method often fails to complete. </remarks>
+    /// <param name="timeout">  The timeout. </param>
+    /// <param name="token">    The cancellation token. </param>
+    /// <returns>   True if data is available; otherwise, false . </returns>
+    public bool QueryDataAvailable( TimeSpan timeout)
+    {
+        if ( timeout == TimeSpan.Zero || this.QueryDataAvailable() ) return true;
+        DateTime endTime = DateTime.Now.Add( timeout );
+        bool done;
+        do
+        {
+            System.Threading.Thread.Sleep( 1 );
+            done = DateTime.Now > endTime || this.QueryDataAvailable();
+        } while ( !done );
+        return this.QueryDataAvailable();
     }
 
     /// <summary>   Read asynchronously until no characters are available in the stream. </summary>
@@ -475,44 +475,41 @@ public partial class TcpSession : ObservableObject, IDisposable
 
     /// <summary>   Sends a query message with termination and reads the reply as a string. </summary>
     /// <remarks>   2022-11-16. </remarks>
+    /// <exception cref="TimeoutException"> Thrown when a Timeout error condition occurs. </exception>
     /// <param name="message">      The message. </param>
     /// <param name="byteCount">    Number of bytes. </param>
     /// <param name="readDelay">    The read delay. </param>
     /// <param name="trimEnd">      True to trim the <see cref="_readTermination"/>. </param>
-    /// <param name="ct">           A token that allows processing to be canceled. </param>
+    /// <param name="tokenSource">  A token that allows processing to be canceled. </param>
     /// <returns>   A reply. </returns>
-    public async Task<string> QueryAsync( string message, int byteCount, TimeSpan readDelay, bool trimEnd, CancellationToken ct )
+    public async Task<string> QueryAsync( string message, int byteCount, TimeSpan readDelay, bool trimEnd, CancellationTokenSource tokenSource )
     {
         if ( string.IsNullOrEmpty( message ) ) return string.Empty;
 
-        Task<int> sendTask = this.WriteAsync( message, ct );
+        Task<int> sendTask = this.WriteAsync( message, tokenSource.Token );
         sendTask.Wait();
+        if ( !sendTask.IsCompleted )
+        {
+            tokenSource.Cancel();
+            throw new TimeoutException( $"{nameof( WriteAsync )} timed out" );
+        }
 
         // wait for available data.
-        // This task times out when called from .NET MAUI APP.
-#if false
-        // works for the console application and unit testing.
-        Task<bool> delayTask = this.DataAvailable( readDelay );
-        var completed_ = delayTask.Wait( readDelay );
-        var hasData = delayTask.Result;
-#else
-        // works for the .NET MAUI, Wpf and Win Forms applications.
-        CancellationTokenSource cancelTask = new();
-        Task<bool> delayTask = this.DataAvailableAsync( readDelay, cancelTask.Token );
-        var completed = delayTask.Wait( readDelay );
-        if ( !completed ) cancelTask.Cancel();
-        var hasData = this.DataAvailable();
-        // this delay is required for the MAUI application: not tested for WPF or Windows Forms.
-        System.Threading.Thread.Sleep( 1 );
+        // a read delay of 1ms is required for Maui, WPF and windows forms applications.
+        readDelay = TimeSpan.FromMilliseconds( Math.Max( 1, readDelay.TotalMilliseconds ) );
+        var dataAvailabelTask = Task.Run( () => this.QueryDataAvailable( readDelay ), tokenSource.Token );
+        dataAvailabelTask.Wait( readDelay );
+        var completed = dataAvailabelTask.Wait( readDelay );
+        if ( !completed ) tokenSource.Cancel();
+        var hasData = this.QueryDataAvailable();
 
-        // Clearly, the desired solution is to figure out how to implement
-        // the loop that waits for data availability. 
-        // We might have to borrow from the TCP Server example!
-#endif
+        // this delay is required for the MAUI application: not tested for WPF or Windows Forms.
+        // if the above delay is not used.
+        // System.Threading.Thread.Sleep( 1 );
 
         // we ignore the delay task result in order to simplify the code as this
         // would return no data if the stream has no available data.
-        return await this.ReadAsync( byteCount, trimEnd, ct );
+        return await this.ReadAsync( byteCount, trimEnd, tokenSource.Token );
     }
 
     /// <summary>   Queries line asynchronous. </summary>
@@ -521,13 +518,13 @@ public partial class TcpSession : ObservableObject, IDisposable
     /// <param name="byteCount">    Number of bytes. </param>
     /// <param name="readDelay">    The read delay. </param>
     /// <param name="trimEnd">      True to trim the <see cref="_readTermination"/>. </param>
-    /// <param name="ct">           A token that allows processing to be canceled. </param>
+    /// <param name="tokenSource">  A token that allows processing to be canceled. </param>
     /// <returns>   A reply. </returns>
-    public async Task<string> QueryLineAsync( string message, int byteCount, TimeSpan readDelay, bool trimEnd, CancellationToken ct )
+    public async Task<string> QueryLineAsync( string message, int byteCount, TimeSpan readDelay, bool trimEnd, CancellationTokenSource tokenSource )
     {
         return string.IsNullOrEmpty( message )
             ? string.Empty
-            : await this.QueryAsync( $"{message}{this.WriteTermination}", byteCount, readDelay, trimEnd, ct );
+            : await this.QueryAsync( $"{message}{this.WriteTermination}", byteCount, readDelay, trimEnd, tokenSource );
     }
 
     /// <summary>   Gets the last leftover response. </summary>

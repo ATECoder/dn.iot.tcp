@@ -10,7 +10,7 @@
     <ApplicationTitle>ISR.Iot.Tcp.Session</ApplicationTitle>
 
     <!-- App Identifier -->
-    <ApplicationId>cc.isr.tcp.session</ApplicationId>
+    <ApplicationId>cc.isr.iot.tcp.session</ApplicationId>
 
     <!-- Versions -->
     <ApplicationDisplayVersion>1.0.8360</ApplicationDisplayVersion>

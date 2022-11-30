@@ -8,10 +8,10 @@
     <LangVersion>latest</LangVersion>
 
     <!-- Display name -->
-    <ApplicationTitle>ISR.Iot.Tcp.Session</ApplicationTitle>
+    <ApplicationTitle>ISR.Iot.Tcp.Server</ApplicationTitle>
 
     <!-- App Identifier -->
-    <ApplicationId>cc.isr.tcp.session</ApplicationId>
+    <ApplicationId>cc.isr.iot.tcp.server</ApplicationId>
 
     <!-- Versions -->
     <ApplicationDisplayVersion>1.0.8360</ApplicationDisplayVersion>

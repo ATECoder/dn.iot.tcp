@@ -53,7 +53,7 @@ git clone https://github.com/ATECoder/dn.iot.tcp.git
 Clone the repositories into the following folders (parents of the .git folder):
 ```
 %vslib%\core\ide
-%dnlib%\vi\tcp
+%dnlib%\iot\tcp
 ```
 where %dnlib% and %vslib% are  the root folders of the .NET libraries, e.g., %my%\lib\vs 
 and %my%\libraries\vs, respectively, and %my% is the root folder of the .NET solutions

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
-    <RootNamespace>isr.Iot.Tcp.Session.MSTest</RootNamespace>
+    <RootNamespace>cc.isr.Iot.Tcp.Session.MSTest</RootNamespace>
     <Nullable>enable</Nullable>
 
     <!-- Versions -->
@@ -24,8 +24,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\server\isr.Iot.Tcp.Server.csproj" />
-    <ProjectReference Include="..\session\isr.Iot.Tcp.Session.csproj" />
+    <ProjectReference Include="..\server\cc.isr.Iot.Tcp.Server.csproj" />
+    <ProjectReference Include="..\session\cc.isr.Iot.Tcp.Session.csproj" />
   </ItemGroup>
 
 </Project>

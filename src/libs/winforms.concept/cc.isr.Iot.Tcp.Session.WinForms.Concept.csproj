@@ -4,14 +4,15 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net7.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
-    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
     <!-- Versions -->
     <ApplicationDisplayVersion>1.0.8360</ApplicationDisplayVersion>
     <ApplicationVersion>1</ApplicationVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\session.helper\isr.Iot.Tcp.Session.Helper.csproj" />
+    <ProjectReference Include="..\session.helper\cc.isr.Iot.Tcp.Session.Helper.csproj" />
   </ItemGroup>
 
 </Project>

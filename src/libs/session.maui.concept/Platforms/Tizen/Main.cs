@@ -3,7 +3,7 @@ using System;
 using Microsoft.Maui;
 using Microsoft.Maui.Hosting;
 
-namespace isr.Iot.Tcp.Session.Maui.Concept
+namespace cc.isr.Iot.Tcp.Session.Maui.Concept
 {
     internal class Program : MauiApplication
     {

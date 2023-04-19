@@ -7,7 +7,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Diagnostics;
 
-namespace isr.Iot.Tcp.Client;
+namespace cc.isr.Iot.Tcp.Client;
 
 /// <summary>   A TCP session. </summary>
 /// <remarks>   2022-11-14. </remarks>

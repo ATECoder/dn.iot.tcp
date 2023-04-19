@@ -1,18 +1,19 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net7.0-windows</TargetFramework>
-    <Nullable>enable</Nullable>
-    <UseWindowsForms>true</UseWindowsForms>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
     <!-- Versions -->
     <ApplicationDisplayVersion>1.0.8360</ApplicationDisplayVersion>
     <ApplicationVersion>1</ApplicationVersion>
+
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\session.helper\isr.Iot.Tcp.Session.Helper.csproj" />
+    <ProjectReference Include="..\Session.Helper\cc.isr.Iot.Tcp.Session.Helper.csproj" />
   </ItemGroup>
 
 </Project>

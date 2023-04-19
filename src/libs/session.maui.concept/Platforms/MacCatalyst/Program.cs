@@ -2,7 +2,7 @@
 
 using UIKit;
 
-namespace isr.Iot.Tcp.Session.Maui.Concept
+namespace cc.isr.Iot.Tcp.Session.Maui.Concept
 {
     public class Program
     {

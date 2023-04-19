@@ -1,4 +1,4 @@
-namespace isr.Iot.Tcp.Session.WinForms.Concept
+namespace cc.isr.Iot.Tcp.Session.WinForms.Concept
 {
     internal static class Program
     {

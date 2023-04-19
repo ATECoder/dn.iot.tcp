@@ -1,6 +1,6 @@
 using System.ComponentModel;
 
-namespace isr.Iot.Tcp.Session.MSTest;
+namespace cc.isr.Iot.Tcp.Session.MSTest;
 
 [TestClass]
 public class TcpSessionEchoServerAsyncTests

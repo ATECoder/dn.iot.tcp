@@ -4,9 +4,9 @@ using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Threading;
 
-using isr.Iot.Tcp.Client;
+using cc.isr.Iot.Tcp.Client;
 
-namespace isr.Iot.Tcp.Session.Helper;
+namespace cc.isr.Iot.Tcp.Session.Helper;
 
 public enum InstrumentId
 {

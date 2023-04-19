@@ -1,16 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net7.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
     <!-- Versions -->
     <ApplicationDisplayVersion>1.0.8360</ApplicationDisplayVersion>
     <ApplicationVersion>1</ApplicationVersion>
-
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\session\isr.Iot.Tcp.Session.csproj" />
+    <ProjectReference Include="..\session.helper\cc.isr.Iot.Tcp.Session.Helper.csproj" />
   </ItemGroup>
 
 </Project>

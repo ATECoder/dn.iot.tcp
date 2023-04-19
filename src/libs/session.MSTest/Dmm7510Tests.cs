@@ -1,4 +1,4 @@
-namespace isr.Iot.Tcp.Session.MSTest;
+namespace cc.isr.Iot.Tcp.Session.MSTest;
 
 [TestClass]
 [TestCategory( "dmm7510" )]

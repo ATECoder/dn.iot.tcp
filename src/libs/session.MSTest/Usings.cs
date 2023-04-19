@@ -1,3 +1,3 @@
 global using Microsoft.VisualStudio.TestTools.UnitTesting;
-global using isr.Iot.Tcp.Client;
-global using isr.Iot.Tcp.Server;
+global using cc.isr.Iot.Tcp.Client;
+global using cc.isr.Iot.Tcp.Server;

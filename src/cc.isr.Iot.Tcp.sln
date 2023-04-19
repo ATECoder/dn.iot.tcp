@@ -3,28 +3,28 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33110.190
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "isr.Iot.Tcp.Session", "libs\session\isr.Iot.Tcp.Session.csproj", "{A892E8DC-BEC9-43A3-BE8F-97B80B0AC107}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cc.isr.Iot.Tcp.Session", "libs\session\cc.isr.Iot.Tcp.Session.csproj", "{A892E8DC-BEC9-43A3-BE8F-97B80B0AC107}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "~items", "~items", "{8B4FEC3B-046C-4901-A752-CA942E7AF535}"
 	ProjectSection(SolutionItems) = preProject
 		..\CHANGELOG.md = ..\CHANGELOG.md
-		isr.Iot.Tcp.sln.vsspell = isr.Iot.Tcp.sln.vsspell
+		isr.Iot.Tcp.sln.vsspell = cc.isr.Iot.Tcp.sln.vsspell
 		..\README.md = ..\README.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "isr.Iot.Tcp.Server", "libs\server\isr.Iot.Tcp.Server.csproj", "{DEEE1C7A-2F00-43E0-9332-1893A825203E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cc.isr.Iot.Tcp.Server", "libs\server\cc.isr.Iot.Tcp.Server.csproj", "{DEEE1C7A-2F00-43E0-9332-1893A825203E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "isr.Iot.Tcp.Session.MSTest", "libs\session.MSTest\isr.Iot.Tcp.Session.MSTest.csproj", "{56F18B1C-9A61-47D8-857E-4570C8849FAB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cc.isr.Iot.Tcp.Session.MSTest", "libs\session.MSTest\cc.isr.Iot.Tcp.Session.MSTest.csproj", "{56F18B1C-9A61-47D8-857E-4570C8849FAB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "isr.Iot.Tcp.Session.Maui.Concept", "libs\session.maui.concept\isr.Iot.Tcp.Session.Maui.Concept.csproj", "{6B085BF5-9D8F-4DF4-99C7-48B1579A2C00}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cc.isr.Iot.Tcp.Session.Maui.Concept", "libs\session.maui.concept\cc.isr.Iot.Tcp.Session.Maui.Concept.csproj", "{6B085BF5-9D8F-4DF4-99C7-48B1579A2C00}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "isr.Iot.Tcp.Session.Helper", "libs\session.helper\isr.Iot.Tcp.Session.Helper.csproj", "{04FE2DDE-8E3B-4370-9D68-A67E35E4CE62}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cc.isr.Iot.Tcp.Session.Helper", "libs\session.helper\cc.isr.Iot.Tcp.Session.Helper.csproj", "{04FE2DDE-8E3B-4370-9D68-A67E35E4CE62}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "isr.Iot.Tcp.Session.ConsoleApp", "libs\session.console\isr.Iot.Tcp.Session.ConsoleApp.csproj", "{12E7D7ED-D4AA-40D1-A9CB-E14DFC35636E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cc.isr.Iot.Tcp.Session.ConsoleApp", "libs\session.console\cc.isr.Iot.Tcp.Session.ConsoleApp.csproj", "{12E7D7ED-D4AA-40D1-A9CB-E14DFC35636E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "isr.Iot.Tcp.Session.Wpf.Concept", "libs\wpf.concept\isr.Iot.Tcp.Session.Wpf.Concept.csproj", "{15AA3D60-6838-4693-91CC-6D757A28A309}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cc.isr.Iot.Tcp.Session.Wpf.Concept", "libs\wpf.concept\cc.isr.Iot.Tcp.Session.Wpf.Concept.csproj", "{15AA3D60-6838-4693-91CC-6D757A28A309}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "isr.Iot.Tcp.Session.WinForms.Concept", "libs\winforms.concept\isr.Iot.Tcp.Session.WinForms.Concept.csproj", "{31DFFFFF-38F7-4D59-8BC6-441BE6727AFE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cc.isr.Iot.Tcp.Session.WinForms.Concept", "libs\winforms.concept\cc.isr.Iot.Tcp.Session.WinForms.Concept.csproj", "{31DFFFFF-38F7-4D59-8BC6-441BE6727AFE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

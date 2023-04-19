@@ -1,7 +1,7 @@
 ﻿using Android.App;
 using Android.Runtime;
 
-namespace isr.Iot.Tcp.Session.Maui.Concept
+namespace cc.isr.Iot.Tcp.Session.Maui.Concept
 {
     [Application]
     public class MainApplication : MauiApplication

@@ -2,12 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>isr.Iot.Tcp</RootNamespace>
+    <RootNamespace>cc.isr.Iot.Tcp</RootNamespace>
 
     <LangVersion>latest</LangVersion>
 
     <!-- Display name -->
-    <ApplicationTitle>ISR.Iot.Tcp.Session</ApplicationTitle>
+    <ApplicationTitle>cc.isr.Iot.Tcp.Session</ApplicationTitle>
 
     <!-- App Identifier -->
     <ApplicationId>cc.isr.iot.tcp.session</ApplicationId>

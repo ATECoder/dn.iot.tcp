@@ -1,7 +1,7 @@
-namespace isr.Iot.Tcp.Session.Maui.Concept;
+namespace cc.isr.Iot.Tcp.Session.Maui.Concept;
 
-using isr.Iot.Tcp.Client;
-using isr.Iot.Tcp.Session.Helper;
+using cc.isr.Iot.Tcp.Client;
+using cc.isr.Iot.Tcp.Session.Helper;
 
 public partial class MainPage : ContentPage
 {

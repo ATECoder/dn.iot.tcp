@@ -1,9 +1,9 @@
 using System;
 using System.Windows;
 
-using isr.Iot.Tcp.Session.Helper;
+using cc.isr.Iot.Tcp.Session.Helper;
 
-namespace isr.Iot.Tcp.Session.Wpf.Concept
+namespace cc.isr.Iot.Tcp.Session.Wpf.Concept
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

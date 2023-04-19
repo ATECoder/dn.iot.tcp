@@ -1,6 +1,6 @@
-using isr.Iot.Tcp.Session.Helper;
+using cc.isr.Iot.Tcp.Session.Helper;
 
-namespace isr.Iot.Tcp.Session.WinForms.Concept
+namespace cc.isr.Iot.Tcp.Session.WinForms.Concept
 {
     public partial class Form1 : Form
     {

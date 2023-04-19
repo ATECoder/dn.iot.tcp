@@ -1,6 +1,6 @@
 ﻿using Foundation;
 
-namespace isr.Iot.Tcp.Session.Maui.Concept
+namespace cc.isr.Iot.Tcp.Session.Maui.Concept
 {
     [Register( "AppDelegate" )]
     public class AppDelegate : MauiUIApplicationDelegate

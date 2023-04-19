@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
-namespace isr.Iot.Tcp.Server;
+namespace cc.isr.Iot.Tcp.Server;
 
 /// <summary>   A TCP echo server. </summary>
 /// <remarks>   2022-11-16. </remarks>

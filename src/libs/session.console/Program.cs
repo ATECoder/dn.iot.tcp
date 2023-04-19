@@ -1,5 +1,5 @@
 // See https://aka.ms/new-console-template for more information
-using isr.Iot.Tcp.Session.Helper;
+using cc.isr.Iot.Tcp.Session.Helper;
 
 InstrumentId instrumentId = InstrumentId.K7510;
 Console.WriteLine( $"Talking to {instrumentId}. Press any key to stop..." );

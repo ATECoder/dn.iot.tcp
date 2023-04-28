@@ -1,4 +1,4 @@
-# IOT Tcp
+### IOT Tcp
 
 TCP Socket-based control and communication library for LXI-based instruments. 
 
@@ -17,18 +17,18 @@ TCP Socket-based control and communication library for LXI-based instruments.
 - [Closed Software](#Closed-software)
 - [Legal Notices](#Legal-Notices)
 
-## Description
+#### Description
 
 The ISR IOT TCP classes provide rudimentary methods for communicating with LXI instruments in mobile and desktop platforms.
 
 Unlike VXI-11 or HiSlip, these classes do not implement the bus level method for issuing device clear, reading service requests or responding to instrument initiated event. While  control ports for these methods are available in some Keysight instruments, these ports are not part of the standard LXI framework.
 
-## Issues
+#### Issues
 
-### read after write delay is required  for Async methods
+##### read after write delay is required  for Async methods
 A delay of 1 ms is required for implementing the asynchronous query method using the TCP Client write and read asynchronous methods. Neither the console nor unit tests are succeptible to this issue. 
 
-## Supported .NET Releases
+#### Supported .NET Releases
 
 * .NET Standard 2.0 - source code framework)
 * .NET 6.0
@@ -38,10 +38,10 @@ A delay of 1 ms is required for implementing the asynchronous query method using
 * WPF
 
 <a name="Source-Code"></a>
-## Source Code
+#### Source Code
 Clone the repository along with its requisite repositories to their respective relative path.
 
-### Repositories
+##### Repositories
 The repositories listed in [external repositories] are required:
 * [IDE Repository] - IDE support files.
 
@@ -58,7 +58,7 @@ Clone the repositories into the following folders (parents of the .git folder):
 where %dnlib% and %vslib% are  the root folders of the .NET libraries, e.g., %my%\lib\vs 
 and %my%\libraries\vs, respectively, and %my% is the root folder of the .NET solutions
 
-### Global Configuration Files
+##### Global Configuration Files
 ISR libraries use a global editor configuration file and a global test run settings file. 
 These files can be found in the [IDE Repository].
 
@@ -75,43 +75,43 @@ xcopy /Y %vslib%\core\ide\code\.runsettings %userprofile%\.runsettings
 ```
 where %userprofile% is the root user folder.
 
-### Packages
+##### Packages
 TBA
 
 <a name="FacilitatedBy"></a>
-## Facilitated By
+#### Facilitated By
 * [Visual Studio]
 * [Atomineer Code Documentation]
 * [EW Software Spell Checker]
 * [Funduc Search and Replace]
 * [IVI Foundation] - IVI Foundation VISA
 
-## Repository Owner
+#### Repository Owner
 * [ATE Coder]
 
 <a name="Authors"></a>
-## Authors
+#### Authors
 * [ATE Coder]  
 * [Josh Brown]
 
 <a name="Acknowledgments"></a>
-## Acknowledgments
+#### Acknowledgments
 * [Its all a remix] -- we are but a spec on the shoulders of giants  
 * [John Simmons] - outlaw programmer  
 * [Stack overflow] - Joel Spolsky  
 * [.Net Foundation] - The .NET Foundation
 
 <a name="Open-Source"></a>
-## Open source
+#### Open source
 Open source used by this software is described and licensed at the following sites:  
 
 <a name="Closed-software"></a>
-## Closed software
+#### Closed software
 Closed software used by this software are described and licensed on the following sites:  
 [IVI Foundation]  
 
 <a name="Resources"></a>
-## Resources 
+#### Resources 
 
 [Use sockets to send and receive data over TCP]
 [Use sockets to send and receive data over TCP]  
@@ -120,7 +120,7 @@ Closed software used by this software are described and licensed on the followin
 [Stopping a TCP Server]  
 
 <a name="Legal-Notices"></a>
-## Legal Notices
+#### Legal Notices
 
 Integrated Scientific Resources, Inc., and any contributors grant you a license to the documentation and other content
 in this repository under the [Creative Commons Attribution 4.0 International Public License](https://creativecommons.org/licenses/by/4.0/legalcode), see the [LICENSE](LICENSE) file, and grant you a license to any code in the repository under the [MIT License](https://opensource.org/licenses/MIT), see the [LICENSE-CODE](LICENSE-CODE) file.

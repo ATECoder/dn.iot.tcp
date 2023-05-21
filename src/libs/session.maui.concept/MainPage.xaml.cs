@@ -13,7 +13,7 @@ public partial class MainPage : ContentPage
 
     private int _count = 0;
 
-    private void OnCounterClicked( object sender, EventArgs e )
+    private void OnCounterClicked( object? sender, EventArgs e )
     {
         this._count++;
 

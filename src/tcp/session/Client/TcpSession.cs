@@ -53,7 +53,7 @@ public partial class TcpSession : ObservableObject, IDisposable
         }
     }
 
-    #region " TCP Client and Stream "
+    #region " tcp client and stream "
 
     private TcpClient _tcpClient = null;
     private NetworkStream _netStream = null;
@@ -226,7 +226,7 @@ public partial class TcpSession : ObservableObject, IDisposable
 
     #endregion
 
-    #region " I/O "
+    #region " i/o "
 
     /// <summary>   Gets or sets the read termination. </summary>
     /// <value> The read termination. </value>
@@ -254,7 +254,7 @@ public partial class TcpSession : ObservableObject, IDisposable
 
     #endregion
 
-    #region " SYNCHRONOUS I/O "
+    #region " synchronous i/o "
 
     /// <summary>
     /// Get a value indicating if data was received from the network and is available to be read.
@@ -374,7 +374,7 @@ public partial class TcpSession : ObservableObject, IDisposable
 
     #endregion
 
-    #region " ASYNCHRONOUS I/O "
+    #region " asynchronous i/o "
 
     /// <summary>   Query if data was received from the network and is available to be read. </summary>
     /// <remarks>   2022-11-04. </remarks>

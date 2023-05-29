@@ -6,11 +6,7 @@
     <RootNamespace>cc.isr.Iot.Tcp</RootNamespace>
 
     <LangVersion>latest</LangVersion>
-
-    <!-- Display name -->
     <ApplicationTitle>cc.isr.Iot.Tcp.Session</ApplicationTitle>
-
-    <!-- App Identifier -->
     <ApplicationId>cc.isr.iot.tcp.session</ApplicationId>
 
     <!-- Versions -->

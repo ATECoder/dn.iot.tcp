@@ -7,11 +7,7 @@
     <Nullable>enable</Nullable>
 
     <LangVersion>latest</LangVersion>
-
-    <!-- Display name -->
     <ApplicationTitle>cc.isr.Iot.Tcp.Server</ApplicationTitle>
-
-    <!-- App Identifier -->
     <ApplicationId>cc.isr.iot.tcp.server</ApplicationId>
 
     <!-- Versions -->

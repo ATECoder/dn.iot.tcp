@@ -11,8 +11,8 @@ public class TcpSessionTests
     {
         try
         {
-            System.Diagnostics.Debug.WriteLine( $"{context.FullyQualifiedTestClassName}.{System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType?.Name} Tester" );
-            _classTestContext = context;
+            Console.WriteLine( $"{testContext.FullyQualifiedTestClassName}.{System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType?.Name}" );
+            _classTestContext = testContext;
             System.Diagnostics.Debug.WriteLine( $"{_classTestContext.FullyQualifiedTestClassName}.{System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType?.Name} Tester" );
             _server = new TcpEchoServer( _ipv4Address!, _portNumber!.Value );
             _server.PropertyChanged += OnServerPropertyChanged;
@@ -90,9 +90,9 @@ public class TcpSessionTests
         while ( repeatCount > 0 )
         {
             repeatCount--;
-            string respnonse = string.Empty;
-            _ = session.QueryLine( command, 1024 , ref respnonse, trimEnd ); 
-            Assert.AreEqual( identity, respnonse, $"@count = {count - repeatCount}" );
+            string response = string.Empty;
+            _ = session.QueryLine( command, 1024 , ref response, trimEnd ); 
+            Assert.AreEqual( identity, response, $"@count = {count - repeatCount}" );
         }
     }
 

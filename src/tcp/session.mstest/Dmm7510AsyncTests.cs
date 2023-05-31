@@ -17,7 +17,7 @@ public class Dmm7510AsyncTests
     private static int WriteLine( TcpSession session, string command, CancellationToken token )
     {
         var task = session.WriteLineAsync( command, token );
-        task.Wait();
+        task.Wait( token );
         return task.Result;
     }
 

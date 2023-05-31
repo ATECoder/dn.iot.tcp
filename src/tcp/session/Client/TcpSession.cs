@@ -20,10 +20,10 @@ public partial class TcpSession : ObservableObject, IDisposable
     /// <param name="portNumber">   (Optional) The port number. </param>
     public TcpSession( string ipv4Address, int portNumber = 5025 )
     {
-        this.PortNumber = portNumber;
-        this.IPv4Address = ipv4Address;
-        this.ReadTermination = "\n";
-        this.WriteTermination = "\n";
+        this._portNumber = portNumber;
+        this._iPv4Address = ipv4Address;
+        this._readTermination = "\n";
+        this._writeTermination = "\n";
     }
 
     /// <summary>
@@ -48,15 +48,13 @@ public partial class TcpSession : ObservableObject, IDisposable
         if ( disposing )
         {
             this._tcpClient?.Dispose();
-            this._tcpClient = null;
-            this._netStream = null;
         }
     }
 
     #region " tcp client and stream "
 
-    private TcpClient _tcpClient = null;
-    private NetworkStream _netStream = null;
+    private TcpClient? _tcpClient;
+    private NetworkStream? _netStream;
 
     /// <summary>   Gets or sets the port number. </summary>
     /// <value> The port number. </value>
@@ -71,31 +69,46 @@ public partial class TcpSession : ObservableObject, IDisposable
     /// <summary>   Gets or sets the receive timeout. </summary>
     /// <remarks> Default value = 0 ms.</remarks>
     /// <value> The receive timeout. </value>
-    public TimeSpan ReceiveTimeout
+    public TimeSpan? ReceiveTimeout
     {
-        get => TimeSpan.FromMilliseconds( this._tcpClient.ReceiveTimeout );
-        set => this.SetProperty( this._tcpClient.ReceiveTimeout , value.Milliseconds, this._tcpClient,
-                               (model, value ) => model.ReceiveTimeout = value ) ;
+        get => this._tcpClient is not null ? TimeSpan.FromMilliseconds( this._tcpClient.ReceiveTimeout ) : null;
+        set {
+            if ( value is not null && this._tcpClient is not null )
+            {
+                _= this.SetProperty( this.ReceiveTimeout, value,
+                                     this._tcpClient, ( model, value ) => model.ReceiveTimeout = value!.Value.Milliseconds );
+            }
+        }
     }
 
     /// <summary>   Gets or sets the send timeout. </summary>
     /// <remarks> Default value = 0 ms.</remarks>
     /// <value> The send timeout. </value>
-    public TimeSpan SendTimeout
+    public TimeSpan? SendTimeout
     {
-        get => TimeSpan.FromMilliseconds( this._tcpClient.SendTimeout );
-        set => this.SetProperty( this._tcpClient.SendTimeout, value.Milliseconds,
-                                 this._tcpClient, ( model, value ) => model.SendTimeout = value );
+        get => this._tcpClient is not null ? TimeSpan.FromMilliseconds( this._tcpClient.SendTimeout ) : null ;
+        set {
+            if ( value is not null && this._tcpClient is not null )
+            {
+                _ = this.SetProperty( this.SendTimeout, value,
+                                  this._tcpClient, ( model, value ) => model.SendTimeout = value!.Value.Milliseconds );
+            }
+        }
     }
 
     /// <summary>   Gets or sets the size of the receive buffer. </summary>
     /// <remarks> Default value = 65536 </remarks>
     /// <value> The size of the receive buffer. </value>
-    public int ReceiveBufferSize
+    public int? ReceiveBufferSize
     {
-        get => this._tcpClient.ReceiveBufferSize;
-        set => this.SetProperty( this._tcpClient.ReceiveBufferSize, value,
-                                 this._tcpClient, ( model, value ) => model.ReceiveBufferSize = value);
+        get => this._tcpClient?.ReceiveBufferSize;
+        set {
+            if ( value is not null && this._tcpClient is not null )
+            {
+                _ = this.SetProperty( this.ReceiveBufferSize, value,
+                                      this._tcpClient, ( model, value ) => model.ReceiveBufferSize = value!.Value );
+            }
+        }
     }
 
     /// <summary>   Opens a new session. </summary>
@@ -104,12 +117,14 @@ public partial class TcpSession : ObservableObject, IDisposable
     public void Connect()
     {
         this._tcpClient = new TcpClient( this.IPv4Address, this.PortNumber );
-        // notices that the Tcp Client is connected to the end point at this point
+
+        // notice that the Tcp Client is connected to the end point at this point
         // even though the .Connect command was not issued.
+
         this._netStream = this._tcpClient.GetStream();
     }
 
-    /// <summary>   Determine if we can connect. </summary>
+    /// <summary>   Determines if we can connect. </summary>
     /// <remarks>   2022-11-18. </remarks>
     /// <returns>   True if we can connect, false if not. </returns>
     public bool CanConnect()
@@ -146,8 +161,8 @@ public partial class TcpSession : ObservableObject, IDisposable
         var success = asyncResult.AsyncWaitHandle.WaitOne( timeout );
         if ( !success )
         {
-            this._tcpClient.Close();
-            this._tcpClient.EndConnect( asyncResult );
+            this._tcpClient?.Close();
+            this._tcpClient?.EndConnect( asyncResult );
         }
         return success;
     }
@@ -159,7 +174,7 @@ public partial class TcpSession : ObservableObject, IDisposable
     {
         if ( asyncResult.IsCompleted )
         {
-            this._netStream = this._tcpClient.GetStream();
+            this._netStream = this._tcpClient!.GetStream();
         }
     }
 
@@ -203,8 +218,8 @@ public partial class TcpSession : ObservableObject, IDisposable
     [RelayCommand( CanExecute = nameof( CanDisconnect ) )]
     public void Disconnect()
     {
-        this._netStream.Close();
-        this._tcpClient.Close();
+        this._netStream?.Close();
+        this._tcpClient?.Close();
     }
 
     /// <summary>   Determine if we can disconnect. </summary>
@@ -221,7 +236,7 @@ public partial class TcpSession : ObservableObject, IDisposable
     [RelayCommand( CanExecute = nameof( CanDisconnect ) )]
     public void Flush()
     {
-        this._netStream.Flush();
+        this._netStream?.Flush();
     }
 
     #endregion
@@ -274,7 +289,7 @@ public partial class TcpSession : ObservableObject, IDisposable
     {
         if ( string.IsNullOrEmpty( message ) ) return 0;
         byte[] buffer = Encoding.ASCII.GetBytes( message );
-        this._netStream.Write( buffer, 0, buffer.Length );
+        this._netStream?.Write( buffer, 0, buffer.Length );
         return buffer.Length;
     }
 
@@ -296,8 +311,12 @@ public partial class TcpSession : ObservableObject, IDisposable
     public int Read( int byteCount, ref string reply, bool trimEnd )
     {
         byte[] buffer = new byte[byteCount];
-        int receivedCount = this._netStream.Read( buffer, 0, byteCount );
-        reply = this.BuildReply(buffer, receivedCount, trimEnd);    
+        int receivedCount = 0;
+        if ( this._netStream is not null )
+        {
+            receivedCount = this._netStream.Read( buffer, 0, byteCount );
+            reply = this.BuildReply( buffer, receivedCount, trimEnd );
+        }
         return receivedCount;
     }
 
@@ -338,9 +357,15 @@ public partial class TcpSession : ObservableObject, IDisposable
     public int Read( int offset, int count, ref float[] values )
     {
         byte[] buffer = new byte[count * 4 + offset + 1];
-        int receivedCount = this._netStream.Read( buffer, 0, buffer.Length );
-        // Need to convert to the byte array into single
-        Buffer.BlockCopy( buffer, offset, values, 0, values.Length * 4 );
+        int receivedCount = 0;
+        if ( this._netStream is not null )
+        {
+            receivedCount = this._netStream.Read( buffer, 0, buffer.Length );
+
+            // Need to convert to the byte array into single
+
+            Buffer.BlockCopy( buffer, offset, values, 0, values.Length * 4 );
+        }
         return receivedCount;
     }
 
@@ -416,13 +441,17 @@ public partial class TcpSession : ObservableObject, IDisposable
     public async Task<string> ReadWhileAvailableAsync( int byteCount, bool trimEnd, CancellationToken ct )
     {
         StringBuilder sb = new();
-        while ( this._netStream.DataAvailable )
+        int replyLength = 0;
+        if ( this._netStream is not null )
         {
-            var buffer = new byte[byteCount];
-            int receivedCount = await this._netStream.ReadAsync( buffer, 0, byteCount, ct );
-            if ( receivedCount > 0 ) _ = sb.Append( Encoding.ASCII.GetString( buffer, 0, receivedCount ) );
+            while ( this._netStream.DataAvailable )
+            {
+                var buffer = new byte[byteCount];
+                int receivedCount = await this._netStream.ReadAsync( buffer, 0, byteCount, ct );
+                if ( receivedCount > 0 ) _ = sb.Append( Encoding.ASCII.GetString( buffer, 0, receivedCount ) );
+            }
+            replyLength = sb.Length - (trimEnd ? this._readTermination.Length : 0);
         }
-        int replyLength = sb.Length - ( trimEnd ? this._readTermination.Length : 0 );
         return replyLength > 0
             ? sb.ToString( 0, replyLength )
             : String.Empty;
@@ -440,8 +469,12 @@ public partial class TcpSession : ObservableObject, IDisposable
     public async Task<string> ReadAsync( int byteCount, bool trimEnd, CancellationToken ct )
     {
         var buffer = new byte[byteCount];
-        int receivedCount = await this._netStream.ReadAsync( buffer, 0, byteCount, ct );
-        return  this.BuildReply( buffer, receivedCount, trimEnd );
+        if ( this._netStream is not null )
+        {
+            int receivedCount = await this._netStream.ReadAsync( buffer, 0, byteCount, ct );
+            return this.BuildReply( buffer, receivedCount, trimEnd );
+        }
+        return string.Empty;
     }
 
     /// <summary>   Sends a message asynchronously reading any existing data into the orphan . </summary>
@@ -453,14 +486,19 @@ public partial class TcpSession : ObservableObject, IDisposable
     {
         if ( string.IsNullOrEmpty( message ) ) return 0;
 
-        // read any data already in the stream.
-        this.Orphan = this._netStream.DataAvailable
-            ? await this.ReadWhileAvailableAsync( 2048, false, ct )
-            : string.Empty;
+        if ( this._netStream is not null )
+        {
+            // read any data already in the stream.
 
-        byte[] buffer = Encoding.ASCII.GetBytes( message );
-        await this._netStream.WriteAsync( buffer, 0, buffer.Length, ct );
-        return buffer.Length;
+            this.Leftover = this._netStream.DataAvailable
+                ? await this.ReadWhileAvailableAsync( 2048, false, ct )
+                : string.Empty;
+
+            byte[] buffer = Encoding.ASCII.GetBytes( message );
+            await this._netStream.WriteAsync( buffer, 0, buffer.Length, ct );
+            return buffer.Length;
+        }
+        return 0;
     }
 
     /// <summary>   Sends a message with termination asynchronously reading any existing data into the orphan . </summary>
@@ -486,20 +524,18 @@ public partial class TcpSession : ObservableObject, IDisposable
     {
         if ( string.IsNullOrEmpty( message ) ) return string.Empty;
 
-        Task<int> sendTask = this.WriteAsync( message, tokenSource.Token );
-        sendTask.Wait();
-        if ( !sendTask.IsCompleted )
-        {
-            tokenSource.Cancel();
-            throw new TimeoutException( $"{nameof( WriteAsync )} timed out" );
-        }
+        var sendTask = this.WriteAsync( message, tokenSource.Token ).ConfigureAwait( false );
+        _ = await sendTask;
 
         // wait for available data.
         // a read delay of 1ms is required for Maui, WPF and windows forms applications.
+
         readDelay = TimeSpan.FromMilliseconds( Math.Max( 1, readDelay.TotalMilliseconds ) );
-        var dataAvailabelTask = Task.Run( () => this.QueryDataAvailable( readDelay ), tokenSource.Token );
-        dataAvailabelTask.Wait( readDelay );
-        var completed = dataAvailabelTask.Wait( readDelay );
+        var dataAvailableTask = Task.Run( () => this.QueryDataAvailable( readDelay ), tokenSource.Token );
+
+        // ?? do we need this? _ = dataAvailableTask.Wait( readDelay );
+
+        var completed = dataAvailableTask.Wait( readDelay );
         if ( !completed ) tokenSource.Cancel();
         var hasData = this.QueryDataAvailable();
 
@@ -509,6 +545,7 @@ public partial class TcpSession : ObservableObject, IDisposable
 
         // we ignore the delay task result in order to simplify the code as this
         // would return no data if the stream has no available data.
+
         return await this.ReadAsync( byteCount, trimEnd, tokenSource.Token );
     }
 
@@ -529,7 +566,7 @@ public partial class TcpSession : ObservableObject, IDisposable
 
     /// <summary>   Gets the last leftover response. </summary>
     /// <value> Any leftover message in the stream. </value>
-    public string Orphan { get; private set; }
+    public string? Leftover { get; private set; }
 
 #endregion
 

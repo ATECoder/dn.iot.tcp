@@ -3,28 +3,32 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33110.190
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cc.isr.Iot.Tcp.Session", "libs\session\cc.isr.Iot.Tcp.Session.csproj", "{A892E8DC-BEC9-43A3-BE8F-97B80B0AC107}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "`items", "`items", "{8B4FEC3B-046C-4901-A752-CA942E7AF535}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "~items", "~items", "{8B4FEC3B-046C-4901-A752-CA942E7AF535}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cc.isr.Iot.Tcp.Session", "tcp\session\cc.isr.Iot.Tcp.Session.csproj", "{A892E8DC-BEC9-43A3-BE8F-97B80B0AC107}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cc.isr.Iot.Tcp.Server", "tcp\server\cc.isr.Iot.Tcp.Server.csproj", "{DEEE1C7A-2F00-43E0-9332-1893A825203E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cc.isr.Iot.Tcp.Session.MSTest", "tcp\session.MSTest\cc.isr.Iot.Tcp.Session.MSTest.csproj", "{56F18B1C-9A61-47D8-857E-4570C8849FAB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cc.isr.Iot.Tcp.Session.Helper", "tcp\session.helper\cc.isr.Iot.Tcp.Session.Helper.csproj", "{04FE2DDE-8E3B-4370-9D68-A67E35E4CE62}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cc.isr.Iot.Tcp.Session.ConsoleApp", "tcp\session.console\cc.isr.Iot.Tcp.Session.ConsoleApp.csproj", "{12E7D7ED-D4AA-40D1-A9CB-E14DFC35636E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cc.isr.Iot.Tcp.Session.Wpf.Concept", "tcp\wpf.concept\cc.isr.Iot.Tcp.Session.Wpf.Concept.csproj", "{15AA3D60-6838-4693-91CC-6D757A28A309}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cc.isr.Iot.Tcp.Session.WinForms.Concept", "tcp\winforms.concept\cc.isr.Iot.Tcp.Session.WinForms.Concept.csproj", "{31DFFFFF-38F7-4D59-8BC6-441BE6727AFE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "`docs", "`docs", "{A68C6B76-76EF-4BF0-9964-9D20ECBD3C0F}"
 	ProjectSection(SolutionItems) = preProject
 		..\CHANGELOG.md = ..\CHANGELOG.md
-		isr.Iot.Tcp.sln.vsspell = cc.isr.Iot.Tcp.sln.vsspell
+		..\Cloning.md = ..\Cloning.md
+		..\Open-Source.md = ..\Open-Source.md
 		..\README.md = ..\README.md
+		..\TODO.md = ..\TODO.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cc.isr.Iot.Tcp.Server", "libs\server\cc.isr.Iot.Tcp.Server.csproj", "{DEEE1C7A-2F00-43E0-9332-1893A825203E}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cc.isr.Iot.Tcp.Session.MSTest", "libs\session.MSTest\cc.isr.Iot.Tcp.Session.MSTest.csproj", "{56F18B1C-9A61-47D8-857E-4570C8849FAB}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cc.isr.Iot.Tcp.Session.Maui.Concept", "libs\session.maui.concept\cc.isr.Iot.Tcp.Session.Maui.Concept.csproj", "{6B085BF5-9D8F-4DF4-99C7-48B1579A2C00}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cc.isr.Iot.Tcp.Session.Helper", "libs\session.helper\cc.isr.Iot.Tcp.Session.Helper.csproj", "{04FE2DDE-8E3B-4370-9D68-A67E35E4CE62}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cc.isr.Iot.Tcp.Session.ConsoleApp", "libs\session.console\cc.isr.Iot.Tcp.Session.ConsoleApp.csproj", "{12E7D7ED-D4AA-40D1-A9CB-E14DFC35636E}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cc.isr.Iot.Tcp.Session.Wpf.Concept", "libs\wpf.concept\cc.isr.Iot.Tcp.Session.Wpf.Concept.csproj", "{15AA3D60-6838-4693-91CC-6D757A28A309}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cc.isr.Iot.Tcp.Session.WinForms.Concept", "libs\winforms.concept\cc.isr.Iot.Tcp.Session.WinForms.Concept.csproj", "{31DFFFFF-38F7-4D59-8BC6-441BE6727AFE}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "~framework", "~framework", "{D3FAF48A-5459-4A00-BAEA-4D3A9E0AD4BF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -44,12 +48,6 @@ Global
 		{56F18B1C-9A61-47D8-857E-4570C8849FAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{56F18B1C-9A61-47D8-857E-4570C8849FAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{56F18B1C-9A61-47D8-857E-4570C8849FAB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6B085BF5-9D8F-4DF4-99C7-48B1579A2C00}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6B085BF5-9D8F-4DF4-99C7-48B1579A2C00}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6B085BF5-9D8F-4DF4-99C7-48B1579A2C00}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{6B085BF5-9D8F-4DF4-99C7-48B1579A2C00}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6B085BF5-9D8F-4DF4-99C7-48B1579A2C00}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6B085BF5-9D8F-4DF4-99C7-48B1579A2C00}.Release|Any CPU.Deploy.0 = Release|Any CPU
 		{04FE2DDE-8E3B-4370-9D68-A67E35E4CE62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{04FE2DDE-8E3B-4370-9D68-A67E35E4CE62}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{04FE2DDE-8E3B-4370-9D68-A67E35E4CE62}.Release|Any CPU.ActiveCfg = Release|Any CPU

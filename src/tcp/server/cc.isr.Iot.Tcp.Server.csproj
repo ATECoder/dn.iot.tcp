@@ -2,11 +2,13 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <!-- Assembly Info -->
-    <RootNamespace>cc.isr.Iot.Tcp</RootNamespace>
+    <LangVersion>latest</LangVersion>
+
+    <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 
-    <LangVersion>latest</LangVersion>
+    <!-- Assembly Info -->
+    <RootNamespace>cc.isr.Iot.Tcp</RootNamespace>
     <ApplicationTitle>cc.isr.Iot.Tcp.Server</ApplicationTitle>
     <ApplicationId>cc.isr.iot.tcp.server</ApplicationId>
 

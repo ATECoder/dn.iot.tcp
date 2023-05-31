@@ -1,13 +1,19 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
     <TargetFramework>net7.0-windows</TargetFramework>
-    <Nullable>enable</Nullable>
+    <OutputType>WinExe</OutputType>
     <UseWPF>true</UseWPF>
+
+    <LangVersion>latest</LangVersion>
+
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
     <!-- Versions -->
     <ApplicationDisplayVersion>1.0.8360</ApplicationDisplayVersion>
     <ApplicationVersion>1</ApplicationVersion>
+
   </PropertyGroup>
 
   <ItemGroup>

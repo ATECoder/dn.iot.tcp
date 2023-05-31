@@ -1,17 +1,17 @@
 namespace cc.isr.Iot.Tcp.Session.MSTest;
 
 [TestClass]
-[TestCategory( "dmm7510" )]
-public class Dmm7510Tests
+[TestCategory( "dmm2700P" )]
+public class Dmm2700PrologixTests
 {
 
     /// <summary>   Assert identity should query. </summary>
     /// <remarks>   2022-11-16. </remarks>
     /// <param name="ipv4Address">  The IPv4 address. </param>
     /// <param name="repeatCount">  Number of repeats. </param>
-    private static void AssertIdentityShouldQuery( string ipv4Address, int repeatCount )
+    private static void AssertIdentityShouldQuery( string ipv4Address, int portNumber, int repeatCount )
     {
-        using TcpSession session = new ( ipv4Address );
+        using TcpSession session = new ( ipv4Address, portNumber );
         string identity = string.Empty;
         string command = "*IDN?";
         bool trimEnd = true;
@@ -32,8 +32,9 @@ public class Dmm7510Tests
     [TestMethod]
     public void IdentityShouldQuery()
     {
-        string ipv4Address = "192.168.0.144";
+        string ipv4Address = "192.168.0.252";
+        int portNumber = 1234;
         int count = 42;
-        Dmm7510Tests.AssertIdentityShouldQuery(ipv4Address, count );
+        Dmm2700PrologixTests.AssertIdentityShouldQuery(ipv4Address, portNumber, count );
     }
 }

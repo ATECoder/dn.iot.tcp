@@ -1,4 +1,4 @@
-﻿using System.Windows;
+using System.Windows;
 
 namespace cc.isr.Iot.Tcp.Session.Wpf.Concept
 {
@@ -6,4 +6,5 @@ namespace cc.isr.Iot.Tcp.Session.Wpf.Concept
     /// Interaction logic for App.xaml
     /// </summary>
     public partial class App : Application
-    { }}
+    { }
+}

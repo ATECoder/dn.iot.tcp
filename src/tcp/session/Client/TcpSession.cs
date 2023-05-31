@@ -1,11 +1,8 @@
-using System;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading.Tasks;
-using System.Threading;
+
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using System.Diagnostics;
 
 namespace cc.isr.Iot.Tcp.Client;
 
@@ -533,7 +530,8 @@ public partial class TcpSession : ObservableObject, IDisposable
         readDelay = TimeSpan.FromMilliseconds( Math.Max( 1, readDelay.TotalMilliseconds ) );
         var dataAvailableTask = Task.Run( () => this.QueryDataAvailable( readDelay ), tokenSource.Token );
 
-        // ?? do we need this? _ = dataAvailableTask.Wait( readDelay );
+        // two checks on data available are needed for some reason. 
+        _ = dataAvailableTask.Wait( readDelay );
 
         var completed = dataAvailableTask.Wait( readDelay );
         if ( !completed ) tokenSource.Cancel();

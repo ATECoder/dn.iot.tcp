@@ -2,6 +2,8 @@ using System.ComponentModel;
 
 namespace cc.isr.Iot.Tcp.Session.MSTest;
 
+/// <summary>   (Unit Test Class) a TCP session echo server asynchronous tests. </summary>
+/// <remarks>   2023-05-31. </remarks>
 [TestClass]
 public class TcpSessionEchoServerAsyncTests
 {

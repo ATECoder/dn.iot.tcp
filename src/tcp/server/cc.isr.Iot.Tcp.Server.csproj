@@ -13,7 +13,7 @@
     <ApplicationId>cc.isr.iot.tcp.server</ApplicationId>
 
     <!-- Versions -->
-    <ApplicationDisplayVersion>1.0.8360</ApplicationDisplayVersion>
+    <ApplicationDisplayVersion>1.0.8551</ApplicationDisplayVersion>
     <ApplicationVersion>1</ApplicationVersion>
 
   </PropertyGroup>
@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.0.0" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.0" />
   </ItemGroup>
 
 </Project>

@@ -1,8 +1,5 @@
-using System;
-using System.Collections.Generic;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
-using System.Threading;
 
 using cc.isr.Iot.Tcp.Client;
 
@@ -10,25 +7,31 @@ namespace cc.isr.Iot.Tcp.Session.Helper;
 
 public enum InstrumentId
 {
-    None, K2450 = 2450, K2600 = 2600, K6510 = 6510, K7510 = 7510
+    None, K2450 = 2450, K2600 = 2600, K2700P = 2700, K6510 = 6510, K7510 = 7510
 }
 
+/// <summary>   Manager for sessions. </summary>
+/// <remarks>   2023-05-31. </remarks>
 public static class SessionManager
 {
-    private static readonly Dictionary<string, (int ReadAfterWriteDelay, int InterQqueryDelay, string IPAddress)> _instrumentInfo;
+    private static readonly Dictionary<string, (int ReadAfterWriteDelay, int InterQqueryDelay, string IPAddress, int PortNumber)> _instrumentInfo;
 
     /// <summary>   Gets the cancellation token source. </summary>
     /// <value> The cancellation token source. </value>
     public static CancellationTokenSource CancellationTokenSource { get; private set; }
 
+    /// <summary>   Static constructor. </summary>
+    /// <remarks>   2023-05-31. </remarks>
     static SessionManager()
     {
+        QueryInfo = string.Empty;
         _instrumentInfo = new() {
-        { "Echo", (0, 0, "127.0.0.1") },
-        { InstrumentId.K2450.ToString() , (0, 0, "192.168.0.152") },
-        { InstrumentId.K2600.ToString(), (0, 0, "192.168.0.50") },
-        { InstrumentId.K6510.ToString(), (0, 0, "192.168.0.154") },
-        { InstrumentId.K7510.ToString(), (0, 0, "192.168.0.144") }
+        { "Echo", (0, 0, "127.0.0.1", 13000) },
+        { InstrumentId.K2450.ToString() , (0, 0, "192.168.0.152", 5025) },
+        { InstrumentId.K2600.ToString(), (0, 0, "192.168.0.50", 5025) },
+        { InstrumentId.K2700P.ToString(), (0, 0, "192.168.0.252", 1234) },
+        { InstrumentId.K6510.ToString(), (0, 0, "192.168.0.154", 5025) },
+        { InstrumentId.K7510.ToString(), (0, 0, "192.168.0.144", 5025) }
         };
         CancellationTokenSource = new ();
     }
@@ -46,12 +49,12 @@ public static class SessionManager
     {
 
         string command = "*IDN?";
-        int portNumber = instrumentId == InstrumentId.None ? 13000 : 5025;
 
         string instrument = instrumentId == InstrumentId.None ? "Echo" : instrumentId.ToString();
         TimeSpan readAfterWriteDelay = TimeSpan.FromMilliseconds( _instrumentInfo[instrument].ReadAfterWriteDelay );
         int interQueryDelayMs = _instrumentInfo[instrument].InterQqueryDelay;
         string ipAddress = _instrumentInfo[instrument].IPAddress;
+        int portNumber = _instrumentInfo[instrument].PortNumber;
         if ( !Paping( ipAddress , portNumber, (int)connectionTimeout.TotalMilliseconds) )
         {
             QueryInfo = $"Attempt to connect to {instrument} at {ipAddress}:{portNumber} aborted after {connectionTimeout.TotalMilliseconds:0}ms";
@@ -90,11 +93,11 @@ public static class SessionManager
     {
 
         string command = "*IDN?";
-        int portNumber = instrumentId == InstrumentId.None ? 13000 : 5025;
         string instrument = instrumentId == InstrumentId.None ? "Echo" : instrumentId.ToString();
         TimeSpan readAfterWriteDelay = TimeSpan.FromMilliseconds( _instrumentInfo[instrument].ReadAfterWriteDelay );
         int interqueryDelayMs = _instrumentInfo[instrument].InterQqueryDelay;
         string ipAddress = _instrumentInfo[instrument].IPAddress;
+        int portNumber = _instrumentInfo[instrument].PortNumber;
 
         if ( !Paping( ipAddress, portNumber, ( int ) connectionTimeout.TotalMilliseconds ) )
         {
@@ -148,6 +151,14 @@ public static class SessionManager
         return "Exception occurred";
     }
 
+    /// <summary>   Queries device asynchronous. </summary>
+    /// <remarks>   2023-05-31. </remarks>
+    /// <param name="session">      The session. </param>
+    /// <param name="command">      The command. </param>
+    /// <param name="byteCount">    Number of bytes. </param>
+    /// <param name="readDelay">    The read delay. </param>
+    /// <param name="trimEnd">      True to trim end. </param>
+    /// <returns>   The device asynchronous. </returns>
     private static string QueryDeviceAsync( TcpSession session, string command, int byteCount, TimeSpan readDelay, bool trimEnd )
     {
         try

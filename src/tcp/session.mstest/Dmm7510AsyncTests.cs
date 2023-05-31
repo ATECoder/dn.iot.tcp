@@ -32,7 +32,7 @@ public class Dmm7510AsyncTests
     private static string QueryLine( TcpSession session, string command, TimeSpan readDelay, bool trimEnd, CancellationTokenSource tokenSource )
     {
         var task = session.QueryLineAsync( command, 1024, readDelay, trimEnd, tokenSource );
-        task.Wait( tokenSource.Token );
+        task.Wait();
         return task.Result;
     }
 

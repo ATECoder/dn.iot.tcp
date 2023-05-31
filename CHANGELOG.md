@@ -2,7 +2,7 @@
 All notable changes to these libraries will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
-##### [1.1.8535] - 2023-05-15 Preview 202304
+##### [1.0.8551] - 2023-05-31 Preview 202304
 * Use cc.isr.Json.AppSettings.ViewModels project for settings I/O.
 
 ##### [0.1.8518] - 2023-04-28 Preview 202304
@@ -21,4 +21,4 @@ Add MAUI concept and console applications. Async query fails on the MAUI applica
 
 &copy;  2022 Integrated Scientific Resources, Inc. All rights reserved.
 
-[0.1.8518]: https://github.com/ATECoder/dn.iot.tcp
+[1.0.8551]: https://github.com/ATECoder/dn.iot.tcp

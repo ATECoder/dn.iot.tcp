@@ -1,0 +1,20 @@
+{
+  "profiles": {
+    "Help": {
+      "commandName": "Project",
+      "commandLineArgs": "-h"
+    },
+    "Version": {
+      "commandName": "Project",
+      "commandLineArgs": "--version"
+    },
+    "k2700": {
+      "commandName": "Project",
+      "commandLineArgs": "--instrument K2700"
+    },
+    "k7510": {
+      "commandName": "Project",
+      "commandLineArgs": "--instrument K7510"
+    }
+  }
+}

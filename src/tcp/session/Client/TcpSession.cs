@@ -258,7 +258,7 @@ public partial class TcpSession : ObservableObject, IDisposable
     /// <returns>   A string. </returns>
     private string BuildReply( byte[] buffer, int receivedCount, bool trimEnd )
     {
-        int replyLength = receivedCount - (trimEnd ? this._readTermination.Length : 0);
+        int replyLength = receivedCount - (trimEnd ? this.ReadTermination.Length : 0);
         return replyLength > 0
             ? Encoding.ASCII.GetString( buffer, 0, replyLength )
             : string.Empty;
@@ -447,7 +447,7 @@ public partial class TcpSession : ObservableObject, IDisposable
                 int receivedCount = await this._netStream.ReadAsync( buffer, 0, byteCount, ct );
                 if ( receivedCount > 0 ) _ = sb.Append( Encoding.ASCII.GetString( buffer, 0, receivedCount ) );
             }
-            replyLength = sb.Length - (trimEnd ? this._readTermination.Length : 0);
+            replyLength = sb.Length - (trimEnd ? this.ReadTermination.Length : 0);
         }
         return replyLength > 0
             ? sb.ToString( 0, replyLength )

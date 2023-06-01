@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33110.190
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "`items", "`items", "{8B4FEC3B-046C-4901-A752-CA942E7AF535}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "`build", "`build", "{8B4FEC3B-046C-4901-A752-CA942E7AF535}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cc.isr.Iot.Tcp.Session", "tcp\session\cc.isr.Iot.Tcp.Session.csproj", "{A892E8DC-BEC9-43A3-BE8F-97B80B0AC107}"
 EndProject

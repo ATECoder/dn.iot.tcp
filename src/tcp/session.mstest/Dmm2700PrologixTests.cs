@@ -16,6 +16,7 @@ public class Dmm2700PrologixTests
         string command = "*IDN?";
         bool trimEnd = true;
         session.Connect( true, command, ref identity, trimEnd );
+        Assert.IsTrue( identity.Contains( "2700" ) );
         session.SendTimeout = TimeSpan.FromMilliseconds( 1000 );
         int count = repeatCount;
         while ( repeatCount > 0 )

@@ -8,9 +8,9 @@
       "commandName": "Project",
       "commandLineArgs": "--version"
     },
-    "k2700": {
+    "k2700P": {
       "commandName": "Project",
-      "commandLineArgs": "--instrument K2700"
+      "commandLineArgs": "--instrument K2700P"
     },
     "k7510": {
       "commandName": "Project",

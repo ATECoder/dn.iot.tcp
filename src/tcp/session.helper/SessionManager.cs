@@ -161,11 +161,20 @@ public static class SessionManager
     /// <returns>   The device asynchronous. </returns>
     private static string QueryDeviceAsync( TcpSession session, string command, int byteCount, TimeSpan readDelay, bool trimEnd )
     {
+        Task<string>? task= null;
         try
         {
-            var task = session.QueryLineAsync( command, byteCount, readDelay, trimEnd, CancellationTokenSource );
+            task = session.QueryLineAsync( command, byteCount, readDelay, trimEnd, CancellationTokenSource );
             task.Wait( CancellationTokenSource.Token );
             return task.Result;
+        }
+        catch ( OperationCanceledException e )
+        {
+            if ( task is not null )
+                Console.WriteLine( "{0}: The wait has been canceled. Task status: {1:G}",
+                                  e.GetType().Name, task?.Status );
+            Thread.Sleep( 100 );
+            Console.WriteLine( "After sleeping, the task status:  {0:G}", task?.Status );
         }
         catch ( ApplicationException ex )
         {

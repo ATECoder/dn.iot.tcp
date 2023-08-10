@@ -1,4 +1,8 @@
+using System.Net;
+using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using System.Numerics;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -10,6 +14,8 @@ namespace cc.isr.Iot.Tcp.Client;
 /// <remarks>   2022-11-14. </remarks>
 public partial class TcpSession : ObservableObject, IDisposable
 {
+
+    #region " construction and cleanup "
 
     /// <summary>   Constructor. </summary>
     /// <remarks>   2022-11-14. </remarks>
@@ -47,6 +53,8 @@ public partial class TcpSession : ObservableObject, IDisposable
             this._tcpClient?.Dispose();
         }
     }
+
+    #endregion
 
     #region " tcp client and stream "
 
@@ -124,10 +132,21 @@ public partial class TcpSession : ObservableObject, IDisposable
     /// <summary>   Determines if we can connect. </summary>
     /// <remarks>   2022-11-18. </remarks>
     /// <returns>   True if we can connect, false if not. </returns>
-    public bool CanConnect()
-    {
-        return this._tcpClient is null || this._netStream is null || this._tcpClient.Client is null;
-    }
+    public bool CanConnect => this._tcpClient is null || this._netStream is null
+                              || this._tcpClient.Client is null || ! this.Connected;
+
+    /// <summary>   Gets the connected status of the session after the last I/O. </summary>
+    /// <remarks>
+    /// 2023-07-13. <para>
+    /// The Connected property gets the connection state of the Client socket as of the last I/O
+    /// operation. When it returns false, the Client socket was either never connected, or is no
+    /// longer connected. Because the Connected property only reflects the state of the connection as
+    /// of the most recent operation, you should attempt to send or receive a message to determine
+    /// the current state. After the message send fails, this property no longer returns true. Note
+    /// that this behavior is by design. </para>
+    /// </remarks>
+    /// <returns>   True if it connected; otherwise, false. </returns>
+    public bool Connected => this._tcpClient?.Connected ?? false;
 
     /// <summary>   Asynchronously start a connection process. </summary>
     /// <remarks>   2022-11-18. </remarks>
@@ -191,7 +210,6 @@ public partial class TcpSession : ObservableObject, IDisposable
             System.Diagnostics.Debug.WriteLine( identity );
         }
     }
-
 
     /// <summary>
     /// Opens a new session and returns the instrument identity.
@@ -566,6 +584,40 @@ public partial class TcpSession : ObservableObject, IDisposable
     /// <value> Any leftover message in the stream. </value>
     public string? Leftover { get; private set; }
 
-#endregion
+    #endregion
+
+    #region " listeners "
+
+    /// <summary>   Enumerates the listeners in this collection. </summary>
+    /// <remarks>   2023-08-10. 
+    /// This does finds neither Prologix or LXI instruments. </remarks>
+    /// <param name="portToCheck">  The port to check. </param>
+    /// <returns>
+    /// An enumerator that allows foreach to be used to process the listeners in this collection.
+    /// </returns>
+    public static IEnumerable<IPEndPoint> EnumerateListeners( int portToCheck )
+    {
+
+        IPGlobalProperties ipProperties = IPGlobalProperties.GetIPGlobalProperties();
+        IPEndPoint[] activeListeners = ipProperties.GetActiveTcpListeners();
+        activeListeners = ipProperties.GetActiveUdpListeners();
+        List<IPEndPoint> portListeners = new();
+        foreach ( var listener in activeListeners )
+        {
+            if ( listener.Port == portToCheck )
+            {
+                portListeners.Add( listener );
+                Console.WriteLine( $"Server is listening on port {listener.Port}" );
+                Console.WriteLine( $"Local address: {listener.Address}" );
+                Console.WriteLine( $"State: {listener.AddressFamily}" );
+                Console.WriteLine();
+            }
+        }
+        return portListeners;
+
+    }
+
+    #endregion
 
 }
+

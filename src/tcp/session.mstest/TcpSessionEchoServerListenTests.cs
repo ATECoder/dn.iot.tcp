@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Net;
 
 namespace cc.isr.Iot.Tcp.Session.MSTest;
 
@@ -17,7 +18,7 @@ public class TcpSessionEchoServerListenTests
     {
         try
         {
-            string methodFullName =  $"{testContext.FullyQualifiedTestClassName}.{System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType?.Name}";
+            string methodFullName = $"{testContext.FullyQualifiedTestClassName}.{System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType?.Name}";
             Console.WriteLine( methodFullName );
             _classTestContext = testContext;
             System.Diagnostics.Debug.WriteLine( $"{_classTestContext.FullyQualifiedTestClassName}.{System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType?.Name} Tester" );
@@ -58,7 +59,7 @@ public class TcpSessionEchoServerListenTests
     {
         if ( _server is not null )
         {
-            if ( _server.Listening)
+            if ( _server.Listening )
             {
                 _server.Stop();
                 _ = (_listenTask?.Wait( 100 ));
@@ -98,7 +99,7 @@ public class TcpSessionEchoServerListenTests
     /// <param name="repeatCount">  Number of repeats. </param>
     private static void AssertIdentityShouldQuery( string ipv4Address, int? portNumber, int repeatCount )
     {
-        using TcpSession session = new ( ipv4Address, portNumber.GetValueOrDefault(13000) );
+        using TcpSession session = new( ipv4Address, portNumber.GetValueOrDefault( 13000 ) );
         string identity = string.Empty;
         string command = "*IDN?";
         bool trimEnd = true;
@@ -109,7 +110,7 @@ public class TcpSessionEchoServerListenTests
         {
             repeatCount--;
             string response = string.Empty;
-            _ = session.QueryLine( command, 1024 , ref response, trimEnd ); 
+            _ = session.QueryLine( command, 1024, ref response, trimEnd );
             Assert.AreEqual( identity, response, $"@count = {count - repeatCount}" );
         }
     }
@@ -120,6 +121,24 @@ public class TcpSessionEchoServerListenTests
     public void IdentityShouldQuery()
     {
         int count = 42;
-        AssertIdentityShouldQuery(_ipv4Address!, _portNumber, count );
+        AssertIdentityShouldQuery( _ipv4Address!, _portNumber, count );
+    }
+
+    /// <summary>   (Unit Test Method) enumerate prologix listeners. </summary>
+    /// <remarks>   2023-08-10. 
+    /// Enumerating the listenrs does not see the Prologix device. </remarks>
+    [TestMethod]
+    public void EnumeratePrologixListeners()
+    {
+        int portToCheck = 1234;
+        IEnumerable<IPEndPoint> listeners = cc.isr.Iot.Tcp.Client.TcpSession.EnumerateListeners( portToCheck );
+        foreach ( var listener in listeners )
+        {
+            Console.WriteLine( $"Server is listening on port {listener.Port}" );
+            Console.WriteLine( $"Local address: {listener.Address}" );
+            Console.WriteLine( $"State: {listener.AddressFamily}" );
+            Console.WriteLine();
+        }
     }
 }
+

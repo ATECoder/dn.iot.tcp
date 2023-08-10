@@ -1,3 +1,4 @@
+using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 
@@ -14,6 +15,11 @@ public enum InstrumentId
 /// <remarks>   2023-05-31. </remarks>
 public static class SessionManager
 {
+
+    const int _prologixPortNo = 1234;
+
+    const int _prologixWaitInterval = 5;
+
     private static readonly Dictionary<string, (int ReadAfterWriteDelay, int InterQqueryDelay, string IPAddress, int PortNumber)> _instrumentInfo;
 
     /// <summary>   Gets the cancellation token source. </summary>
@@ -45,7 +51,7 @@ public static class SessionManager
     /// <param name="instrumentId">         Identifier for the instrument. </param>
     /// <param name="connectionTimeout">    The connection timeout. </param>
     /// <returns>   The identity. </returns>
-    public static string QueryIdentity( InstrumentId instrumentId, TimeSpan connectionTimeout )
+    public static string QueryIdentity( InstrumentId instrumentId, TimeSpan connectionTimeout, bool useAsync )
     {
 
         string command = "*IDN?";
@@ -57,31 +63,151 @@ public static class SessionManager
         int portNumber = _instrumentInfo[instrument].PortNumber;
         if ( !Paping( ipAddress , portNumber, (int)connectionTimeout.TotalMilliseconds) )
         {
-            QueryInfo = $"Attempt to connect to {instrument} at {ipAddress}:{portNumber} aborted after {connectionTimeout.TotalMilliseconds:0}ms";
-            return string.Empty;
+            QueryInfo = $"Attempt to ping {instrument} at {ipAddress}:{portNumber} aborted after {connectionTimeout.TotalMilliseconds:0}ms";
+            return QueryInfo + "\n";
         }
 
         QueryInfo = $"{instrument} Delays: Read: {readAfterWriteDelay.TotalMilliseconds:0}ms; Write: {interQueryDelayMs}ms";
 
-        System.Text.StringBuilder builder = new();
-        using var session = new TcpSession( ipAddress, portNumber );
+        using TcpSession session = new( ipAddress, portNumber );
+        session.Connect();
 
-        string identity = string.Empty;
-        session.Connect( true, command, ref identity, true );
-        _ = builder.Append( $"a: {identity}\n" );
+        if ( !session.Connected )
+        {
+            throw new InvalidOperationException( $"Connection failed at {ipAddress}:{portNumber}" );
+        }
 
-        string response = QueryDevice( session, command, 256, true );
-        _ = builder.Append( $"b: {response}\n" );
+        try
+        {
 
-        if ( interQueryDelayMs > 0 ) System.Threading.Thread.Sleep( interQueryDelayMs );
-        response = QueryDevice( session, command, 256, true );
-        _ = builder.Append( $"c: {response}\n" );
+            if ( portNumber == _prologixPortNo )
+            {
 
-        if ( interQueryDelayMs > 0 ) System.Threading.Thread.Sleep( interQueryDelayMs );
-        response = QueryDevice( session, command, 256, true );
-        _ = builder.Append( $"d: {response}\n" );
+                /* set auto read after write
+                   Prologix GPIB-ETHERNET controller can be configured to automatically address
+                   instruments to talk after sending them a command in order to read their response. The
+                   feature called, Read-After-Write, saves the user from having to issue read commands
+                   repeatedly. */
 
-        return builder.ToString();
+                command = "++auto 1";
+
+                /* send the command, which may cause Query Unterminated because we are setting the device to talk
+                   where there is nothing to talk. */
+
+                session.WriteLine( command );
+
+                // wait for the command to process.
+
+                Thread.Sleep( _prologixWaitInterval );
+
+                // disable front panel operation of the currently addressed instrument.
+
+                session.WriteLine( "++llo" );
+
+                Thread.Sleep( _prologixWaitInterval );
+
+                /* clear errors if any so as to leave the instrument without errors.
+                   here we add *OPC? to prevent the query unterminated error. */
+
+                session.WriteLine( "*CLS; *OPC?" );
+                Thread.Sleep( _prologixWaitInterval );
+                string reply = string.Empty;
+                int readCount = session.Read( 1024, ref reply, true );
+
+                // note the the GPIB-Lan device appends CR and LF character and we are trimming only the LF.
+
+                if ( 2 != readCount )
+                {
+                    throw new InvalidOperationException( "Operation completed reply of a single character is expected" );
+                }
+
+                reply.TrimEnd( '\r' );
+
+                if ( !string.Equals( reply, "1"))
+                {
+                    throw new InvalidOperationException( "Operation completed reply is expected" );
+                }
+
+            }
+
+            System.Text.StringBuilder builder = new();
+
+            string identity = string.Empty;
+
+            command = "*IDN?";
+
+            if ( useAsync  )
+            {
+
+                string response = QueryDeviceAsync( session, command, 256, readAfterWriteDelay, true );
+                _ = builder.Append( $"b: {response}\n" );
+
+                if ( interQueryDelayMs > 0 ) System.Threading.Thread.Sleep( interQueryDelayMs );
+                response = QueryDeviceAsync( session, command, 256, readAfterWriteDelay, true );
+                _ = builder.Append( $"c: {response}\n" );
+
+                if ( interQueryDelayMs > 0 ) System.Threading.Thread.Sleep( interQueryDelayMs );
+                response = QueryDeviceAsync( session, command, 256, readAfterWriteDelay, true );
+                _ = builder.Append( $"d: {response}\n" );
+            }
+            else
+            {
+
+                string response = QueryDevice( session, command, 256, true );
+                _ = builder.Append( $"b: {response}\n" );
+
+                if ( interQueryDelayMs > 0 ) System.Threading.Thread.Sleep( interQueryDelayMs );
+                response = QueryDevice( session, command, 256, true );
+                _ = builder.Append( $"c: {response}\n" );
+
+                if ( interQueryDelayMs > 0 ) System.Threading.Thread.Sleep( interQueryDelayMs );
+                response = QueryDevice( session, command, 256, true );
+                _ = builder.Append( $"d: {response}\n" );
+            }
+
+            return builder.ToString();
+
+        }
+        catch ( Exception )
+        {
+
+            throw;
+        }
+        finally
+        {
+            if ( session.Connected )
+            {
+
+                /* clear errors if any so as to leave the instrument without errors.
+                   here we add *OPC? to prevent the query unterminated error. */
+                session.WriteLine( "*CLS; *OPC?" );
+                Thread.Sleep( _prologixWaitInterval );
+                string reply = string.Empty;
+                _ = session.Read( 1024, ref reply, true );
+
+                if ( portNumber == _prologixPortNo )
+                {
+
+                    // enable front panel operation of the currently addressed instrument.
+
+                    _ = session.WriteLine( "++loc" );
+
+                    Thread.Sleep( _prologixWaitInterval );
+
+                    //  send the command to set the interface to listen with read after write set to false.
+
+                    _ = session.WriteLine( "++auto 0" );
+
+                    Thread.Sleep( _prologixWaitInterval );
+
+                }
+
+                session.Disconnect();
+
+            }
+
+        }
+
     }
 
     /// <summary>   Queries identity asynchronously. </summary>
@@ -102,7 +228,7 @@ public static class SessionManager
         if ( !Paping( ipAddress, portNumber, ( int ) connectionTimeout.TotalMilliseconds ) )
         {
             QueryInfo = $"Attempt to connect to {instrument} at {ipAddress}:{portNumber} aborted after {connectionTimeout.TotalMilliseconds:0}ms";
-            return string.Empty;
+            return QueryInfo;
         }
 
 

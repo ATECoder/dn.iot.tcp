@@ -26,11 +26,11 @@ Random rnd = new( DateTime.Now.Second );
 while ( !Console.KeyAvailable )
 {
     if ( rnd.NextDouble() > 0.5 )
-        Console.Write( SessionManager.QueryIdentity( instrumentId, TimeSpan.FromMilliseconds( 10 ) ) );
+        Console.Write( SessionManager.QueryIdentity( instrumentId, TimeSpan.FromMilliseconds( 100 ), false ) );
     else
     {
         Console.WriteLine( "async:" );
-        Console.Write( SessionManager.QueryIdentityAsync( instrumentId, TimeSpan.FromMilliseconds( 10 ) ) );
+        Console.Write( SessionManager.QueryIdentity( instrumentId, TimeSpan.FromMilliseconds( 100 ), true ) );
     }
     Thread.Sleep( 100 );
 }

@@ -245,7 +245,6 @@ public partial class TcpSession : ObservableObject, IDisposable
         return this._tcpClient is not null && this._netStream is not null && this._tcpClient.Client is not null;
     }
 
-
     /// <summary>   Flushes the TCP Stream. </summary>
     /// <remarks>   2022-11-14. </remarks>
     [RelayCommand( CanExecute = nameof( CanDisconnect ) )]

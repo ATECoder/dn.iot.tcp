@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0-windows</TargetFramework>
+    <OutputType>WinExe</OutputType>
+    <UseWPF>true</UseWPF>
+
+    <LangVersion>latest</LangVersion>
+
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <!-- Assembly Info -->
+    <RootNamespace>cc.isr.Iot.Tcp.Client.Wpf.Concept</RootNamespace>
+
+    <IsPackable>false</IsPackable>
+
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\client.helper\cc.isr.Iot.Tcp.Client.Helper.csproj" />
+  </ItemGroup>
+
+</Project>

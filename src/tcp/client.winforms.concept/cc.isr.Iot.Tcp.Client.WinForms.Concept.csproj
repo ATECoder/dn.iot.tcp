@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0-windows</TargetFramework>
+    <OutputType>WinExe</OutputType>
+    <UseWindowsForms>true</UseWindowsForms>
+
+    <LangVersion>latest</LangVersion>
+
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <!-- Assembly Info -->
+    <RootNamespace>cc.isr.Iot.Tcp.Client.WinForms.Concept</RootNamespace>
+
+    <IsPackable>false</IsPackable>
+
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\client.helper\cc.isr.Iot.Tcp.Client.Helper.csproj" />
+  </ItemGroup>
+
+</Project>

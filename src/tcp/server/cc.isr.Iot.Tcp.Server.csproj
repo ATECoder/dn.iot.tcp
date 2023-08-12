@@ -12,9 +12,7 @@
     <ApplicationTitle>cc.isr.Iot.Tcp.Server</ApplicationTitle>
     <ApplicationId>cc.isr.iot.tcp.server</ApplicationId>
 
-    <!-- Versions -->
-    <ApplicationDisplayVersion>1.0.8551</ApplicationDisplayVersion>
-    <ApplicationVersion>1</ApplicationVersion>
+	<IsPackable>false</IsPackable>
 
   </PropertyGroup>
 

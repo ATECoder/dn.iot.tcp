@@ -1,0 +1,45 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <IsTestProject>true</IsTestProject>    
+    
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <!-- Assembly Info -->
+    <RootNamespace>cc.isr.Iot.Tcp.Client.MSTest</RootNamespace>
+    <AssemblyName>cc.isr.Iot.Tcp.Client.MSTest</AssemblyName>
+
+    <IsPackable>false</IsPackable>
+
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.0" />
+    <PackageReference Include="MSTest.TestAdapter" version="3.1.1" />
+    <PackageReference Include="MSTest.TestFramework" Version="3.1.1" />
+    <PackageReference Include="coverlet.collector" Version="6.0.0" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <DefineConstants>$(DefineConstants);MYPROJREF;</DefineConstants>
+  </PropertyGroup>
+
+  <Choose>
+    <When Condition="$(DefineConstants.Contains(';PROJREF;')) OR $(DefineConstants.Contains(';MYPROJREF;'))">
+      <ItemGroup>
+		<ProjectReference Include="..\server\cc.isr.Iot.Tcp.Server.csproj" />
+		<ProjectReference Include="..\client\cc.isr.Iot.Tcp.Client.csproj" />
+      </ItemGroup>
+    </When>
+    <Otherwise>
+      <ItemGroup>
+        <PackageReference Include="cc.isr.Iot.Tcp.Server" Version="1.0.0" />
+        <PackageReference Include="cc.isr.Iot.Tcp.Client" Version="1.0.0" />
+      </ItemGroup>
+    </Otherwise>
+  </Choose>
+
+</Project>

@@ -1,0 +1,74 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <OutputType>Library</OutputType>
+    <LangVersion>latest</LangVersion>
+
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <!-- Assembly Info -->
+    <RootNamespace>cc.isr.Iot.Tcp.Client</RootNamespace>
+    <AssemblyName>cc.isr.Iot.Tcp.Client.Scpi</AssemblyName>
+    <ApplicationTitle>cc.isr.Iot.Tcp.Client.Scpi</ApplicationTitle>
+    <ApplicationId>cc.isr.iot.tcp.client.scpi</ApplicationId>
+
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+
+    <!-- Coding -->
+    <OptionExplicit>On</OptionExplicit>
+    <OptionCompare>Binary</OptionCompare>
+    <OptionStrict>On</OptionStrict>
+    <OptionInfer>Off</OptionInfer>
+
+    <!-- Signature -->
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\..\items\keyPair.snk</AssemblyOriginatorKeyFile>
+    <DelaySign>false</DelaySign>
+
+    <!-- NuGet -->
+    <IsPackable>true</IsPackable>
+    <PackageId>cc.isr.Iot.Tcp.Client.Scpi</PackageId>
+    <Description>An IOT TCP Client for control and communication of LXI SCPI Instruments.</Description>
+    <PackageTags>IOT TCP LXI SCPI Instrument</PackageTags>
+    <PackageOutputPath>C:\my\nuget</PackageOutputPath>
+    <PackageReadmeFile>readme.md</PackageReadmeFile>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+
+    <!-- Documentation -->
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="NewFolder\**" />
+    <EmbeddedResource Remove="NewFolder\**" />
+    <None Remove="NewFolder\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <DefineConstants>$(DefineConstants);MYPROJREF;</DefineConstants>
+  </PropertyGroup>
+
+  <Choose>
+    <When Condition="$(DefineConstants.Contains(';PROJREF;')) OR $(DefineConstants.Contains(';MYPROJREF;'))">
+      <ItemGroup>
+		<ProjectReference Include="..\client\cc.isr.Iot.Tcp.Client.csproj" />
+      </ItemGroup>
+    </When>
+    <Otherwise>
+      <ItemGroup>
+        <PackageReference Include="cc.isr.Iot.Tcp.Client" Version="1.0.0" />
+      </ItemGroup>
+    </Otherwise>
+  </Choose>
+
+</Project>

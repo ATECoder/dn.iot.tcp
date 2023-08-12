@@ -4,20 +4,24 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.4.33110.190
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "`build", "`build", "{8B4FEC3B-046C-4901-A752-CA942E7AF535}"
+	ProjectSection(SolutionItems) = preProject
+		items\version.build.bat = items\version.build.bat
+		items\version.build.props = items\version.build.props
+	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cc.isr.Iot.Tcp.Session", "tcp\session\cc.isr.Iot.Tcp.Session.csproj", "{A892E8DC-BEC9-43A3-BE8F-97B80B0AC107}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cc.isr.Iot.Tcp.Client", "tcp\client\cc.isr.Iot.Tcp.Client.csproj", "{A892E8DC-BEC9-43A3-BE8F-97B80B0AC107}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cc.isr.Iot.Tcp.Server", "tcp\server\cc.isr.Iot.Tcp.Server.csproj", "{DEEE1C7A-2F00-43E0-9332-1893A825203E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cc.isr.Iot.Tcp.Session.MSTest", "tcp\session.MSTest\cc.isr.Iot.Tcp.Session.MSTest.csproj", "{56F18B1C-9A61-47D8-857E-4570C8849FAB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cc.isr.Iot.Tcp.Client.MSTest", "tcp\client.MSTest\cc.isr.Iot.Tcp.Client.MSTest.csproj", "{56F18B1C-9A61-47D8-857E-4570C8849FAB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cc.isr.Iot.Tcp.Session.Helper", "tcp\session.helper\cc.isr.Iot.Tcp.Session.Helper.csproj", "{04FE2DDE-8E3B-4370-9D68-A67E35E4CE62}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cc.isr.Iot.Tcp.Client.Helper", "tcp\client.helper\cc.isr.Iot.Tcp.Client.Helper.csproj", "{04FE2DDE-8E3B-4370-9D68-A67E35E4CE62}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cc.isr.Iot.Tcp.Session.ConsoleApp", "tcp\session.console\cc.isr.Iot.Tcp.Session.ConsoleApp.csproj", "{12E7D7ED-D4AA-40D1-A9CB-E14DFC35636E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cc.isr.Iot.Tcp.Client.ConsoleApp", "tcp\client.console\cc.isr.Iot.Tcp.Client.ConsoleApp.csproj", "{12E7D7ED-D4AA-40D1-A9CB-E14DFC35636E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cc.isr.Iot.Tcp.Session.Wpf.Concept", "tcp\wpf.concept\cc.isr.Iot.Tcp.Session.Wpf.Concept.csproj", "{15AA3D60-6838-4693-91CC-6D757A28A309}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cc.isr.Iot.Tcp.Client.Wpf.Concept", "tcp\client.wpf.concept\cc.isr.Iot.Tcp.Client.Wpf.Concept.csproj", "{15AA3D60-6838-4693-91CC-6D757A28A309}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cc.isr.Iot.Tcp.Session.WinForms.Concept", "tcp\winforms.concept\cc.isr.Iot.Tcp.Session.WinForms.Concept.csproj", "{31DFFFFF-38F7-4D59-8BC6-441BE6727AFE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cc.isr.Iot.Tcp.Client.WinForms.Concept", "tcp\client.winforms.concept\cc.isr.Iot.Tcp.Client.WinForms.Concept.csproj", "{31DFFFFF-38F7-4D59-8BC6-441BE6727AFE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "`docs", "`docs", "{A68C6B76-76EF-4BF0-9964-9D20ECBD3C0F}"
 	ProjectSection(SolutionItems) = preProject
@@ -30,9 +34,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "`docs", "`docs", "{A68C6B76
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "~framework", "~framework", "{D3FAF48A-5459-4A00-BAEA-4D3A9E0AD4BF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cc.isr.Iot.Tcp.Ieee488", "tcp\Ieee488\cc.isr.Iot.Tcp.Ieee488.csproj", "{E92DC5DA-5C13-4D03-8926-F666D23407E8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cc.isr.Iot.Tcp.Client.Ieee488", "tcp\client.ieee488\cc.isr.Iot.Tcp.Client.Ieee488.csproj", "{E92DC5DA-5C13-4D03-8926-F666D23407E8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cc.isr.Iot.Tcp.Scpi", "tcp\Scpi\cc.isr.Iot.Tcp.Scpi.csproj", "{F5A806C0-A1AC-482D-9E66-68B2FBB89961}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cc.isr.Iot.Tcp.Client.Scpi", "tcp\client.scpi\cc.isr.Iot.Tcp.Client.Scpi.csproj", "{F5A806C0-A1AC-482D-9E66-68B2FBB89961}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -68,7 +68,11 @@ public partial class TcpSession : ObservableObject, IConnectable
     /// <summary>   Gets or sets the IPv4 address. </summary>
     /// <value> The IP address. </value>
     [ObservableProperty]
-    private string _iPv4Address; 
+    private string _iPv4Address;
+
+    /// <summary>   Gets the socket address. </summary>
+    /// <value> The socket address. </value>
+    public string SocketAddress => $"{this.IPv4Address}:{this.PortNumber}";
 
     /// <summary>   Gets or sets the receive timeout. </summary>
     /// <remarks> Default value = 0 ms.</remarks>
@@ -114,47 +118,6 @@ public partial class TcpSession : ObservableObject, IConnectable
             }
         }
     }
-
-    /// <summary>   Opens a new session. </summary>
-    /// <remarks>   2022-11-14. </remarks>
-    [RelayCommand( CanExecute = nameof(this.CanConnect )) ]
-    public void Connect()
-    {
-
-        ConnectionChangingEventArgs e = new();
-        this.OnConnectionChanging( e );
-        if ( !e.Cancel )
-        {
-            this._tcpClient = new TcpClient( this.IPv4Address, this.PortNumber );
-
-            // notice that the Tcp Client is connected to the end point at this point
-            // even though the .Connect command was not issued.
-
-            this._netStream = this._tcpClient.GetStream();
-
-            ConnectionChangedEventArgs args = new( this.Connected);
-            this.OnConnectionChanged( args );
-        }
-    }
-
-    /// <summary>   Determines if we can connect. </summary>
-    /// <remarks>   2022-11-18. </remarks>
-    /// <returns>   True if we can connect, false if not. </returns>
-    public bool CanConnect => this._tcpClient is null || this._netStream is null
-                              || this._tcpClient.Client is null || ! this.Connected;
-
-    /// <summary>   Gets the connected status of the session after the last I/O. </summary>
-    /// <remarks>
-    /// 2023-07-13. <para>
-    /// The Connected property gets the connection state of the Client socket as of the last I/O
-    /// operation. When it returns false, the Client socket was either never connected, or is no
-    /// longer connected. Because the Connected property only reflects the state of the connection as
-    /// of the most recent operation, you should attempt to send or receive a message to determine
-    /// the current state. After the message send fails, this property no longer returns true. Note
-    /// that this behavior is by design. </para>
-    /// </remarks>
-    /// <returns>   True if it connected; otherwise, false. </returns>
-    public bool Connected => this._tcpClient?.Connected ?? false;
 
     /// <summary>   Asynchronously start a connection process. </summary>
     /// <remarks>   2022-11-18. </remarks>
@@ -234,32 +197,6 @@ public partial class TcpSession : ObservableObject, IConnectable
         {
             _ = this.QueryLine( queryMessage, 128, ref identity, trimEnd );
         }
-    }
-
-    /// <summary>   Disconnects this object. </summary>
-    /// <remarks>   2022-11-14. </remarks>
-    [RelayCommand( CanExecute = nameof( CanDisconnect ) )]
-    public void Disconnect()
-    {
-        ConnectionChangingEventArgs e = new( this.Connected, false );
-        this.OnConnectionChanging( e );
-        if ( !e.Cancel )
-        {
-
-            this._netStream?.Close();
-            this._tcpClient?.Close();
-
-            ConnectionChangedEventArgs args = new( this.Connected );
-            this.OnConnectionChanged( args );
-        }
-    }
-
-    /// <summary>   Determine if we can disconnect. </summary>
-    /// <remarks>   2022-11-18. </remarks>
-    /// <returns>   True if we can disconnect, false if not. </returns>
-    public bool CanDisconnect()
-    {
-        return this._tcpClient is not null && this._netStream is not null && this._tcpClient.Client is not null;
     }
 
     /// <summary>   Flushes the TCP Stream. </summary>
@@ -599,9 +536,6 @@ public partial class TcpSession : ObservableObject, IConnectable
     /// <summary>   Gets the last leftover response. </summary>
     /// <value> Any leftover message in the stream. </value>
     public string? Leftover { get; private set; }
-    bool IConnectable.Connected { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-    bool IConnectable.CanConnect { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-    bool IConnectable.CanDisconnect { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
     #endregion
 
@@ -662,6 +596,70 @@ public partial class TcpSession : ObservableObject, IConnectable
         var handler = this.ConnectionChanging;
         handler?.Invoke( this, e );
     }
+
+    /// <summary>   Opens a new session. </summary>
+    /// <remarks>   2022-11-14. </remarks>
+    [RelayCommand( CanExecute = nameof( this.CanConnect ) )]
+    public void Connect()
+    {
+
+        ConnectionChangingEventArgs e = new();
+        this.OnConnectionChanging( e );
+        if ( !e.Cancel )
+        {
+            this._tcpClient = new TcpClient( this.IPv4Address, this.PortNumber );
+
+            // notice that the Tcp Client is connected to the end point at this point
+            // even though the .Connect command was not issued.
+
+            this._netStream = this._tcpClient.GetStream();
+
+            ConnectionChangedEventArgs args = new( this.Connected );
+            this.OnConnectionChanged( args );
+        }
+    }
+
+    /// <summary>   Determines if we can connect. </summary>
+    /// <remarks>   2022-11-18. </remarks>
+    /// <returns>   True if we can connect, false if not. </returns>
+    public bool CanConnect => this._tcpClient is null || this._netStream is null
+                              || this._tcpClient.Client is null || !this.Connected;
+
+    /// <summary>   Gets the connected status of the session after the last I/O. </summary>
+    /// <remarks>
+    /// 2023-07-13. <para>
+    /// The Connected property gets the connection state of the Client socket as of the last I/O
+    /// operation. When it returns false, the Client socket was either never connected, or is no
+    /// longer connected. Because the Connected property only reflects the state of the connection as
+    /// of the most recent operation, you should attempt to send or receive a message to determine
+    /// the current state. After the message send fails, this property no longer returns true. Note
+    /// that this behavior is by design. </para>
+    /// </remarks>
+    /// <returns>   True if it connected; otherwise, false. </returns>
+    public bool Connected => this._tcpClient?.Connected ?? false;
+
+    /// <summary>   Disconnects this object. </summary>
+    /// <remarks>   2022-11-14. </remarks>
+    [RelayCommand( CanExecute = nameof( CanDisconnect ) )]
+    public void Disconnect()
+    {
+        ConnectionChangingEventArgs e = new( this.Connected, false );
+        this.OnConnectionChanging( e );
+        if ( !e.Cancel )
+        {
+
+            this._netStream?.Close();
+            this._tcpClient?.Close();
+
+            ConnectionChangedEventArgs args = new( this.Connected );
+            this.OnConnectionChanged( args );
+        }
+    }
+
+    /// <summary>   Determine if we can disconnect. </summary>
+    /// <remarks>   2022-11-18. </remarks>
+    /// <returns>   True if we can disconnect, false if not. </returns>
+    public bool CanDisconnect => this._tcpClient is not null && this._netStream is not null && this._tcpClient.Client is not null;
 
     #endregion
 

@@ -6,18 +6,18 @@ public interface IConnectable: IDisposable
 {
     /// <summary>   Gets or sets a value indicating whether the connected. </summary>
     /// <value> True if connected, false if not. </value>
-    public bool Connected { get; set; }
+    public bool Connected { get; }
 
     /// <summary>   Gets or sets a value indicating whether we can connect. </summary>
     /// <value> True if we can connect, false if not. </value>
-    public bool CanConnect { get; set; }
+    public bool CanConnect { get; }
 
     /// <summary>   Opens the connection. </summary>
     public void Connect();
 
     /// <summary>   Gets or sets a value indicating whether we can disconnect. </summary>
     /// <value> True if we can disconnect, false if not. </value>
-    public bool CanDisconnect { get; set; }
+    public bool CanDisconnect { get; }
 
     /// <summary>   Closes the connection. </summary>
     public void Disconnect();

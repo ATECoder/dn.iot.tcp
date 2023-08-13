@@ -15,10 +15,8 @@ public enum InstrumentId
 /// <remarks>   2023-05-31. </remarks>
 public static class SessionManager
 {
-
-    const int _prologixPortNo = 1234;
-
-    const int _prologixWaitInterval = 5;
+    private const int _prologixPortNo = 1234;
+    private const int _prologixWaitInterval = 5;
 
     private static readonly Dictionary<string, (int ReadAfterWriteDelay, int InterQqueryDelay, string IPAddress, int PortNumber)> _instrumentInfo;
 
@@ -54,7 +52,7 @@ public static class SessionManager
     public static string QueryIdentity( InstrumentId instrumentId, TimeSpan connectionTimeout, bool useAsync )
     {
 
-        string command = "*IDN?";
+        string command;
 
         string instrument = instrumentId == InstrumentId.None ? "Echo" : instrumentId.ToString();
         TimeSpan readAfterWriteDelay = TimeSpan.FromMilliseconds( _instrumentInfo[instrument].ReadAfterWriteDelay );
@@ -94,7 +92,7 @@ public static class SessionManager
                 /* send the command, which may cause Query Unterminated because we are setting the device to talk
                    where there is nothing to talk. */
 
-                session.WriteLine( command );
+                _ = session.WriteLine( command );
 
                 // wait for the command to process.
 
@@ -102,14 +100,14 @@ public static class SessionManager
 
                 // disable front panel operation of the currently addressed instrument.
 
-                session.WriteLine( "++llo" );
+                _ = session.WriteLine( "++llo" );
 
                 Thread.Sleep( _prologixWaitInterval );
 
                 /* clear errors if any so as to leave the instrument without errors.
                    here we add *OPC? to prevent the query unterminated error. */
 
-                session.WriteLine( "*CLS; *OPC?" );
+                _ = session.WriteLine( "*CLS; *OPC?" );
                 Thread.Sleep( _prologixWaitInterval );
                 string reply = string.Empty;
                 int readCount = session.Read( 1024, ref reply, true );
@@ -121,7 +119,7 @@ public static class SessionManager
                     throw new InvalidOperationException( "Operation completed reply of a single character is expected" );
                 }
 
-                reply.TrimEnd( '\r' );
+                _ = reply.TrimEnd( '\r' );
 
                 if ( !string.Equals( reply, "1"))
                 {
@@ -180,7 +178,7 @@ public static class SessionManager
 
                 /* clear errors if any so as to leave the instrument without errors.
                    here we add *OPC? to prevent the query unterminated error. */
-                session.WriteLine( "*CLS; *OPC?" );
+                _ = session.WriteLine( "*CLS; *OPC?" );
                 Thread.Sleep( _prologixWaitInterval );
                 string reply = string.Empty;
                 _ = session.Read( 1024, ref reply, true );

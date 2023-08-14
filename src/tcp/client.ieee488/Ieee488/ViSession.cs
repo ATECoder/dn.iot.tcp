@@ -415,7 +415,7 @@ public partial class ViSession : ObservableObject, IConnectable
             if ( this.GpibLan is not null )
             {
                 this.GpibLan.Enabled = _gpibLanPortNumber == (( TcpSession ) sender)?.PortNumber;
-                this.UsingGpibLan = true;
+                this.UsingGpibLan = this.GpibLan.Enabled;
             }
         }
         catch ( Exception ex )

@@ -14,6 +14,6 @@ public class NotifyExceptionTracer : IExceptionTracer
     public void Trace( Exception exception )
     {
         var handler = TraceException;
-        handler?.Invoke( this, new ThreadExceptionEventArgs( exception );
+        handler?.Invoke( this, new ThreadExceptionEventArgs( exception ) );
     }
 }

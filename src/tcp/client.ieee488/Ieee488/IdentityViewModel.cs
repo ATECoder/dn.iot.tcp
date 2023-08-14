@@ -76,6 +76,16 @@ public partial class IdentityViewModel: ObservableObject
 
     #endregion
 
+    #region " event handler "
+
+    private void HandlerTracerException( object sender, ThreadExceptionEventArgs e )
+    {
+        if ( e is not null && e.Exception is not null )
+            this.ErrorMessage = e.Exception.ToString();
+    }
+
+    #endregion
+
     #region " commands "
 
     /// <summary>   Determine if we can read identity. </summary>
@@ -83,7 +93,7 @@ public partial class IdentityViewModel: ObservableObject
     /// <returns>   True if we can read identity, false if not. </returns>
     public bool CanReadIdentity()
     {
-        return NetExplorer.PingPort( this.HostAddress ?? string.Empty, this.PortNumber, this.ReceiveTimeout );
+        return NetExplorer.PingPort( this.HostAddress ?? string.Empty, this.PortNumber );
     }
 
     /// <summary>   Reads the identity. </summary>
@@ -109,7 +119,10 @@ public partial class IdentityViewModel: ObservableObject
             if ( string.IsNullOrEmpty( this.HostAddress ) )
                 throw new InvalidOperationException( $"Empty host address" );
 
-            p_session = new( this.HostAddress!, this.PortNumber, new NotifyExceptionTracer() );
+            NotifyExceptionTracer exceptionTracer = new NotifyExceptionTracer();
+            exceptionTracer.TraceException += this.HandlerTracerException;
+
+            p_session = new( this.HostAddress!, this.PortNumber, exceptionTracer );
 
             // open the connection
             

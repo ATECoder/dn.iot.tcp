@@ -34,7 +34,7 @@ internal readonly struct Index : IEquatable<Index>
     /// <exception cref="ArgumentOutOfRangeException">  Thrown when one or more arguments are outside
     ///                                                 the required range. </exception>
     /// <param name="value">    The index value. it has to be zero or positive number. </param>
-    /// <param name="fromEnd">  (Optional) Indicating if the index is from the start or from the end. </param>
+    /// <param name="fromEnd">   Indicating if the index is from the start or from the end. </param>
     [MethodImpl( MethodImplOptions.AggressiveInlining )]
     public Index( int value, bool fromEnd = false )
     {

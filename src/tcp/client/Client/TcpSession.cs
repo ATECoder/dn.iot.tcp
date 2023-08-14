@@ -662,7 +662,5 @@ public partial class TcpSession : ObservableObject, IConnectable
     public bool CanDisconnect => this._tcpClient is not null && this._netStream is not null && this._tcpClient.Client is not null;
 
     #endregion
-
-
 }
 

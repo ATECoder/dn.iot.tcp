@@ -2,15 +2,17 @@
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
-    <LangVersion>latest</LangVersion>
-    <IsTestProject>true</IsTestProject>    
-    
+    <IsTestProject>true</IsTestProject>
+
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 
     <!-- Assembly Info -->
-    <RootNamespace>cc.isr.Iot.Tcp.Client</RootNamespace>
-    <AssemblyName>cc.isr.Iot.Tcp.Client.MSTest</AssemblyName>
+    <RootNamespace>cc.isr.Iot.Tcp.Client.Ieee488</RootNamespace>
+    <AssemblyName>cc.isr.Iot.Tcp.Client.Ieee488.MSTest</AssemblyName>
 
     <IsPackable>false</IsPackable>
 
@@ -30,14 +32,12 @@
   <Choose>
     <When Condition="$(DefineConstants.Contains(';PROJREF;')) OR $(DefineConstants.Contains(';MYPROJREF;'))">
       <ItemGroup>
-		<ProjectReference Include="..\server\cc.isr.Iot.Tcp.Server.csproj" />
-		<ProjectReference Include="..\client\cc.isr.Iot.Tcp.Client.csproj" />
+        <ProjectReference Include="..\client.ieee488\cc.isr.Iot.Tcp.Client.Ieee488.csproj" />
       </ItemGroup>
     </When>
     <Otherwise>
       <ItemGroup>
-        <PackageReference Include="cc.isr.Iot.Tcp.Server" Version="1.0.0" />
-        <PackageReference Include="cc.isr.Iot.Tcp.Client" Version="1.0.0" />
+        <PackageReference Include="cc.isr.Iot.Tcp.Client.Ieee488" Version="1.0.0" />
       </ItemGroup>
     </Otherwise>
   </Choose>

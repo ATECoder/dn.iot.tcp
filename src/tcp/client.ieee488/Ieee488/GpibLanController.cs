@@ -26,9 +26,9 @@ public partial class GpibLanController : ObservableObject, IDisposable
     /// <remarks>   2023-08-12. </remarks>
     /// <param name="tcpSession">               The TCP client session. </param>
     /// <param name="exceptionTracer">          The exception tracer. </param>
-    /// <param name="readTermination">          (Optional) The read termination. </param>
-    /// <param name="writeTermination">         (Optional) The write termination. </param>
-    /// <param name="readAfterWriteDelayMs">    (Optional) The read after write delay in
+    /// <param name="readTermination">           The read termination. </param>
+    /// <param name="writeTermination">          The write termination. </param>
+    /// <param name="readAfterWriteDelayMs">     The read after write delay in
     ///                                         milliseconds. </param>
     public GpibLanController( TcpSession tcpSession, IExceptionTracer exceptionTracer,
                              char readTermination = '\n', char writeTermination = '\n',
@@ -180,7 +180,7 @@ public partial class GpibLanController : ObservableObject, IDisposable
     /// issue error -420 Query Unterminated.
     /// </remarks>
     /// <param name="message">              The message. </param>
-    /// <param name="appendTermination">    (Optional, True) True to append termination. </param>
+    /// <param name="appendTermination">    (Optional) (True) True to append termination. </param>
     /// <returns>   [Long] The number of sent characters. </returns>
     public int SendToDevice( string message , bool appendTermination = true )
     {
@@ -209,15 +209,19 @@ public partial class GpibLanController : ObservableObject, IDisposable
 
     }
 
-    /// <summary>   Receives a message from the server until reaching the specified termination
-    /// or reading the specified number of characters. </summary>
-    /// <remarks>   If <see cref="ReadAfterWriteEnabled"/> is not enabled then
-    /// this method uses the <c>++read</c> command to first read the data
-    /// from the device to the controller. </remarks>
-    /// <param name="a_maxLength">     (Optional, 32767) The maximum number of bytes to read. </param>
-    /// <param name="a_trimEnd">       (Optional, true) true to return the string without the termination. </param>
+    /// <summary>
+    /// Receives a message from the server until reaching the specified termination or reading the
+    /// specified number of characters.
+    /// </summary>
+    /// <remarks>
+    /// If <see cref="ReadAfterWriteEnabled"/> is not enabled then this method uses the <c>++read</c>
+    /// command to first read the data from the device to the controller.
+    /// </remarks>
+    /// <param name="maxLength">    (Optional) (32767) The maximum number of bytes to read. </param>
+    /// <param name="trimEnd">      (Optional) (true) true to return the string without the
+    ///                             termination. </param>
     /// <returns>   The received message. </returns>
-    public string ReceiveFromDevice( int a_maxLength = 0x7FFF, bool a_trimEnd = true )
+    public string ReceiveFromDevice( int maxLength = 0x7FFF, bool trimEnd = true )
     {
 
         string reply = string.Empty;
@@ -232,7 +236,7 @@ public partial class GpibLanController : ObservableObject, IDisposable
                 _ = this.ReadFromDeviceToController();
             }
 
-            _ = this.TcpSession.Read( a_maxLength, ref reply, a_trimEnd );
+            _ = this.TcpSession.Read( maxLength, ref reply, trimEnd );
 
         }
 
@@ -241,21 +245,19 @@ public partial class GpibLanController : ObservableObject, IDisposable
 
     /// <summary>   Sends a message to the device and receives a reply. </summary>
     /// <remarks>   2023-08-12. </remarks>
-    /// <param name="a_message">            The message. </param>
-    /// <param name="appendTermination">    (true) (Optional) true to append the
-    ///                                     <see cref="WriteTermination"/> to the message. </param>
-    /// <param name="maxLength">            (Optional) (Optional, 32767) The maximum number of bytes
-    ///                                     to read. </param>
-    /// <param name="trimEnd">              (Optional) (Optional, true) true to return the string
-    ///                                     without the termination. </param>
+    /// <param name="message">              The message. </param>
+    /// <param name="appendTermination">    (Optional) (true)  true to append the <see cref="WriteTermination"/>
+    ///                                     to the message. </param>
+    /// <param name="maxLength">            (Optional) (32767) The maximum number of bytes to read. </param>
+    /// <param name="trimEnd">              (Optional) (true) true to return the string without the
+    ///                                     termination. </param>
     /// <returns>   The received message. </returns>
-    public string QueryDevice( string a_message, bool appendTermination = true, int maxLength = 0x7FFF, bool trimEnd = true )
+    public string QueryDevice( string message, bool appendTermination = true, int maxLength = 0x7FFF, bool trimEnd = true )
     {
-        return 0 < this.SendToDevice( a_message, appendTermination )
+        return 0 < this.SendToDevice( message, appendTermination )
                 ? this.ReceiveFromDevice( maxLength , trimEnd)
                 : string.Empty;
     }
-
 
     #endregion
 
@@ -357,31 +359,28 @@ public partial class GpibLanController : ObservableObject, IDisposable
 
     /// <summary>   Sets the device Status Byte to be returned on a serial poll. </summary>
     /// <remarks>
-    /// This command works only if the controller is set as a device using the ++mode command.
-    /// The status command is used to specify the device status byte to be returned when serial
-    /// polled by a GPIB controller. If the RQS bit (bit #6) of this status byte is set ) the
-    /// SRQ signal is asserted (low). After a serial poll, SRQ line is de-asserted and status byte is
-    /// set to 0. Status byte is initialized to 0 on power up.
-    /// SRQ is also de-asserted and status byte is cleared if DEVICE CLEAR (DCL) message,
-    /// or SELECTED DEVICE CLEAR (SDC) message, is received from the GPIB controller.
-    /// If the command is issued without any arguments it returns the currently specified status
-    /// byte.
-    /// SYNTAX: ++status [0-255]
-    /// Example:
+    /// This command works only if the controller is set as a device using the ++mode command. The
+    /// status command is used to specify the device status byte to be returned when serial polled by
+    /// a GPIB controller. If the RQS bit (bit #6) of this status byte is set ) the SRQ signal is
+    /// asserted (low). After a serial poll, SRQ line is de-asserted and status byte is set to 0.
+    /// Status byte is initialized to 0 on power up. SRQ is also de-asserted and status byte is
+    /// cleared if DEVICE CLEAR (DCL) message, or SELECTED DEVICE CLEAR (SDC) message, is received
+    /// from the GPIB controller. If the command is issued without any arguments it returns the
+    /// currently specified status byte. SYNTAX: ++status [0-255] Example:
     /// ++status 72 Specify serial poll status byte as 72. Since bit #6 is set, this
     ///             command will assert SRQ.
     /// ++status Query current serial poll status byte.
     /// </remarks>
-    /// <param name="a_value">   The status byte mask. </param>
-    public void StatusByteSetter( int a_value )
+    /// <param name="value">    The status byte mask. </param>
+    public void StatusByteSetter( int value )
     { 
         if ( !this.ControllerMode )
         {
-            a_value = this.Delimit(a_value, 0, 255);
-            if ( a_value != this.StatusByte )
-                _ = this.SendToController( $"++status {a_value}" );
+            value = this.Delimit(value, 0, 255);
+            if ( value != this.StatusByte )
+                _ = this.SendToController( $"++status {value}" );
         }
-        this.StatusByte = a_value;
+        this.StatusByte = value;
     }
 
     /// <summary>   Gets the device Status Byte. </summary>
@@ -398,9 +397,9 @@ public partial class GpibLanController : ObservableObject, IDisposable
     }
 
     /// <summary>   Returns the delimited integer value. </summary>
-    /// <param name="value">      [Integer] the value to delimit.</param>
-    /// <param name="minValue">   [Integer] the minimum. </param>
-    /// <param name="maxValue">   [Integer] the maximum. </param>
+    /// <param name="value">      the value to delimit.</param>
+    /// <param name="minValue">   the minimum. </param>
+    /// <param name="maxValue">   the maximum. </param>
     public int Delimit( int value, int minValue, int maxValue )
     {
         return value < minValue
@@ -446,17 +445,17 @@ public partial class GpibLanController : ObservableObject, IDisposable
     public String GpibAddressGetter()
     {
         string reply = "-1";
-        string p_receivedMessage = this.QueryController( "++addr" );
-        if ( !string.IsNullOrEmpty( p_receivedMessage ) )
+        string receivedMessage = this.QueryController( "++addr" );
+        if ( !string.IsNullOrEmpty( receivedMessage ) )
         {
-            string[] p_addresses = p_receivedMessage.Split( new char[] { ' ' } );
-            switch ( p_addresses.Length )
+            string[] addresses = receivedMessage.Split( new char[] { ' ' } );
+            switch ( addresses.Length )
             {
                 case 1:
-                    reply  = p_addresses[0];
+                    reply  = addresses[0];
                     break;
                 case 2:
-                    reply =  p_addresses[ 1 ] + " " + p_addresses[ 2 ];
+                    reply =  addresses[ 1 ] + " " + addresses[ 2 ];
                     break;
                 default:
                     break;
@@ -478,21 +477,21 @@ public partial class GpibLanController : ObservableObject, IDisposable
     /// Internally, the secondary address, which is offset by 96, must be separated from the primary
     /// address by a space character. Specifying secondary address has no effect in DEVICE mode.
     /// </remarks>
-    /// <param name="a_primaryAddress">     Specifies the primary GPIB address between 0 and 30. </param>
-    /// <param name="a_secondaryAddress">   [Optional, Integer] (Optional) Specifies the second GPIB
-    ///                                     Address between 0 and 30. </param>
-    public void GpibAddressSetter( int a_primaryAddress, int a_secondaryAddress = -1 )
+    /// <param name="primaryAddress">   Specifies the primary GPIB address between 0 and 30. </param>
+    /// <param name="secondaryAddress"> (Optional) Specifies the secondary GPIB Address between 0 and
+    ///                                 30. </param>
+    public void GpibAddressSetter( int primaryAddress, int secondaryAddress = -1 )
     {
-        if ( a_primaryAddress >= 0 && a_secondaryAddress < 0 )
+        if ( primaryAddress >= 0 && secondaryAddress < 0 )
         {
-            a_primaryAddress = this.Delimit( a_primaryAddress, 0, 30 );
-            _ = this.SendToController( $"++addr {a_primaryAddress}" );
+            primaryAddress = this.Delimit( primaryAddress, 0, 30 );
+            _ = this.SendToController( $"++addr {primaryAddress}" );
         }
-        else if ( a_primaryAddress >= 0 && a_secondaryAddress >= 0 )
+        else if ( primaryAddress >= 0 && secondaryAddress >= 0 )
         {
-            a_primaryAddress = this.Delimit( a_primaryAddress, 0, 30 );
-            a_secondaryAddress = this.Delimit( a_secondaryAddress, 0, 30 );
-            _ = this.SendToController( $"++addr {a_primaryAddress} {a_secondaryAddress + 96}" );
+            primaryAddress = this.Delimit( primaryAddress, 0, 30 );
+            secondaryAddress = this.Delimit( secondaryAddress, 0, 30 );
+            _ = this.SendToController( $"++addr {primaryAddress} {secondaryAddress + 96}" );
         }
     }
 
@@ -508,15 +507,15 @@ public partial class GpibLanController : ObservableObject, IDisposable
     /// commands. Timeout may be set to any value between 1 &amp;&amp; 3000 milliseconds.
     /// </summary>
     /// <remarks>   2023-08-12. </remarks>
-    /// <param name="a_timeoutMs">  The timeout interval in milliseconds. </param>
-    public void ReadTimeoutSetter( int a_timeoutMs )
+    /// <param name="timeoutMs">    The timeout interval in milliseconds. </param>
+    public void ReadTimeoutSetter( int timeoutMs )
     {
-        a_timeoutMs = this.Delimit( a_timeoutMs, 1, 3000 );
+        timeoutMs = this.Delimit( timeoutMs, 1, 3000 );
     
-        if ( a_timeoutMs != this.ReadTimeout )
-            _ = this.SendToController( $"++read_tmo_ms {a_timeoutMs}" );
+        if ( timeoutMs != this.ReadTimeout )
+            _ = this.SendToController( $"++read_tmo_ms {timeoutMs}" );
 
-        this.ReadTimeout = a_timeoutMs;
+        this.ReadTimeout = timeoutMs;
     }
 
     /// <summary>   Gets the device read timeout, in milliseconds, that is used in the
@@ -558,20 +557,20 @@ public partial class GpibLanController : ObservableObject, IDisposable
     /// the device to its normal Talker/Listener state. Once a device requesting service is serial
     /// polled, it usually un-asserts the SRQ line.
     /// </remarks>
-    /// <param name="a_primaryAddress">     [Optional, Integer] (Optional) Specifies the primary GPIB
-    ///                                     address between 0 and 30. </param>
-    /// <param name="a_secondaryAddress">   [Optional, Integer] (Optional) Specifies the second GPIB
-    ///                                     Address between 0 and 30. </param>
+    /// <param name="primaryAddress">   (Optional) Specifies the primary GPIB address between 0 and
+    ///                                 30. </param>
+    /// <param name="secondaryAddress"> (Optional) Specifies the secondary GPIB Address between 0 and
+    ///                                 30. </param>
     /// <returns>   The status byte. </returns>
-    public int SerialPoll( int a_primaryAddress = -1, int a_secondaryAddress = -1 )
+    public int SerialPoll( int primaryAddress = -1, int secondaryAddress = -1 )
     { 
         string command = "++spoll";
 
-        if  (a_primaryAddress >= 0 && a_secondaryAddress< 0 )
-            command = $"{command} {a_primaryAddress}";
+        if  (primaryAddress >= 0 && secondaryAddress< 0 )
+            command = $"{command} {primaryAddress}";
 
-        else if  (a_primaryAddress >= 0 && a_secondaryAddress >= 0 )
-            command = $"{command} {a_primaryAddress} {a_secondaryAddress + 96}";
+        else if  (primaryAddress >= 0 && secondaryAddress >= 0 )
+            command = $"{command} {primaryAddress} {secondaryAddress + 96}";
 
 
         return int.TryParse( this.QueryController( command ), out int value )
@@ -591,33 +590,32 @@ public partial class GpibLanController : ObservableObject, IDisposable
     /// <summary>   Wait for the specified masked bits on the status byte or timeout. </summary>
     /// <remarks>   2023-08-12. </remarks>
     /// <param name="timeout">          time to wait for reply. </param>
-    /// <param name="a_bitMask">        the bitmask to match for terminating the wait. </param>
-    /// <param name="loopDelay">        (5) The loop delay in milliseconds. </param>
-    /// <param name="doEventsAction">   (null) The do events action. </param>
-    /// <returns>   [Integer] The last status byte read before ending the wait. </returns>
-    public int AwaitStatus( TimeSpan timeout, int a_bitMask, int loopDelay = 5, Action? doEventsAction = null )
+    /// <param name="bitMask">          the bitmask to match for terminating the wait. </param>
+    /// <param name="loopDelay">        (Optional) (5) The loop delay in milliseconds. </param>
+    /// <param name="doEventsAction">   (Optional) (null) The do events action. </param>
+    /// <returns>   The last status byte read before ending the wait. </returns>
+    public int AwaitStatus( TimeSpan timeout, int bitMask, int loopDelay = 5, Action? doEventsAction = null )
     {
-        int p_statusByte;
 
         // read the status byte
-        p_statusByte = this.SerialPoll();
+        int statusByte = this.SerialPoll();
 
         Stopwatch stopwatch = Stopwatch.StartNew();
     
         if ( timeout > TimeSpan.Zero )
         {
-            bool completed = a_bitMask == (p_statusByte & a_bitMask);
+            bool completed = bitMask == (statusByte & bitMask);
             while ( stopwatch.Elapsed <= timeout && !completed )
             {
                 if ( loopDelay > 0 )
                     _ = Stopwatch.StartNew().SyncLetElapse( TimeSpan.FromMilliseconds( loopDelay ));
                 doEventsAction?.Invoke();
-                p_statusByte = this.SerialPoll();
-                completed = a_bitMask == (p_statusByte & a_bitMask);
+                statusByte = this.SerialPoll();
+                completed = bitMask == (statusByte & bitMask);
             }
         }
 
-        return p_statusByte;
+        return statusByte;
 
     }
 

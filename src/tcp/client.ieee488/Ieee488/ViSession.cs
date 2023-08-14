@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Tracing;
@@ -32,9 +33,9 @@ public partial class ViSession : ObservableObject, IConnectable
     /// <remarks>   2023-08-12. </remarks>
     /// <param name="tcpSession">               The TCP client session. </param>
     /// <param name="exceptionTracer">          The exception tracer. </param>
-    /// <param name="readTermination">          (Optional) The read termination. </param>
-    /// <param name="writeTermination">         (Optional) The write termination. </param>
-    /// <param name="readAfterWriteDelayMs">    (Optional) The read after write delay in
+    /// <param name="readTermination">           The read termination. </param>
+    /// <param name="writeTermination">          The write termination. </param>
+    /// <param name="readAfterWriteDelayMs">     The read after write delay in
     ///                                         milliseconds. </param>
     public ViSession( TcpSession tcpSession, IExceptionTracer exceptionTracer,
                       char readTermination = '\n', char writeTermination = '\n',
@@ -47,6 +48,14 @@ public partial class ViSession : ObservableObject, IConnectable
         this.ReadAfterWriteDelay = readAfterWriteDelayMs;
         this.Init(tcpSession, exceptionTracer);
     }
+
+    /// <summary>   Constructor. </summary>
+    /// <remarks>   2023-08-12. </remarks>
+    /// <param name="ipv4Address">  The IPv4 address. </param>
+    /// <param name="portNumber">    The port number. </param>
+    public ViSession( string ipv4Address, int portNumber = 5025 ) : this( new TcpSession( ipv4Address, portNumber ),
+            new DebugExceptionTracer() )
+    { }
 
     /// <summary>   Initializes this object. </summary>
     /// <remarks>   2023-08-12. </remarks>
@@ -62,14 +71,6 @@ public partial class ViSession : ObservableObject, IConnectable
             this.TcpSession.ConnectionChanging += this.TcpSession_ConnectionChanging;
         }
     }
-
-    /// <summary>   Constructor. </summary>
-    /// <remarks>   2023-08-12. </remarks>
-    /// <param name="ipv4Address">  The IPv4 address. </param>
-    /// <param name="portNumber">   (Optional) The port number. </param>
-    public ViSession( string ipv4Address, int portNumber = 5025 ) : this( new TcpSession( ipv4Address , portNumber),
-            new DebugTracer() )
-    { }
 
     /// <summary>
     /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged
@@ -157,12 +158,6 @@ public partial class ViSession : ObservableObject, IConnectable
     [ObservableProperty]
     private int _sessionReadTimeout;
 
-    /// <summary>   Returns true if the TCP Connection uses the Prologix
-    /// GPIB-Lan interface device. </summary>
-    /// <value>   [Boolean] True if using the Prologix GPIB-Lan interface device. </value>
-    [ObservableProperty]
-    private bool _usingGpibLan;
-
     #endregion
 
     #region " gpib lan controller "
@@ -172,28 +167,35 @@ public partial class ViSession : ObservableObject, IConnectable
     [ObservableProperty]
     private GpibLanController? _gpibLan;
 
+    /// <summary>   Returns true if the TCP Connection uses the Prologix
+    /// GPIB-Lan interface device. </summary>
+    /// <value>   [Boolean] True if using the Prologix GPIB-Lan interface device. </value>
+    [ObservableProperty]
+    private bool _usingGpibLan;
+
     #endregion
 
     #region " device i/o "
 
     /// <summary>   Sends a message. </summary>
-    /// <remarks>   if (using the Prologix device at port 1234, this
-    /// method first sets the Prologix to auto off (++auto 0) to prevent it from
-    /// setting the device to talk prematurely which might cause the device
-    /// (e.g., the Keithley 2700 scanning multimeter) to issue error -420 Query Unterminated. </remarks>
-    /// <param name="a_message">             The message to send to the instrument. </param>
-    /// <param name="a_appendTermination">   (true) True to append termination to
-    ///                                      the message. </param>
+    /// <remarks>
+    /// if (using the Prologix device at port 1234, this method first sets the Prologix to auto off
+    /// (++auto 0) to prevent it from setting the device to talk prematurely which might cause the
+    /// device (e.g., the Keithley 2700 scanning multimeter) to issue error -420 Query Unterminated.
+    /// </remarks>
+    /// <param name="message">              The message to send to the instrument. </param>
+    /// <param name="appendTermination">    (Optional) (true) True to append termination to the
+    ///                                     message. </param>
     /// <returns>   [int] The number of sent characters. </returns>
-    public int WriteLine( string a_message , bool a_appendTermination = true )
+    public int WriteLine( string message , bool appendTermination = true )
     {
         int reply = 0;
         if ( this.UsingGpibLan )
-            reply = this.GpibLan?.SendToDevice( a_message, a_appendTermination ) ?? 0;
+            reply = this.GpibLan?.SendToDevice( message, appendTermination ) ?? 0;
         else if (this.TcpSession is not null )
         {
-            if ( a_appendTermination ) a_message += this.WriteTermination;
-            reply = this.TcpSession.Write( a_message );
+            if ( appendTermination ) message += this.WriteTermination;
+            reply = this.TcpSession.Write( message );
             _ = TimeSpan.FromMilliseconds(this.ReadAfterWriteDelay).SyncWait();
         }
         return reply;
@@ -208,30 +210,30 @@ public partial class ViSession : ObservableObject, IConnectable
     /// the device <c>++read</c> to read the instrument.
     /// </remarks>
     /// <param name="timeout">        time to wait for reply in milliseconds. </param>
-    /// <param name="maxLength">      [Optional, int, 32767] (Optional) The maximum number of bytes
+    /// <param name="maxLength">      [Optional, int, 32767]  The maximum number of bytes
     ///                                 to read. </param>
-    /// <param name="trimEnd">        (true) (Optional) true to return the
+    /// <param name="trimEnd">        (true)  true to return the
     ///                                 string without the termination. </param>
     /// <param name="doEventsAction">   The do events action. </param>
     /// <returns>   The reading. </returns>
     public string AwaitReading( int timeout, int maxLength = 0x7FFF, bool trimEnd = true, Action? doEventsAction = null ) 
     {
-        string p_reading = string.Empty;
+        string reading = string.Empty;
         try
         {
-            Stopwatch p_stopper = Stopwatch.StartNew();
+            Stopwatch stopper = Stopwatch.StartNew();
 
             // wait for data or timeout
-            while ( this.TcpSession is not null && (string.IsNullOrEmpty( p_reading ) || (p_stopper.ElapsedMilliseconds < timeout)) )
+            while ( this.TcpSession is not null && (string.IsNullOrEmpty( reading ) || (stopper.ElapsedMilliseconds < timeout)) )
             {
                 doEventsAction?.Invoke();
 
                 // take a reading
 
                 if ( this.UsingGpibLan )
-                    p_reading = this.GpibLan?.ReceiveFromDevice( maxLength, trimEnd ) ?? string.Empty;
+                    reading = this.GpibLan?.ReceiveFromDevice( maxLength, trimEnd ) ?? string.Empty;
                 else
-                    _ = this.TcpSession.Read( maxLength, ref p_reading, trimEnd );
+                    _ = this.TcpSession.Read( maxLength, ref reading, trimEnd );
             }
         }
 	    catch (Exception ex )
@@ -241,7 +243,7 @@ public partial class ViSession : ObservableObject, IConnectable
 	    finally
 	    {
         }
-        return p_reading;
+        return reading;
     }
 
     /// <summary>
@@ -250,33 +252,33 @@ public partial class ViSession : ObservableObject, IConnectable
     /// </summary>
     /// <remarks>   2023-08-12. </remarks>
     /// <exception cref="TimeoutException"> Thrown when a Timeout error condition occurs. </exception>
-    /// <param name="maxLength">      [Optional, int, 32767] (Optional) The maximum number of bytes
+    /// <param name="maxLength">      [Optional, int, 32767]  The maximum number of bytes
     ///                                 to read. </param>
-    /// <param name="trimEnd">        (true) (Optional) true to return the
+    /// <param name="trimEnd">        (true)  true to return the
     ///                                 string without the termination. </param>
-    /// <param name="doEventsAction">   (Optional) The do events action. </param>
+    /// <param name="doEventsAction">    The do events action. </param>
     /// <returns>   The received message. </returns>
     public string Read( int maxLength = 0x7FFF, bool trimEnd = true, Action? doEventsAction = null )
     {
-        string p_reading = string.Empty;
+        string reading = string.Empty;
         if ( this.SessionReadTimeout > 0 )
 
-            p_reading = this.AwaitReading( this.SessionReadTimeout, maxLength, trimEnd, doEventsAction );
+            reading = this.AwaitReading( this.SessionReadTimeout, maxLength, trimEnd, doEventsAction );
 
         else if ( this.TcpSession is not null )
         {
             if ( this.UsingGpibLan )
 
-                p_reading = this.GpibLan?.ReceiveFromDevice( maxLength, trimEnd ) ?? string.Empty;
+                reading = this.GpibLan?.ReceiveFromDevice( maxLength, trimEnd ) ?? string.Empty;
 
             else
-                _ = this.TcpSession.Read( maxLength, ref p_reading, trimEnd);
+                _ = this.TcpSession.Read( maxLength, ref reading, trimEnd);
         }
 
         // report an error on failure to read.
-        return string.IsNullOrEmpty( p_reading )
+        return string.IsNullOrEmpty( reading )
             ? throw new TimeoutException( $"Data not received reading the instrument at {this.SocketAddress} with a timeout of {this.SessionReadTimeout}ms." )
-            : p_reading;
+            : reading;
     }
 
     /// <summary>   Sends a message and receives a reply. </summary>
@@ -391,7 +393,6 @@ public partial class ViSession : ObservableObject, IConnectable
 
         try
         {
-
         }
         catch ( Exception ex )
         {
@@ -409,6 +410,13 @@ public partial class ViSession : ObservableObject, IConnectable
         if ( sender is null || eventArgs is null ) return;
         try
         {
+            // enable the GPIB-Lan controller if the Tcp Session connects to the 
+            // GPIB-Lan controller port
+            if ( this.GpibLan is not null )
+            {
+                this.GpibLan.Enabled = _gpibLanPortNumber == (( TcpSession ) sender)?.PortNumber;
+                this.UsingGpibLan = true;
+            }
         }
         catch ( Exception ex )
         {

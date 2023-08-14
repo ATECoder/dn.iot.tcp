@@ -21,9 +21,9 @@ public class Ieee488Session : ObservableObject, IConnectable
     /// <remarks>   2023-08-12. </remarks>
     /// <param name="tcpSession">               The TCP client session. </param>
     /// <param name="exceptionTracer">          The exception tracer. </param>
-    /// <param name="readTermination">          (Optional) The read termination. </param>
-    /// <param name="writeTermination">         (Optional) The write termination. </param>
-    /// <param name="readAfterWriteDelayMs">    (Optional) The read after write delay in
+    /// <param name="readTermination">          (Optional) (The read termination. </param>
+    /// <param name="writeTermination">         (Optional) (The write termination. </param>
+    /// <param name="readAfterWriteDelayMs">    (Optional) (The read after write delay in
     ///                                         milliseconds. </param>
     public Ieee488Session( TcpSession tcpSession, IExceptionTracer exceptionTracer,
                              char readTermination = '\n', char writeTermination = '\n',
@@ -42,6 +42,23 @@ public class Ieee488Session : ObservableObject, IConnectable
             this.ViSession.ConnectionChanging += this.ViSession_ConnectionChanging;
         }
     }
+
+    /// <summary>   Constructor. </summary>
+    /// <remarks>   2023-08-12. </remarks>
+    /// <param name="ipv4Address">  The IPv4 address. </param>
+    /// <param name="portNumber">   (Optional) The port number. </param>
+    public Ieee488Session( string ipv4Address, int portNumber = 5025 ) : this(  ipv4Address, portNumber, new DebugExceptionTracer() )
+    { }
+
+    /// <summary>   Constructor. </summary>
+    /// <remarks>   2023-08-14. </remarks>
+    /// <param name="ipv4Address">      The IPv4 address. </param>
+    /// <param name="portNumber">       The port number. </param>
+    /// <param name="exceptionTracer">  The exception tracer. </param>
+    public Ieee488Session( string ipv4Address, int portNumber, IExceptionTracer exceptionTracer ) : this( new TcpSession( ipv4Address, portNumber ),
+            exceptionTracer )
+    { }
+
 
     /// <summary>
     /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged
@@ -120,19 +137,23 @@ public class Ieee488Session : ObservableObject, IConnectable
     }
 
     /// <summary>   Sends a message. </summary>
-    /// <param name="message">             The message to send to the instrument. </param>
-    /// <param name="queryEAV">            (true) true to check the Error Available status bit
-    ///                                      after sending the message if (<see cref="ViSession.UsingGpibLan"/> or VXI. </param>
-    /// <param name="a_appendTermination">   (true) true to append termination to
-    ///                                      the message. </param>
+    /// <remarks>   2023-08-14. </remarks>
+    /// <exception cref="InvalidOperationException">    Thrown when the requested operation is
+    ///                                                 invalid. </exception>
+    /// <param name="message">              The message to send to the instrument. </param>
+    /// <param name="queryEAV">             (Optional) (true) true to check the Error Available
+    ///                                     status bit after sending the message if (<see cref="ViSession.UsingGpibLan"/>
+    ///                                     or VXI. </param>
+    /// <param name="appendTermination">    (Optional) (true) true to append termination to the
+    ///                                     message. </param>
     /// <returns>   [Long] The number of sent characters. </returns>
-    public int WriteLine( string message, bool queryEAV = true, bool a_appendTermination = true )
+    public int WriteLine( string message, bool queryEAV = true, bool appendTermination = true )
     {
         int reply = 0;
         if ( this.ViSession is not null )
         {
 
-            reply = this.ViSession.WriteLine( message, a_appendTermination );
+            reply = this.ViSession.WriteLine( message, appendTermination );
 
             if ( this.ViSession.GpibLan is not null && this.ViSession.UsingGpibLan && queryEAV)
     	    {
@@ -163,27 +184,26 @@ public class Ieee488Session : ObservableObject, IConnectable
     /// </summary>
     /// <remarks>   2023-08-13. </remarks>
     /// <exception cref="TimeoutException"> Thrown when a Timeout error condition occurs. </exception>
-    /// <param name="a_awaitMAV">       (true) (Optional) true to wait for the
-    ///                                 Message Available status bit before reading if (<see cref="ViSession.UsingGpibLan"/>
+    /// <param name="awaitMAV">         (Optional) (true)  true to wait for the Message Available
+    ///                                 status bit before reading if (<see cref="ViSession.UsingGpibLan"/>
     ///                                 or VXI. </param>
-    /// <param name="a_maxLength">      (32767) (Optional) The maximum number of
-    ///                                 bytes to read. </param>
-    /// <param name="a_trimEnd">        (true) (Optional) true to return the
-    ///                                 string without the termination. </param>
-    /// <param name="doEventsAction">   (Optional) The do events action. </param>
+    /// <param name="maxLength">        (Optional) (32767)  The maximum number of bytes to read. </param>
+    /// <param name="trimEnd">          (Optional) (true)  true to return the string without the
+    ///                                 termination. </param>
+    /// <param name="doEventsAction">   (Optional) (The do events action. </param>
     /// <returns>   The received message. </returns>
-    public string Read( bool a_awaitMAV = true, int a_maxLength = 0x7FFF, bool a_trimEnd = true, Action? doEventsAction = null )
+    public string Read( bool awaitMAV = true, int maxLength = 0x7FFF, bool trimEnd = true, Action? doEventsAction = null )
     {
-        int p_statusByte = 0;
+        int statusByte = 0;
         string reply = string.Empty;
         if ( this.ViSession is not null )
         {
 
-            if ( this.ViSession.GpibLan is not null && this.ViSession.UsingGpibLan && a_awaitMAV )
+            if ( this.ViSession.GpibLan is not null && this.ViSession.UsingGpibLan && awaitMAV )
             {
                 // wait for the message available bits.
 
-                p_statusByte = this.ViSession.GpibLan.AwaitStatus( TimeSpan.FromMilliseconds( this.ViSession.SessionReadTimeout ),
+                statusByte = this.ViSession.GpibLan.AwaitStatus( TimeSpan.FromMilliseconds( this.ViSession.SessionReadTimeout ),
                                                                    ( int ) ServiceRequests.MessageAvailable,
                                                                    doEventsAction:doEventsAction );
             }
@@ -191,8 +211,8 @@ public class Ieee488Session : ObservableObject, IConnectable
             // either way, try reading the instrument
 
             reply = this.ViSession.SessionReadTimeout > 0
-                    ? this.ViSession.AwaitReading( this.ViSession.SessionReadTimeout, a_maxLength, a_trimEnd )
-                    : this.ViSession.Read( a_maxLength, a_trimEnd );
+                    ? this.ViSession.AwaitReading( this.ViSession.SessionReadTimeout, maxLength, trimEnd )
+                    : this.ViSession.Read( maxLength, trimEnd );
 
             // report an error on failure to read.
             if ( string.IsNullOrEmpty( reply ) )
@@ -200,12 +220,12 @@ public class Ieee488Session : ObservableObject, IConnectable
 
                 // check if (message available.
 
-                string errorMessage = this.IsServiceRequest( p_statusByte , ServiceRequests.MessageAvailable)
+                string errorMessage = this.IsServiceRequest( statusByte , ServiceRequests.MessageAvailable)
                     ? "No Message Available"
                     : "Data not received after message available";
 
                 throw new TimeoutException(
-                    $"SRQ=0x{p_statusByte:x2}. {errorMessage} (0x{ServiceRequests.MessageAvailable:x2}) reading the instrument at {this.ViSession.SocketAddress} with a timeout of {this.ViSession.SessionReadTimeout}ms." );
+                    $"SRQ=0x{statusByte:x2}. {errorMessage} (0x{ServiceRequests.MessageAvailable:x2}) reading the instrument at {this.ViSession.SocketAddress} with a timeout of {this.ViSession.SessionReadTimeout}ms." );
             }
         }
         return reply;
@@ -213,22 +233,25 @@ public class Ieee488Session : ObservableObject, IConnectable
 
 
     /// <summary>   Sends a message and receives a reply. </summary>
-    /// <param name="a_message">             The message to send to the instrument. </param>
-    /// <param name="a_queryEAV">            (true) true to check the Error Available status bit
-    ///                                      after sending the message if (<see cref="ViSession.UsingGpibLan"/> or VXI. </param>
-    /// <param name="a_awaitMAV">            (true) true to wait for the Message Available
-    ///                                      status bit before reading if (<see cref="ViSession.UsingGpibLan"/> or VXI. </param>
-    /// <param name="a_appendTermination">   (true) true to append termination to
-    ///                                      the message. </param>
-    /// <param name="a_maxLength">           (32767) The maximum number of bytes to read. </param>
-    /// <param name="a_trimEnd">             (true) true to return the string without
-    ///                                      the termination. </param>
+    /// <remarks>   2023-08-14. </remarks>
+    /// <param name="message">              The message to send to the instrument. </param>
+    /// <param name="queryEAV">             (Optional) (true) true to check the Error Available
+    ///                                     status bit after sending the message if (<see cref="ViSession.UsingGpibLan"/>
+    ///                                     or VXI. </param>
+    /// <param name="awaitMAV">             (Optional) (true) true to wait for the Message Available
+    ///                                     status bit before reading if (<see cref="ViSession.UsingGpibLan"/>
+    ///                                     or VXI. </param>
+    /// <param name="appendTermination">    (Optional) (true) true to append termination to the
+    ///                                     message. </param>
+    /// <param name="maxLength">            (Optional) (32767) The maximum number of bytes to read. </param>
+    /// <param name="trimEnd">              (Optional) (true) true to return the string without the
+    ///                                     termination. </param>
     /// <returns>   The received message. </returns>
-    public string QueryLine( string a_message, bool a_queryEAV = true, bool a_awaitMAV = true,
-                             bool a_appendTermination = true, int a_maxLength = 0x7FFF, bool a_trimEnd = true )
+    public string QueryLine( string message, bool queryEAV = true, bool awaitMAV = true,
+                             bool appendTermination = true, int maxLength = 0x7FFF, bool trimEnd = true )
     {
-        return 0 < this.WriteLine( a_message, a_queryEAV, a_appendTermination )
-            ? this.Read( a_awaitMAV, a_maxLength, a_trimEnd )
+        return 0 < this.WriteLine( message, queryEAV, appendTermination )
+            ? this.Read( awaitMAV, maxLength, trimEnd )
             : string.Empty;
     }
 
@@ -237,19 +260,20 @@ public class Ieee488Session : ObservableObject, IConnectable
     #region " ieee488 commands "
 
     /// <summary>   Clears Status (CLS) command. </summary>
-    /// <param name="a_awaitOpc">   [Optional, Boolean, true] true to wait for operation completion
-    ///                             after issuing the <c>*CLS</c> command by querying <c>*CLS; *OPC?</c></param>
-    public void ClearExecutionState( bool a_awaitOpc = true )
+    /// <remarks>   2023-08-14. </remarks>
+    /// <param name="awaitOpc"> (Optional) (true) true to wait for operation completion after issuing
+    ///                         the <c>*CLS</c> command by querying <c>*CLS; *OPC?</c> </param>
+    public void ClearExecutionState( bool awaitOpc = true )
     {
-        string p_command = Syntax.ClearExecutionStateCommand;
-        if ( a_awaitOpc )
+        string command = Syntax.ClearExecutionStateCommand;
+        if ( awaitOpc )
         {
-            p_command = $"{p_command};{Syntax.OperationCompletedQueryCommand}";
-            _ = this.QueryLine( p_command, false, true );
+            command = $"{command};{Syntax.OperationCompletedQueryCommand}";
+            _ = this.QueryLine( command, false, true );
         }
         else
         {
-            _ = this.WriteLine( p_command, false );
+            _ = this.WriteLine( command, false );
         }
     }
 
@@ -299,28 +323,133 @@ public class Ieee488Session : ObservableObject, IConnectable
     /// <returns>   The service request event register status value. </returns>
     public int QueryServiceRequestStatus()
     {
-        string p_eventStatus = this.QueryLine( Syntax.ServiceRequestQueryCommand );
-        return int.TryParse( p_eventStatus, out int value )
+        string eventStatus = this.QueryLine( Syntax.ServiceRequestQueryCommand );
+        return int.TryParse( eventStatus, out int value )
             ? value
             : 0;
     }
 
     /// <summary>   Reads the status byte. </summary>
-    /// <param name="a_canQuery">   (false) true to send <c>*STB?</c>
-    ///                             if (not <see cref="ViSession.UsingGpibLan"/>. </param>
+    /// <remarks>   2023-08-14. </remarks>
+    /// <param name="canQuery"> (Optional) (false) true to send <c>*STB?</c>
+    ///                         if (not <see cref="ViSession.UsingGpibLan"/>. </param>
     /// <returns>   The status byte. </returns>
-    public int ReadStatusByte( bool a_canQuery = false )
+    public int ReadStatusByte( bool canQuery = false )
     {
         // querying the service request status could cause
         // a query unterminated error.
 
         return this.ViSession?.UsingGpibLan ?? false
             ? this.ViSession?.GpibLan?.SerialPoll() ?? 0 
-            : a_canQuery
+            : canQuery
                 ? this.QueryServiceRequestStatus()
                 : 0;
     }
 
+    /// <summary>   Checks if service is requested. </summary>
+    /// <param name="canQuery">   (false) true to send <c>*STB?</c>
+    /// if (not <see cref="ViSession.UsingGpibLan"/>. </param>
+    /// <returns>   The status byte. </returns>
+    public bool ServiceRequested( bool canQuery = false )
+    {
+        return this.ViSession?.UsingGpibLan ?? false
+            ? this.ViSession?.GpibLan?.ServiceRequested() ?? false
+            : canQuery && this.IsServiceRequest( this.QueryServiceRequestStatus(), ServiceRequests.RequestingService );
+    }
+
+    /// <summary>   Issues a wait (*WAI) command. </summary>
+    /// <remarks>   2023-08-14. </remarks>
+    /// <param name="awaitOpc"> (Optional) (true) true to wait for operation completion after issuing
+    ///                         the <c>*WAI</c> command by querying <c>*WAI; *OPC?</c> </param>
+    public void Wait( bool awaitOpc = true )
+    {
+        string command = Syntax.WaitCommand;
+        if ( awaitOpc )
+        {
+            command = $"{command};{Syntax.OperationCompletedQueryCommand}";
+            _ = this.QueryLine( command, false, true );
+        }
+        else
+            _ = this.WriteLine( command );
+    }
+
+    /// <summary>   Enables standard events using the (*ESE {0}) command. </summary>
+    /// <remarks>   2023-08-14. </remarks>
+    /// <param name="bitMask">  Defines the bits corresponding to the standard events to enable. </param>
+    /// <param name="awaitOpc"> (Optional) (true) true to wait for operation completion after issuing
+    ///                         the <c>*ESE #</c> command by querying <c>*ESE #; *OPC?</c> </param>
+    public void EnableStandardEvents( int bitMask, bool awaitOpc = true )
+    {
+        string command = String.Format( Syntax.StandardEventEnableCommand, bitMask );
+        if ( awaitOpc )
+        {
+            command = $"{command};{Syntax.OperationCompletedQueryCommand}";
+            _ = this.QueryLine( command, false, true );
+        }
+        else
+            _ = this.WriteLine( command );
+    }
+
+    /// <summary>   Returns the standard events enable byte using the *ESE? query command. </summary>
+    /// <remarks>   2023-08-14. </remarks>
+    /// <returns>   The standard event register enable status value. </returns>
+    public int QueryStandardEventsEnable()
+    {
+        string enabledBits = this.QueryLine( Syntax.StandardEventEnableQueryCommand );
+        return int.TryParse( enabledBits, out int value ) ? value : 0;
+    }
+
+    /// <summary>   Returns the standard events status byte using the *ESR? query command. </summary>
+    /// <remarks>   2023-08-14. </remarks>
+    /// <returns>   The standard event register status value. </returns>
+    public int QueryStandardEventsStatus()
+    {
+        string statusBits = this.QueryLine( Syntax.StandardEventStatusQueryCommand );
+        return int.TryParse( statusBits, out int value ) ? value : 0;
+    }
+
+    /// <summary>   Enables Service Request using the (*SRE {0}) command. </summary>
+    /// <remarks>   2023-08-14. </remarks>
+    /// <param name="bitMask">  Defines the bits corresponding to the service request events to
+    ///                         enable. </param>
+    /// <param name="awaitOpc"> (Optional) (true) true to wait for operation completion after issuing
+    ///                         the <c>*SRE #</c> command by querying <c>*SRE #; *OPC?</c> </param>
+    public void EnableServiceRequest( int bitMask, bool awaitOpc = true )
+    {
+        string command = String.Format( Syntax.ServiceRequestEnableCommand, bitMask );
+        if ( awaitOpc )
+        {
+            command = $"{command};{Syntax.OperationCompletedQueryCommand}";
+            _ = this.QueryLine( command, false, true );
+        }
+        else
+            _ = this.WriteLine( command );
+    }
+
+    /// <summary>   Returns the Service Request enable byte using the *SRE? query command. </summary>
+    /// <remarks>   2023-08-14. </remarks>
+    /// <returns>   The service request event register enable status value. </returns>
+    public int QueryServiceRequestEnable()
+    {
+        string enabledBits = this.QueryLine( Syntax.ServiceRequestEnableQueryCommand );
+        return int.TryParse( enabledBits, out int value ) ? value : 0;
+    }
+
+    /// <summary>   Reset to known state (*RST) command. </summary>
+    /// <remarks>   2023-08-14. </remarks>
+    /// <param name="awaitOpc"> (Optional) (true) true to wait for operation completion after issuing
+    ///                         the <c>*SRE</c> command by querying <c>*SRE; *OPC?</c> </param>
+    public void ResetKnownState( bool awaitOpc = true )
+    {
+        string command = Syntax.ResetKnownStateCommand;
+        if ( awaitOpc )
+        {
+            command = $"{command};{Syntax.OperationCompletedQueryCommand}";
+            _ = this.QueryLine( command, false, true );
+        }
+        else
+            _ = this.WriteLine( command, false );
+    }
 
     #endregion
 
@@ -374,14 +503,29 @@ public class Ieee488Session : ObservableObject, IConnectable
     /// <remarks>   2023-08-12. </remarks>
     public void Connect()
     {
-        throw new NotImplementedException();
+        ConnectionChangingEventArgs e = new();
+        this.OnConnectionChanging( e );
+        if ( !e.Cancel )
+        {
+            this.Connectable?.Connect();
+
+            ConnectionChangedEventArgs args = new( this.Connected );
+            this.OnConnectionChanged( args );
+        }
     }
 
     /// <summary>   Closes the connection. </summary>
     /// <remarks>   2023-08-12. </remarks>
     public void Disconnect()
     {
-        throw new NotImplementedException();
+        ConnectionChangingEventArgs e = new( this.Connected, false );
+        this.OnConnectionChanging( e );
+        if ( !e.Cancel )
+        {
+            this.Connectable?.Disconnect();
+            ConnectionChangedEventArgs args = new( this.Connected );
+            this.OnConnectionChanged( args );
+        }
     }
 
     #endregion

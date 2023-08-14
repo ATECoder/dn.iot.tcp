@@ -216,7 +216,7 @@ public partial class GpibLanController : ObservableObject, IDisposable
     /// from the device to the controller. </remarks>
     /// <param name="a_maxLength">     (Optional, 32767) The maximum number of bytes to read. </param>
     /// <param name="a_trimEnd">       (Optional, true) true to return the string without the termination. </param>
-    /// <returns>   [String] The received message. </returns>
+    /// <returns>   The received message. </returns>
     public string ReceiveFromDevice( int a_maxLength = 0x7FFF, bool a_trimEnd = true )
     {
 
@@ -242,13 +242,13 @@ public partial class GpibLanController : ObservableObject, IDisposable
     /// <summary>   Sends a message to the device and receives a reply. </summary>
     /// <remarks>   2023-08-12. </remarks>
     /// <param name="a_message">            The message. </param>
-    /// <param name="appendTermination">    [Optional, Boolean, true] (Optional) true to append the
+    /// <param name="appendTermination">    (true) (Optional) true to append the
     ///                                     <see cref="WriteTermination"/> to the message. </param>
     /// <param name="maxLength">            (Optional) (Optional, 32767) The maximum number of bytes
     ///                                     to read. </param>
     /// <param name="trimEnd">              (Optional) (Optional, true) true to return the string
     ///                                     without the termination. </param>
-    /// <returns>   [String] The received message. </returns>
+    /// <returns>   The received message. </returns>
     public string QueryDevice( string a_message, bool appendTermination = true, int maxLength = 0x7FFF, bool trimEnd = true )
     {
         return 0 < this.SendToDevice( a_message, appendTermination )
@@ -282,7 +282,7 @@ public partial class GpibLanController : ObservableObject, IDisposable
     /// <remarks>   2023-08-12. </remarks>
     /// <param name="maxLength">    [32767] The maximum length of the. </param>
     /// <param name="trimEnd">      [true] true to trim the end termination. </param>
-    /// <returns>   [String] The received message. </returns>
+    /// <returns>   The received message. </returns>
     public string ReceiveFromController( int maxLength = 0x7FFF, bool trimEnd = true ) 
     {
         if ( this.TcpSession is null ) return string.Empty;
@@ -303,7 +303,7 @@ public partial class GpibLanController : ObservableObject, IDisposable
     }
 
     /// <summary>   Sends a message to the controller and read back the reply. </summary>
-    /// <param name="message">             [String] The message. </param>
+    /// <param name="message">             The message. </param>
     /// <param name="appendTermination">   [Optional, true] true to append the
     ///                                      <see cref="WriteTermination"/> to the message. </param>
     /// <returns>   The received message. </returns>
@@ -591,11 +591,11 @@ public partial class GpibLanController : ObservableObject, IDisposable
     /// <summary>   Wait for the specified masked bits on the status byte or timeout. </summary>
     /// <remarks>   2023-08-12. </remarks>
     /// <param name="timeout">          time to wait for reply. </param>
-    /// <param name="loopDelay">        The loop delay. </param>
     /// <param name="a_bitMask">        the bitmask to match for terminating the wait. </param>
-    /// <param name="doEventsAction">   The do events action. </param>
+    /// <param name="loopDelay">        (5) The loop delay in milliseconds. </param>
+    /// <param name="doEventsAction">   (null) The do events action. </param>
     /// <returns>   [Integer] The last status byte read before ending the wait. </returns>
-    public int AwaitStatus( TimeSpan timeout, TimeSpan loopDelay, int a_bitMask, Action? doEventsAction )
+    public int AwaitStatus( TimeSpan timeout, int a_bitMask, int loopDelay = 5, Action? doEventsAction = null )
     {
         int p_statusByte;
 
@@ -609,9 +609,8 @@ public partial class GpibLanController : ObservableObject, IDisposable
             bool completed = a_bitMask == (p_statusByte & a_bitMask);
             while ( stopwatch.Elapsed <= timeout && !completed )
             {
-                if ( loopDelay > TimeSpan.Zero )
-                    Task.Delay(  loopDelay ).Wait();
-                    _ = Stopwatch.StartNew().SyncLetElapse( loopDelay );
+                if ( loopDelay > 0 )
+                    _ = Stopwatch.StartNew().SyncLetElapse( TimeSpan.FromMilliseconds( loopDelay ));
                 doEventsAction?.Invoke();
                 p_statusByte = this.SerialPoll();
                 completed = a_bitMask == (p_statusByte & a_bitMask);
@@ -686,6 +685,10 @@ public partial class GpibLanController : ObservableObject, IDisposable
 
         try
         {
+            // enable the GPIB-Lan controller if the Tcp Session connects to the 
+            // GPIB-Lan controller port
+            this.Enabled = _gpibLanPortNumber == ( ( TcpSession ) sender)?.PortNumber;
+
             // the GPIB-Lan controller is enabled only if the Tcp client is
             // connected to a GPIB-Lan controller such as the Prologix GPIB-Lan controller.
             if ( !this.Enabled ) return;

@@ -1,13 +1,5 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Net.Sockets;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-
-using cc.isr.Iot.Tcp.Client;
+using System.Runtime.InteropServices;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 
@@ -456,6 +448,32 @@ public partial class GpibLanController : ObservableObject, IDisposable
                     break;
                 case 2:
                     reply =  addresses[ 1 ] + " " + addresses[ 2 ];
+                    break;
+                default:
+                    break;
+            }
+        }
+        return reply;
+    }
+
+    /// <summary>   Gpib addresses getter. </summary>
+    /// <remarks>   2023-08-14. </remarks>
+    /// <returns>   A Tuple. </returns>
+    public (int Primary, int Secondary) GpibAddressesGetter()
+    {
+        (int primary, int secondary) reply = (-1, -1);
+        string receivedMessage = this.QueryController( "++addr" );
+        if ( !string.IsNullOrEmpty( receivedMessage ) )
+        {
+            string[] addresses = receivedMessage.Split( new char[] { ' ' } );
+            switch ( addresses.Length )
+            {
+                case 1:
+                    reply.primary = Convert.ToInt32( addresses[0] );
+                    break;
+                case 2:
+                    reply.primary = Convert.ToInt32( addresses[0] );
+                    reply.secondary = Convert.ToInt32( addresses[1] );
                     break;
                 default:
                     break;

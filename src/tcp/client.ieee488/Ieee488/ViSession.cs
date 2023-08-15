@@ -1,11 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Diagnostics.Tracing;
-using System.Net.Sockets;
-using System.Transactions;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 
@@ -18,14 +12,17 @@ public partial class ViSession : ObservableObject, IConnectable
 
     #region " construction and cleanup "
 
-    [SuppressMessage( "CodeQuality", "IDE0051:Remove unused private members", Justification = "<Pending>" )]
+    /// <summary>   (Immutable) the gpib LAN port number. </summary>
     private const int _gpibLanPortNumber = 1234;
 
+    /// <summary>   (Immutable) the read after write delay default. </summary>
     private const int _readAfterWriteDelayDefault = 5;
 
+    /// <summary>   (Immutable) the session read timeout default. </summary>
     [SuppressMessage( "CodeQuality", "IDE0051:Remove unused private members", Justification = "<Pending>" )]
     private const int _sessionReadTimeoutDefault = 3000;
 
+    /// <summary>   (Immutable) the socket receive timeout default. </summary>
     [SuppressMessage( "CodeQuality", "IDE0051:Remove unused private members", Justification = "<Pending>" )]
     private const int _socketReceiveTimeoutDefault = 500;
 

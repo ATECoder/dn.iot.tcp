@@ -5,12 +5,12 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace cc.isr.Iot.Tcp.Client.Ieee488;
 
-/// <summary>   A ViewModel for the identity. </summary>
+/// <summary>   A ViewModel for the identity query. </summary>
 /// <remarks>   2023-08-14. </remarks>
 public partial class IdentityViewModel: ObservableObject
 {
 
-    #region " identity view properties "
+    #region " observable properties "
 
     /// <summary>   Number of repeats. </summary>
     [ObservableProperty]
@@ -76,9 +76,13 @@ public partial class IdentityViewModel: ObservableObject
 
     #endregion
 
-    #region " event handler "
+    #region " event handlers "
 
-    private void HandlerTracerException( object sender, ThreadExceptionEventArgs e )
+    /// <summary>   Handles the tracer exception. </summary>
+    /// <remarks>   2023-08-14. </remarks>
+    /// <param name="sender">   Source of the event. </param>
+    /// <param name="e">        Thread exception event information. </param>
+    private void HandleTracerException( object sender, ThreadExceptionEventArgs e )
     {
         if ( e is not null && e.Exception is not null )
             this.ErrorMessage = e.Exception.ToString();
@@ -119,8 +123,8 @@ public partial class IdentityViewModel: ObservableObject
             if ( string.IsNullOrEmpty( this.HostAddress ) )
                 throw new InvalidOperationException( $"Empty host address" );
 
-            NotifyExceptionTracer exceptionTracer = new NotifyExceptionTracer();
-            exceptionTracer.TraceException += this.HandlerTracerException;
+            NotifyExceptionTracer exceptionTracer = new();
+            exceptionTracer.TraceException += this.HandleTracerException;
 
             p_session = new( this.HostAddress!, this.PortNumber, exceptionTracer );
 

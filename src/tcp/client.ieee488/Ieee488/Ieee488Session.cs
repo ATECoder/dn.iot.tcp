@@ -1,7 +1,4 @@
-using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Diagnostics.Tracing;
-using System.Net.NetworkInformation;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 
@@ -230,7 +227,6 @@ public class Ieee488Session : ObservableObject, IConnectable
         }
         return reply;
     }
-
 
     /// <summary>   Sends a message and receives a reply. </summary>
     /// <remarks>   2023-08-14. </remarks>

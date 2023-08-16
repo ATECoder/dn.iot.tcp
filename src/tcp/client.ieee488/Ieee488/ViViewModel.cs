@@ -69,7 +69,7 @@ public partial class ViViewModel : ObservableObject, IDisposable
 
     /// <summary>   Gets or sets the session. </summary>
     /// <value> The session. </value>
-    public Ieee488Session? Session { get; set; }
+    public Ieee488VI? Session { get; set; }
 
     #endregion
 
@@ -465,7 +465,7 @@ public partial class ViViewModel : ObservableObject, IDisposable
 
     #region " tcp session event handlers "
 
-    /// <summary>   Handles the <see cref="Ieee488Session.ConnectionChanged"/> event. </summary>
+    /// <summary>   Handles the <see cref="Ieee488VI.ConnectionChanged"/> event. </summary>
     /// <remarks>   2023-08-12. </remarks>
     /// <param name="sender">       Source of the event. </param>
     /// <param name="eventArgs">  Reference to the <see cref="ConnectionChangedEventArgs"/> event
@@ -483,7 +483,7 @@ public partial class ViViewModel : ObservableObject, IDisposable
             this.ReadAfterWriteEnabled = this.Session!.ViSession!.GpibLan!.ReadAfterWriteEnabled;
     }
 
-    /// <summary>   Handles the <see cref="Ieee488Session.ConnectionChanging"/> event. </summary>
+    /// <summary>   Handles the <see cref="Ieee488VI.ConnectionChanging"/> event. </summary>
     /// <remarks>   2023-08-12. </remarks>
     /// <param name="sender">       Source of the event. </param>
     /// <param name="eventArgs">  Reference to the <see cref="ConnectionChangingEventArgs"/> event

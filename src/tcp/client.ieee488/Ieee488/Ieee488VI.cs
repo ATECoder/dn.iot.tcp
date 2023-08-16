@@ -4,9 +4,9 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace cc.isr.Iot.Tcp.Client.Ieee488;
 
-/// <summary>   An ieee 488 session. </summary>
+/// <summary>   A Virtual Instrument supporting the IEEE488.2 instrument protocol. </summary>
 /// <remarks>   2023-08-12. </remarks>
-public class Ieee488Session : ObservableObject, IConnectable
+public class Ieee488VI : ObservableObject, IConnectable
 {
 
     #region " construction and cleanup "
@@ -21,11 +21,41 @@ public class Ieee488Session : ObservableObject, IConnectable
     /// <param name="writeTermination">         (Optional) (The write termination. </param>
     /// <param name="readAfterWriteDelayMs">    (Optional) (The read after write delay in
     ///                                         milliseconds. </param>
-    public Ieee488Session( TcpSession tcpSession, 
-                             char readTermination = '\n', char writeTermination = '\n',
-                             int readAfterWriteDelayMs = 5 )
+    public Ieee488VI( TcpSession tcpSession, 
+                      char readTermination = '\n', char writeTermination = '\n',
+                      int readAfterWriteDelayMs = 5 )
     {
         this._identity = string.Empty;
+        this.Initialize(tcpSession, readTermination, writeTermination, readAfterWriteDelayMs );
+    }
+
+    /// <summary>   Constructor. </summary>
+    /// <remarks>   2023-08-14. </remarks>
+    /// <param name="ipv4Address">      The IPv4 address. </param>
+    /// <param name="portNumber">       The port number. </param>
+    public Ieee488VI( string ipv4Address, int portNumber ) : this( new TcpSession( ipv4Address, portNumber ) )
+    { }
+
+    /// <summary>   Default constructor. </summary>
+    /// <remarks>   2023-08-15. </remarks>
+    public Ieee488VI()
+    {
+        this._identity = string.Empty;
+    }
+
+    /// <summary>   Initializes this object. </summary>
+    /// <remarks>   2023-08-15. </remarks>
+    /// <param name="tcpSession">               The TCP client session. </param>
+    /// <param name="readTermination">          (Optional) (The read termination. </param>
+    /// <param name="writeTermination">         (Optional) (The write termination. </param>
+    /// <param name="readAfterWriteDelayMs">    (Optional) (The read after write delay in
+    ///                                         milliseconds. </param>
+    [MemberNotNull( nameof( Identity ) )]
+    public virtual void Initialize( TcpSession tcpSession,
+                            char readTermination = '\n', char writeTermination = '\n',
+                            int readAfterWriteDelayMs = 5 )
+    {
+        this.Identity = string.Empty;
         this.ViSession = new ViSession( tcpSession, readTermination, writeTermination, readAfterWriteDelayMs );
         this.ReadTermination = readTermination;
         this.WriteTermination = writeTermination;
@@ -40,12 +70,13 @@ public class Ieee488Session : ObservableObject, IConnectable
     }
 
     /// <summary>   Constructor. </summary>
-    /// <remarks>   2023-08-14. </remarks>
-    /// <param name="ipv4Address">      The IPv4 address. </param>
-    /// <param name="portNumber">       The port number. </param>
-    public Ieee488Session( string ipv4Address, int portNumber ) : this( new TcpSession( ipv4Address, portNumber ) )
-    { }
-
+    /// <remarks>   2023-08-12. </remarks>
+    /// <param name="ipv4Address">  The IPv4 address. </param>
+    /// <param name="portNumber">    The port number. </param>
+    public virtual void Initialize( string ipv4Address, int portNumber = 5025 )
+    {
+        this.Initialize( new TcpSession( ipv4Address, portNumber ) );
+    }
 
     /// <summary>
     /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged
@@ -62,7 +93,7 @@ public class Ieee488Session : ObservableObject, IConnectable
     /// </summary>
     /// <param name="disposing">    True to release both managed and unmanaged resources; false to
     ///                             release only unmanaged resources. </param>
-    private void Dispose( bool disposing )
+    protected virtual void Dispose( bool disposing )
     {
         if ( disposing )
         {
@@ -273,6 +304,10 @@ public class Ieee488Session : ObservableObject, IConnectable
                 this._identity = this.QueryIdentity();
             return this._identity;
         }
+        private set
+        {
+            this._identity = value;
+        }
     }
 
     /// <summary>   Returns the instrument identity using the *IDN? query command. </summary>
@@ -442,7 +477,7 @@ public class Ieee488Session : ObservableObject, IConnectable
 
     /// <summary>   Gets or sets the TCP client session. </summary>
     /// <value> The TCP client session. </value>
-    public ViSession? ViSession { get; }
+    public ViSession? ViSession { get; private set; }
 
     /// <summary>   Gets a reference to the connectable <see cref="ViSession"/> object . </summary>
     /// <value>   [<see cref="IConnectable"/>]. </value>

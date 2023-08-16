@@ -106,7 +106,7 @@ public partial class IdentityViewModel: ObservableObject
     public void ReadIdentity()
     {
 
-        Ieee488Session? session = null;
+        Ieee488VI? session = null;
         try
         {
             this.SocketAddress = string.Empty;

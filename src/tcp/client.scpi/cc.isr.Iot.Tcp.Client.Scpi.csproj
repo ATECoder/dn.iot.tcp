@@ -54,16 +54,16 @@
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\client.ieee488\cc.isr.Iot.Tcp.Client.Ieee488.csproj" />
+  </ItemGroup>
+
   <PropertyGroup>
     <DefineConstants>$(DefineConstants);MYPROJREF;</DefineConstants>
   </PropertyGroup>
 
   <Choose>
-    <When Condition="$(DefineConstants.Contains(';PROJREF;')) OR $(DefineConstants.Contains(';MYPROJREF;'))">
-      <ItemGroup>
-		<ProjectReference Include="..\client\cc.isr.Iot.Tcp.Client.csproj" />
-      </ItemGroup>
-    </When>
+    <When Condition="$(DefineConstants.Contains(';PROJREF;')) OR $(DefineConstants.Contains(';MYPROJREF;'))" />
     <Otherwise>
       <ItemGroup>
         <PackageReference Include="cc.isr.Iot.Tcp.Client" Version="1.0.0" />

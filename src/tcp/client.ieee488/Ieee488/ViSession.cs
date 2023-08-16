@@ -38,10 +38,7 @@ public partial class ViSession : ObservableObject, IConnectable
                       int readAfterWriteDelayMs = _readAfterWriteDelayDefault )
     {
         this.TcpSession = tcpSession;
-        this.ReadTermination = readTermination;
-        this.WriteTermination = writeTermination;
-        this.ReadAfterWriteDelay = readAfterWriteDelayMs;
-        this.Init(tcpSession);
+        this.Initialize( tcpSession, readTermination, writeTermination, readAfterWriteDelayMs );
     }
 
     /// <summary>   Constructor. </summary>
@@ -51,12 +48,29 @@ public partial class ViSession : ObservableObject, IConnectable
     public ViSession( string ipv4Address, int portNumber = 5025 ) : this( new TcpSession( ipv4Address, portNumber ) )
     { }
 
+    /// <summary>   Default constructor. </summary>
+    /// <remarks>   2023-08-15. </remarks>
+    public ViSession() 
+    { }
+
     /// <summary>   Initializes this object. </summary>
-    /// <remarks>   2023-08-12. </remarks>
-    /// <param name="tcpSession">       The TCP client session. </param>
+    /// <remarks>   2023-08-15. </remarks>
+    /// <param name="tcpSession">               The TCP client session. </param>
+    /// <param name="readTermination">          (Optional) The read termination. </param>
+    /// <param name="writeTermination">         (Optional) The write termination. </param>
+    /// <param name="readAfterWriteDelayMs">    (Optional) The read after write delay in
+    ///                                         milliseconds. </param>
     [MemberNotNull( nameof( GpibLan ) )]
-    private void Init( TcpSession tcpSession )
+    public void Initialize( [DisallowNull] TcpSession tcpSession,
+                            char readTermination = '\n', char writeTermination = '\n',
+                            int readAfterWriteDelayMs = _readAfterWriteDelayDefault )
     {
+        if ( tcpSession is null ) throw new ArgumentNullException( nameof( tcpSession ) );
+        this.TcpSession = tcpSession;
+        this.ReadTermination = readTermination;
+        this.WriteTermination = writeTermination;
+        this.ReadAfterWriteDelay = readAfterWriteDelayMs;
+
         this.GpibLan = new GpibLanController( tcpSession );
         if ( this.TcpSession is not null )
         {
@@ -64,6 +78,15 @@ public partial class ViSession : ObservableObject, IConnectable
             this.TcpSession.ConnectionChanging += this.TcpSession_ConnectionChanging;
             this.TcpSession.EventHandlerException += this.TcpSession_EventHandlerException;
         }
+    }
+
+    /// <summary>   Constructor. </summary>
+    /// <remarks>   2023-08-12. </remarks>
+    /// <param name="ipv4Address">  The IPv4 address. </param>
+    /// <param name="portNumber">    The port number. </param>
+    public void Initialize( string ipv4Address, int portNumber = 5025 )
+    {
+        this.Initialize( new TcpSession( ipv4Address, portNumber ) );
     }
 
     /// <summary>

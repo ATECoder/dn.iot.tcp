@@ -78,11 +78,11 @@ public partial class IdentityViewModel: ObservableObject
 
     #region " event handlers "
 
-    /// <summary>   Handles the tracer exception. </summary>
+    /// <summary>   Event handler. Called by ViSession for event handler exception events. </summary>
     /// <remarks>   2023-08-14. </remarks>
     /// <param name="sender">   Source of the event. </param>
     /// <param name="e">        Thread exception event information. </param>
-    private void HandleTracerException( object sender, ThreadExceptionEventArgs e )
+    private void ViSession_EventHandlerException( object sender, ThreadExceptionEventArgs e )
     {
         if ( e is not null && e.Exception is not null )
             this.ErrorMessage = e.Exception.ToString();
@@ -106,7 +106,7 @@ public partial class IdentityViewModel: ObservableObject
     public void ReadIdentity()
     {
 
-        Ieee488Session? p_session = null;
+        Ieee488Session? session = null;
         try
         {
             this.SocketAddress = string.Empty;
@@ -118,48 +118,47 @@ public partial class IdentityViewModel: ObservableObject
             this.ElapsedTime = string.Empty;
             this.ErrorMessage = string.Empty;
 
-            Stopwatch p_stopper = new();
+            Stopwatch stopper = new();
 
             if ( string.IsNullOrEmpty( this.HostAddress ) )
                 throw new InvalidOperationException( $"Empty host address" );
 
-            NotifyExceptionTracer exceptionTracer = new();
-            exceptionTracer.TraceException += this.HandleTracerException;
 
-            p_session = new( this.HostAddress!, this.PortNumber, exceptionTracer );
+            session = new( this.HostAddress!, this.PortNumber );
+            session.EventHandlerException+= this.ViSession_EventHandlerException;
 
             // open the connection
-            
-            p_session.Connect();
+
+            session.Connect();
 
             // report the connection state
-            this.Connected = p_session.Connected;
-            this.SocketAddress = p_session!.ViSession!.SocketAddress;
+            this.Connected = session.Connected;
+            this.SocketAddress = session!.ViSession!.SocketAddress;
 
 
-            double p_totalMilliseconds = 0;
-            if ( this.RepeatCount > 0 && p_session.Connected )
+            double totalMilliseconds = 0;
+            if ( this.RepeatCount > 0 && session.Connected )
             {
 
                 this.SentMessage = "*IDN?";
 
-                int p_loopCount = 0;
-                while ( p_loopCount < this.RepeatCount )
+                int loopCount = 0;
+                while ( loopCount < this.RepeatCount )
                 {
-                    p_loopCount++;
-                    p_stopper.Restart();
+                    loopCount++;
+                    stopper.Restart();
 
                     this.Identity = this.UseViSession
-                                        ? p_session.ViSession.QueryLine( this.SentMessage )
-                                        : p_session.QueryLine( this.SentMessage );
-                    p_totalMilliseconds += p_stopper.ElapsedMilliseconds;
+                                        ? session.ViSession.QueryLine( this.SentMessage )
+                                        : session.QueryLine( this.SentMessage );
+                    totalMilliseconds += stopper.ElapsedMilliseconds;
 
                     this.ReceivedMessage = this.Identity;
                     this.ReceivedMessageLength = (this.Identity?.Length ?? 0).ToString();
                 }
 
-                this.AverageElapsedTime = String.Format( this.ElapsedTimeFormat , p_totalMilliseconds / p_loopCount ) + " ms";
-                this.ElapsedTime = String.Format( this.ElapsedTimeFormat, p_totalMilliseconds ) + " ms";
+                this.AverageElapsedTime = String.Format( this.ElapsedTimeFormat , totalMilliseconds / loopCount ) + " ms";
+                this.ElapsedTime = String.Format( this.ElapsedTimeFormat, totalMilliseconds ) + " ms";
             }
             else this.ReceivedMessage = this.RepeatCount <= 0
                 ? "testing connect and disconnect; disconnecting..."
@@ -172,9 +171,9 @@ public partial class IdentityViewModel: ObservableObject
         }
         finally
         {
-            if ( p_session?.Connected ?? false )
-                p_session.Disconnect();
-            p_session = null;
+            if ( session?.Connected ?? false )
+                session.Disconnect();
+            session = null;
         }
     }
 

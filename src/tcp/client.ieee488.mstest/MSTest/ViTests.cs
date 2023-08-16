@@ -1,11 +1,9 @@
-using System.Security.Principal;
-
 namespace cc.isr.Iot.Tcp.Client.Ieee488.MSTest;
 
-/// <summary>   (Unit Test Class) an identity tests. </summary>
-/// <remarks>   2023-08-14. </remarks>
+/// <summary>   (Unit Test Class) a vi tests. </summary>
+/// <remarks>   2023-08-15. </remarks>
 [TestClass]
-public class IdentityTests
+public class ViTests
 {
     /// <summary>   Should read identity. </summary>
     /// <remarks>   2023-08-14. </remarks>
@@ -18,35 +16,31 @@ public class IdentityTests
     public void ShouldReadIdentity( string hostAddress, int portNumber, string model )
     {
 
-        IdentityViewModel viewModel = new() {
+        ViViewModel viewModel = new ( ) {
             HostAddress = hostAddress,
             PortNumber = portNumber,
             ElapsedTimeFormat = "0.0"
         };
 
-        if ( !viewModel.CanReadIdentity() )
-            Assert.Inconclusive( $"View model {nameof(IdentityViewModel.CanReadIdentity)} is false indicating that no listeners were found at {hostAddress}:{portNumber}." );
+        if ( !viewModel.CanToggleConnection() )
+            Assert.Inconclusive( $"View model {nameof(ViViewModel)}.{nameof(ViViewModel.CanToggleConnection )} is false indicating that no listener was found at {hostAddress}:{portNumber}." );
 
         if ( !NetExplorer.PingPort( hostAddress, portNumber ) )
             Assert.Inconclusive( $"instrument not found at {hostAddress}:{portNumber}." );
 
+        Assert.IsFalse( viewModel.Connected, $"View model {nameof( ViViewModel )}.{nameof( ViViewModel.Connected )} should be false." );
+
+        viewModel.ToggleConnection();
+
+        Assert.IsTrue( viewModel.Connected, $"View model {nameof( ViViewModel )}.{nameof( ViViewModel.Connected )} should be true." );
+
         // start with connect/disconnect test:
+        viewModel.QueryMessage = Syntax.IdentityQueryCommand;
+        viewModel.QueryCommand.Execute(null);
+        string? identity = viewModel.ReceivedMessage;
 
-        viewModel.RepeatCount = 0;
-
-        viewModel.ReadIdentity();
-
-        Assert.IsTrue( string.IsNullOrEmpty( viewModel.ErrorMessage ),
-                $"Identity should read without exception. However, an exception was reported: {viewModel.ErrorMessage}." );
-
-        viewModel.RepeatCount = 1;
-
-        viewModel.ReadIdentity();
-
-        Assert.IsTrue( string.IsNullOrEmpty( viewModel.ErrorMessage ),
-                $"Identity should read without exception. However, an exception was reported: {viewModel.ErrorMessage}." );
-
-        string? identity = viewModel.Identity;
+        Assert.IsTrue( string.IsNullOrEmpty( viewModel.LastErrorMessage ),
+                $"Identity should read without exception. However, an exception was reported: {viewModel.LastErrorMessage}." );
 
         Assert.IsFalse( string.IsNullOrEmpty( identity ),
                 $"Identity should have a value." );

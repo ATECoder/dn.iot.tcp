@@ -29,43 +29,40 @@ public partial class ViSession : ObservableObject, IConnectable
     /// <summary>   Constructor. </summary>
     /// <remarks>   2023-08-12. </remarks>
     /// <param name="tcpSession">               The TCP client session. </param>
-    /// <param name="exceptionTracer">          The exception tracer. </param>
     /// <param name="readTermination">           The read termination. </param>
     /// <param name="writeTermination">          The write termination. </param>
     /// <param name="readAfterWriteDelayMs">     The read after write delay in
     ///                                         milliseconds. </param>
-    public ViSession( TcpSession tcpSession, IExceptionTracer exceptionTracer,
+    public ViSession( TcpSession tcpSession, 
                       char readTermination = '\n', char writeTermination = '\n',
                       int readAfterWriteDelayMs = _readAfterWriteDelayDefault )
     {
         this.TcpSession = tcpSession;
         this.ReadTermination = readTermination;
         this.WriteTermination = writeTermination;
-        this.ExceptionTracer = exceptionTracer;
         this.ReadAfterWriteDelay = readAfterWriteDelayMs;
-        this.Init(tcpSession, exceptionTracer);
+        this.Init(tcpSession);
     }
 
     /// <summary>   Constructor. </summary>
     /// <remarks>   2023-08-12. </remarks>
     /// <param name="ipv4Address">  The IPv4 address. </param>
     /// <param name="portNumber">    The port number. </param>
-    public ViSession( string ipv4Address, int portNumber = 5025 ) : this( new TcpSession( ipv4Address, portNumber ),
-            new DebugExceptionTracer() )
+    public ViSession( string ipv4Address, int portNumber = 5025 ) : this( new TcpSession( ipv4Address, portNumber ) )
     { }
 
     /// <summary>   Initializes this object. </summary>
     /// <remarks>   2023-08-12. </remarks>
     /// <param name="tcpSession">       The TCP client session. </param>
-    /// <param name="exceptionTracer">  The exception tracer. </param>
     [MemberNotNull( nameof( GpibLan ) )]
-    private void Init( TcpSession tcpSession, IExceptionTracer exceptionTracer )
+    private void Init( TcpSession tcpSession )
     {
-        this.GpibLan = new GpibLanController( tcpSession, exceptionTracer );
+        this.GpibLan = new GpibLanController( tcpSession );
         if ( this.TcpSession is not null )
         {
             this.TcpSession.ConnectionChanged += this.TcpSession_ConnectionChanged;
             this.TcpSession.ConnectionChanging += this.TcpSession_ConnectionChanging;
+            this.TcpSession.EventHandlerException += this.TcpSession_EventHandlerException;
         }
     }
 
@@ -97,6 +94,7 @@ public partial class ViSession : ObservableObject, IConnectable
                 }
                 this.TcpSession.ConnectionChanged -= this.TcpSession_ConnectionChanged;
                 this.TcpSession.ConnectionChanging -= this.TcpSession_ConnectionChanging;
+                this.TcpSession.EventHandlerException -= this.TcpSession_EventHandlerException;
             }
 
             this.GpibLan?.Dispose();
@@ -105,7 +103,6 @@ public partial class ViSession : ObservableObject, IConnectable
             this.TcpSession?.Dispose();
             this.TcpSession = null;
 
-            this.ExceptionTracer = null;
         }
     }
 
@@ -216,29 +213,20 @@ public partial class ViSession : ObservableObject, IConnectable
     public string AwaitReading( int timeout, int maxLength = 0x7FFF, bool trimEnd = true, Action? doEventsAction = null ) 
     {
         string reading = string.Empty;
-        try
+
+        Stopwatch stopper = Stopwatch.StartNew();
+
+        // wait for data or timeout
+        while ( this.TcpSession is not null && (string.IsNullOrEmpty( reading ) || (stopper.ElapsedMilliseconds < timeout)) )
         {
-            Stopwatch stopper = Stopwatch.StartNew();
+            doEventsAction?.Invoke();
 
-            // wait for data or timeout
-            while ( this.TcpSession is not null && (string.IsNullOrEmpty( reading ) || (stopper.ElapsedMilliseconds < timeout)) )
-            {
-                doEventsAction?.Invoke();
+            // take a reading
 
-                // take a reading
-
-                if ( this.UsingGpibLan )
-                    reading = this.GpibLan?.ReceiveFromDevice( maxLength, trimEnd ) ?? string.Empty;
-                else
-                    _ = this.TcpSession.Read( maxLength, ref reading, trimEnd );
-            }
-        }
-	    catch (Exception ex )
-	    {
-		    this.ExceptionTracer?.Trace(ex);
-	    }
-	    finally
-	    {
+            if ( this.UsingGpibLan )
+                reading = this.GpibLan?.ReceiveFromDevice( maxLength, trimEnd ) ?? string.Empty;
+            else
+                _ = this.TcpSession.Read( maxLength, ref reading, trimEnd );
         }
         return reading;
     }
@@ -312,6 +300,9 @@ public partial class ViSession : ObservableObject, IConnectable
     /// <value> True if we can disconnect, false if not. </value>
     public bool CanDisconnect => this.Connectable?.CanDisconnect ?? false;
 
+    /// <summary>   Event queue for all listeners interested in EventHandlerException events. </summary>
+    public event EventHandler<ThreadExceptionEventArgs>? EventHandlerException;
+
     /// <summary>   Event queue for all listeners interested in ConnectionChanged events. </summary>
     public event EventHandler<ConnectionChangedEventArgs>? ConnectionChanged;
 
@@ -320,8 +311,25 @@ public partial class ViSession : ObservableObject, IConnectable
     /// <param name="e">    Event information to send to registered event handlers. </param>
     protected void OnConnectionChanged( ConnectionChangedEventArgs e )
     {
+
         var handler = this.ConnectionChanged;
-        handler?.Invoke( this, e );
+        try
+        {
+            handler?.Invoke( this, e );
+        }
+        catch ( System.OutOfMemoryException ) { throw; }
+        catch ( System.DllNotFoundException ) { throw; }
+        catch ( System.StackOverflowException ) { throw; }
+        catch ( System.InvalidCastException ) { throw; }
+        catch ( Exception ex )
+        {
+            // https://stackoverflow.com/questions/3114543/should-event-handlers-in-c-sharp-ever-raise-exceptions
+            // other exceptions are to be callers for tracing or further handling.
+
+            ex.Data.Add( $"Method {ex.Data.Count}", $"in {handler?.Method.Name}" );
+            var eventHandlerException = this.EventHandlerException;
+            eventHandlerException?.Invoke( this, new ThreadExceptionEventArgs( ex ) );
+        }
     }
 
     /// <summary>   Event queue for all listeners interested in ConnectionChanging events. </summary>
@@ -333,7 +341,23 @@ public partial class ViSession : ObservableObject, IConnectable
     protected void OnConnectionChanging( ConnectionChangingEventArgs e )
     {
         var handler = this.ConnectionChanging;
-        handler?.Invoke( this, e );
+        try
+        {
+            handler?.Invoke( this, e );
+        }
+        catch ( System.OutOfMemoryException ) { throw; }
+        catch ( System.DllNotFoundException ) { throw; }
+        catch ( System.StackOverflowException ) { throw; }
+        catch ( System.InvalidCastException ) { throw; }
+        catch ( Exception ex )
+        {
+            // https://stackoverflow.com/questions/3114543/should-event-handlers-in-c-sharp-ever-raise-exceptions
+            // other exceptions are to be callers for tracing or further handling.
+
+            ex.Data.Add( $"Method {ex.Data.Count}", $"in {handler?.Method.Name}" );
+            var eventHandlerException = this.EventHandlerException;
+            eventHandlerException?.Invoke( this, new ThreadExceptionEventArgs( ex ) );
+        }
     }
 
     /// <summary>   Opens the connection. </summary>
@@ -369,15 +393,6 @@ public partial class ViSession : ObservableObject, IConnectable
 
     #region " tcp session event handlers "
 
-    private IExceptionTracer? _exceptionTracer;
-    /// <summary>   Gets or sets the exception tracer. </summary>
-    /// <value> The exception tracer. </value>
-    private IExceptionTracer? ExceptionTracer
-    {
-        get => this._exceptionTracer;
-        set => _ = this.SetProperty( ref this._exceptionTracer, value );
-    }
-
     /// <summary>   Handles the <see cref="TcpSession.ConnectionChanged"/> event. </summary>
     /// <remarks>   2023-08-12. </remarks>
     /// <param name="sender">       Source of the event. </param>
@@ -387,14 +402,6 @@ public partial class ViSession : ObservableObject, IConnectable
     {
 
         if ( sender is null || eventArgs is null ) return;
-
-        try
-        {
-        }
-        catch ( Exception ex )
-        {
-            this.ExceptionTracer?.Trace( ex );
-        }
     }
 
     /// <summary>   Handles the <see cref="TcpSession.ConnectionChanging"/> event. </summary>
@@ -405,21 +412,25 @@ public partial class ViSession : ObservableObject, IConnectable
     private void TcpSession_ConnectionChanging( object sender, ConnectionChangingEventArgs eventArgs )
     {
         if ( sender is null || eventArgs is null ) return;
-        try
+        // enable the GPIB-Lan controller if the Tcp Session connects to the 
+        // GPIB-Lan controller port
+        if ( this.GpibLan is not null )
         {
-            // enable the GPIB-Lan controller if the Tcp Session connects to the 
-            // GPIB-Lan controller port
-            if ( this.GpibLan is not null )
-            {
-                this.GpibLan.Enabled = _gpibLanPortNumber == (( TcpSession ) sender)?.PortNumber;
-                this.UsingGpibLan = this.GpibLan.Enabled;
-            }
+            this.GpibLan.Enabled = _gpibLanPortNumber == (( TcpSession ) sender)?.PortNumber;
+            this.UsingGpibLan = this.GpibLan.Enabled;
         }
-        catch ( Exception ex )
-        {
-            this.ExceptionTracer?.Trace( ex );
-        }
+    }
 
+    /// <summary>
+    /// Event handler. Called by TcpSession for event handler exception events.
+    /// </summary>
+    /// <remarks>   2023-08-15. </remarks>
+    /// <param name="sender">       Source of the event. </param>
+    /// <param name="eventArgs">    Thread exception event information. </param>
+    private void TcpSession_EventHandlerException( object sender, ThreadExceptionEventArgs eventArgs )
+    {
+        var handler = this.EventHandlerException;
+        handler?.Invoke( this, eventArgs );
     }
 
     #endregion

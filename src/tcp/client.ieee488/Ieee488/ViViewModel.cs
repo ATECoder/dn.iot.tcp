@@ -1,6 +1,9 @@
+using System;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -16,13 +19,10 @@ public partial class ViViewModel : ObservableObject, IDisposable
 
     /// <summary>   Default constructor. </summary>
     /// <remarks>   2023-08-14. </remarks>
-    /// <param name="exceptionTracer">  The exception tracer. </param>
-    public ViViewModel(NotifyExceptionTracer exceptionTracer)
+    public ViViewModel()
     {
         this._availableCommands = new();
         this.PopulateCommands();
-        this.ExceptionTracer = exceptionTracer;
-        this.ExceptionTracer.TraceException += this.HandleTracerException;
         this.Stopwatch = new Stopwatch();
     }
 
@@ -54,12 +54,11 @@ public partial class ViViewModel : ObservableObject, IDisposable
                 }
                 this.Session.ConnectionChanged -= this.Session_ConnectionChanged;
                 this.Session.ConnectionChanging -= this.Session_ConnectionChanging;
+                this.Session.EventHandlerException -= this.Session_EventHandlerException;
             }
 
             this.Session?.Dispose();
             this.Session = null;
-
-            this.ExceptionTracer = null;
         }
     }
 
@@ -208,9 +207,6 @@ public partial class ViViewModel : ObservableObject, IDisposable
 
         if ( this.Connected )
         {
-            if ( this.ExceptionTracer is not null )
-                this.ExceptionTracer.TraceException -= this.HandleTracerException;
-
             if (this.Session is not null )
             {
                 this.Session.Disconnect();
@@ -294,8 +290,8 @@ public partial class ViViewModel : ObservableObject, IDisposable
         if ( this.UsingGpibLan() && this.AutoStatusRead )
             this.SerialPollByte = this.Session!.ViSession!.GpibLan!.SerialPoll();
 
-        bool p_isQuery = this.SentMessage.EndsWith( "?" );
-        if ( !p_isQuery && this.AutoStatusRead )
+        bool isQuery = this.SentMessage.EndsWith( "?" );
+        if ( !isQuery && this.AutoStatusRead )
 	    {
             this.StatusByte = this.Session!.QueryServiceRequestStatus();
             this.StandardByte = this.Session!.QueryStandardEventsStatus();
@@ -479,19 +475,12 @@ public partial class ViViewModel : ObservableObject, IDisposable
 
         if ( sender is null || eventArgs is null ) return;
 
-        try
-        {
-            this.SocketAddress = eventArgs.Connected
-                                    ? this.Session!.ViSession!.SocketAddress
-                                    : string.Empty;
+        this.SocketAddress = eventArgs.Connected
+                                ? this.Session!.ViSession!.SocketAddress
+                                : string.Empty;
 
-            if ( this.UsingGpibLan() )
-                this.ReadAfterWriteEnabled = this.Session!.ViSession!.GpibLan!.ReadAfterWriteEnabled;
-        }
-        catch ( Exception ex )
-        {
-            this.ExceptionTracer?.Trace( ex );
-        }
+        if ( this.UsingGpibLan() )
+            this.ReadAfterWriteEnabled = this.Session!.ViSession!.GpibLan!.ReadAfterWriteEnabled;
     }
 
     /// <summary>   Handles the <see cref="Ieee488Session.ConnectionChanging"/> event. </summary>
@@ -502,12 +491,26 @@ public partial class ViViewModel : ObservableObject, IDisposable
     private void Session_ConnectionChanging( object sender, ConnectionChangingEventArgs eventArgs )
     {
         if ( sender is null || eventArgs is null ) return;
-        try
+    }
+
+    /// <summary>   Event handler. Called by Session for event handler exception events. </summary>
+    /// <remarks>   2023-08-15. </remarks>
+    /// <param name="sender">   Source of the event. </param>
+    /// <param name="e">        Thread exception event information. </param>
+    private void Session_EventHandlerException( object sender, ThreadExceptionEventArgs e )
+    {
+        if ( e is not null && e.Exception is not null )
         {
-        }
-        catch ( Exception ex )
-        {
-            this.ExceptionTracer?.Trace( ex );
+            this.LastErrorMessage = e.Exception.ToString();
+            if ( e.Exception.Data?.Count > 0 )
+            {
+                System.Text.StringBuilder builder = new();
+                foreach ( System.Collections.DictionaryEntry keyValuePair in e.Exception.Data )
+                {
+                    _ = builder.AppendLine( $"Data: {keyValuePair.Key}: {keyValuePair.Value}" );
+                }
+                this.LastErrorMessage += e.Exception.Data;
+            }
         }
 
     }
@@ -537,21 +540,6 @@ public partial class ViViewModel : ObservableObject, IDisposable
     #endregion
 
     #region " event handlers "
-
-    private NotifyExceptionTracer? _exceptionTracer;
-    /// <summary>   Gets or sets the exception tracer. </summary>
-    /// <value> The exception tracer. </value>
-    private NotifyExceptionTracer? ExceptionTracer
-    {
-        get => this._exceptionTracer;
-        set => _ = this.SetProperty( ref this._exceptionTracer, value );
-    }
-
-    private void HandleTracerException( object sender, ThreadExceptionEventArgs e )
-    {
-        if ( e is not null && e.Exception is not null )
-            this.LastErrorMessage = e.Exception.ToString();
-    }
 
     private void HandleGpibLanPropertyChange( object sender, PropertyChangedEventArgs e )
     {

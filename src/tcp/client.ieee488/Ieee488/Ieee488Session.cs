@@ -17,43 +17,33 @@ public class Ieee488Session : ObservableObject, IConnectable
     /// <summary>   Constructor. </summary>
     /// <remarks>   2023-08-12. </remarks>
     /// <param name="tcpSession">               The TCP client session. </param>
-    /// <param name="exceptionTracer">          The exception tracer. </param>
     /// <param name="readTermination">          (Optional) (The read termination. </param>
     /// <param name="writeTermination">         (Optional) (The write termination. </param>
     /// <param name="readAfterWriteDelayMs">    (Optional) (The read after write delay in
     ///                                         milliseconds. </param>
-    public Ieee488Session( TcpSession tcpSession, IExceptionTracer exceptionTracer,
+    public Ieee488Session( TcpSession tcpSession, 
                              char readTermination = '\n', char writeTermination = '\n',
                              int readAfterWriteDelayMs = 5 )
     {
         this._identity = string.Empty;
-        this.ViSession = new ViSession( tcpSession, exceptionTracer, readTermination, writeTermination, readAfterWriteDelayMs );
+        this.ViSession = new ViSession( tcpSession, readTermination, writeTermination, readAfterWriteDelayMs );
         this.ReadTermination = readTermination;
         this.WriteTermination = writeTermination;
-        this.ExceptionTracer = exceptionTracer;
         this.ReadAfterWriteDelay = readAfterWriteDelayMs;
 
         if ( this.ViSession is not null )
         {
             this.ViSession.ConnectionChanged += this.ViSession_ConnectionChanged;
             this.ViSession.ConnectionChanging += this.ViSession_ConnectionChanging;
+            this.ViSession.EventHandlerException += this.ViSession_EventHandlerException;
         }
     }
-
-    /// <summary>   Constructor. </summary>
-    /// <remarks>   2023-08-12. </remarks>
-    /// <param name="ipv4Address">  The IPv4 address. </param>
-    /// <param name="portNumber">   (Optional) The port number. </param>
-    public Ieee488Session( string ipv4Address, int portNumber = 5025 ) : this(  ipv4Address, portNumber, new DebugExceptionTracer() )
-    { }
 
     /// <summary>   Constructor. </summary>
     /// <remarks>   2023-08-14. </remarks>
     /// <param name="ipv4Address">      The IPv4 address. </param>
     /// <param name="portNumber">       The port number. </param>
-    /// <param name="exceptionTracer">  The exception tracer. </param>
-    public Ieee488Session( string ipv4Address, int portNumber, IExceptionTracer exceptionTracer ) : this( new TcpSession( ipv4Address, portNumber ),
-            exceptionTracer )
+    public Ieee488Session( string ipv4Address, int portNumber ) : this( new TcpSession( ipv4Address, portNumber ) )
     { }
 
 
@@ -81,10 +71,9 @@ public class Ieee488Session : ObservableObject, IConnectable
                 if ( this.ViSession.Connected ) { this.ViSession.Disconnect(); }
                 this.ViSession.ConnectionChanged -= this.ViSession_ConnectionChanged;
                 this.ViSession.ConnectionChanging -= this.ViSession_ConnectionChanging;
+                this.ViSession.EventHandlerException -= this.ViSession_EventHandlerException;
             }
             this.ViSession?.Dispose();
-
-            this.ExceptionTracer = null;
         }
     }
 
@@ -471,6 +460,9 @@ public class Ieee488Session : ObservableObject, IConnectable
     /// <value> True if we can disconnect, false if not. </value>
     public bool CanDisconnect => this.Connectable?.CanDisconnect ?? false;
 
+    /// <summary>   Event queue for all listeners interested in EventHandlerException events. </summary>
+    public event EventHandler<ThreadExceptionEventArgs>? EventHandlerException;
+
     /// <summary>   Event queue for all listeners interested in ConnectionChanged events. </summary>
     public event EventHandler<ConnectionChangedEventArgs>? ConnectionChanged;
 
@@ -479,8 +471,25 @@ public class Ieee488Session : ObservableObject, IConnectable
     /// <param name="e">    Event information to send to registered event handlers. </param>
     protected void OnConnectionChanged( ConnectionChangedEventArgs e )
     {
+
         var handler = this.ConnectionChanged;
-        handler?.Invoke( this, e );
+        try
+        {
+            handler?.Invoke( this, e );
+        }
+        catch ( System.OutOfMemoryException ) { throw; }
+        catch ( System.DllNotFoundException ) { throw; }
+        catch ( System.StackOverflowException ) { throw; }
+        catch ( System.InvalidCastException ) { throw; }
+        catch ( Exception ex )
+        {
+            // https://stackoverflow.com/questions/3114543/should-event-handlers-in-c-sharp-ever-raise-exceptions
+            // other exceptions are to be callers for tracing or further handling.
+
+            ex.Data.Add( $"Method {ex.Data.Count}", $"in {handler?.Method.Name}" );
+            var eventHandlerException = this.EventHandlerException;
+            eventHandlerException?.Invoke( this, new ThreadExceptionEventArgs( ex ) );
+        }
     }
 
     /// <summary>   Event queue for all listeners interested in ConnectionChanging events. </summary>
@@ -492,7 +501,23 @@ public class Ieee488Session : ObservableObject, IConnectable
     protected void OnConnectionChanging( ConnectionChangingEventArgs e )
     {
         var handler = this.ConnectionChanging;
-        handler?.Invoke( this, e );
+        try
+        {
+            handler?.Invoke( this, e );
+        }
+        catch ( System.OutOfMemoryException ) { throw; }
+        catch ( System.DllNotFoundException ) { throw; }
+        catch ( System.StackOverflowException ) { throw; }
+        catch ( System.InvalidCastException ) { throw; }
+        catch ( Exception ex )
+        {
+            // https://stackoverflow.com/questions/3114543/should-event-handlers-in-c-sharp-ever-raise-exceptions
+            // other exceptions are to be callers for tracing or further handling.
+
+            ex.Data.Add( $"Method {ex.Data.Count}", $"in {handler?.Method.Name}" );
+            var eventHandlerException = this.EventHandlerException;
+            eventHandlerException?.Invoke( this, new ThreadExceptionEventArgs( ex ) );
+        }
     }
 
     /// <summary>   Opens the connection. </summary>
@@ -526,16 +551,7 @@ public class Ieee488Session : ObservableObject, IConnectable
 
     #endregion
 
-    #region " tcp session event handlers "
-
-    private IExceptionTracer? _exceptionTracer;
-    /// <summary>   Gets or sets the exception tracer. </summary>
-    /// <value> The exception tracer. </value>
-    private IExceptionTracer? ExceptionTracer
-    {
-        get => this._exceptionTracer;
-        set => _ = this.SetProperty( ref this._exceptionTracer, value );
-    }
+    #region " vi session event handlers "
 
     /// <summary>   Handles the <see cref="TcpSession.ConnectionChanged"/> event. </summary>
     /// <remarks>   2023-08-12. </remarks>
@@ -544,17 +560,7 @@ public class Ieee488Session : ObservableObject, IConnectable
     ///                             arguments. </param>
     private void ViSession_ConnectionChanged( object sender, ConnectionChangedEventArgs eventArgs )
     {
-
         if ( sender is null || eventArgs is null ) return;
-
-        try
-        {
-
-        }
-        catch ( Exception ex )
-        {
-            this.ExceptionTracer?.Trace( ex );
-        }
     }
 
     /// <summary>   Handles the <see cref="TcpSession.ConnectionChanging"/> event. </summary>
@@ -565,15 +571,24 @@ public class Ieee488Session : ObservableObject, IConnectable
     private void ViSession_ConnectionChanging( object sender, ConnectionChangingEventArgs eventArgs )
     {
         if ( sender is null || eventArgs is null ) return;
-        try
-        {
-        }
-        catch ( Exception ex )
-        {
-            this.ExceptionTracer?.Trace( ex );
-        }
-
     }
+
+    /// <summary>
+    /// Event handler. Called by TcpSession for event handler exception events.
+    /// </summary>
+    /// <remarks>   2023-08-15. </remarks>
+    /// <param name="sender">       Source of the event. </param>
+    /// <param name="eventArgs">    Thread exception event information. </param>
+    private void ViSession_EventHandlerException( object sender, ThreadExceptionEventArgs eventArgs )
+    {
+        var handler = this.EventHandlerException;
+        handler?.Invoke( this, eventArgs );
+    }
+
+
+    #endregion
+
+    #region " tcp session event handlers "
 
     #endregion
 

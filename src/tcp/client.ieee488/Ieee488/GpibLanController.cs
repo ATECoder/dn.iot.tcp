@@ -17,12 +17,11 @@ public partial class GpibLanController : ObservableObject, IDisposable
     /// <summary>   Constructor. </summary>
     /// <remarks>   2023-08-12. </remarks>
     /// <param name="tcpSession">               The TCP client session. </param>
-    /// <param name="exceptionTracer">          The exception tracer. </param>
-    /// <param name="readTermination">           The read termination. </param>
-    /// <param name="writeTermination">          The write termination. </param>
-    /// <param name="readAfterWriteDelayMs">     The read after write delay in
+    /// <param name="readTermination">          (Optional) The read termination. </param>
+    /// <param name="writeTermination">         (Optional) The write termination. </param>
+    /// <param name="readAfterWriteDelayMs">    (Optional) The read after write delay in
     ///                                         milliseconds. </param>
-    public GpibLanController( TcpSession tcpSession, IExceptionTracer exceptionTracer,
+    public GpibLanController( TcpSession tcpSession,
                              char readTermination = '\n', char writeTermination = '\n',
                              int readAfterWriteDelayMs = 5)
     {
@@ -30,7 +29,6 @@ public partial class GpibLanController : ObservableObject, IDisposable
         this.ReadTermination = readTermination;
         this.WriteTermination = writeTermination;
         this.ControllerMode = true;
-        this.ExceptionTracer = exceptionTracer;
         this.ReadAfterWriteDelay = readAfterWriteDelayMs;
 
         // this needs to be turned on if using the Keithley 2700 with enabled read-after-write
@@ -41,6 +39,7 @@ public partial class GpibLanController : ObservableObject, IDisposable
         {
             this.TcpSession.ConnectionChanged += this.TcpSession_ConnectionChanged;
             this.TcpSession.ConnectionChanging += this.TcpSession_ConnectionChanging;
+            this.TcpSession.EventHandlerException+= this.TcpSession_EventHandlerException;
         }
     }
 
@@ -67,11 +66,10 @@ public partial class GpibLanController : ObservableObject, IDisposable
             {
                 this.TcpSession.ConnectionChanged -= this.TcpSession_ConnectionChanged;
                 this.TcpSession.ConnectionChanging -= this.TcpSession_ConnectionChanging;
+                this.TcpSession.EventHandlerException -= this.TcpSession_EventHandlerException;
             }
             this.TcpSession?.Dispose();
             this.TcpSession = null;
-
-            this.ExceptionTracer = null;
         }
     }
 
@@ -641,11 +639,6 @@ public partial class GpibLanController : ObservableObject, IDisposable
 
     #region " tcp session event handlers "
 
-    /// <summary>   Gets or sets the exception tracer. </summary>
-    /// <value> The exception tracer. </value>
-    [ObservableProperty]
-    private IExceptionTracer? _exceptionTracer;
-
     /// <summary>   Handles the <see cref="TcpSession.ConnectionChanged"/> event. </summary>
     /// <remarks>   2023-08-12. </remarks>
     /// <param name="sender">       Source of the event. </param>
@@ -656,38 +649,30 @@ public partial class GpibLanController : ObservableObject, IDisposable
 
         if ( sender is null || eventArgs is null ) return;
 
-        try
+        this.Enabled = this.TcpSession?.PortNumber == _gpibLanPortNumber;
+
+        // the GPIB-Lan controller is enabled only if the Tcp client is
+        // connected to a GPIB-Lan controller such as the Prologix GPIB-Lan controller.
+
+        if ( !this.Enabled ) return;
+
+        // when connected, the read after write is turned off by default.
+        // this is done to prevent Query Unterminated errors on instruments such as the Keithley 2700.
+        // Where Read-After-Write is disabled, upon read, the controller is commanded to read from
+        // the instrument using the <c>++read</c> command.
+
+        if ( eventArgs.Connected )
         {
 
-            this.Enabled = this.TcpSession?.PortNumber == _gpibLanPortNumber;
+            // from experiments it seems this needs to be set first.
+            _ = this.ReadAfterWriteEnabledGetter();
 
-            // the GPIB-Lan controller is enabled only if the Tcp client is
-            // connected to a GPIB-Lan controller such as the Prologix GPIB-Lan controller.
-             
-            if ( !this.Enabled ) return;
+            // defaults to turning off auto read-after-write
+            this.ReadAfterWriteEnabled = true;
 
-		    // when connected, the read after write is turned off by default.
-		    // this is done to prevent Query Unterminated errors on instruments such as the Keithley 2700.
-		    // Where Read-After-Write is disabled, upon read, the controller is commanded to read from
-		    // the instrument using the <c>++read</c> command.
-		
-		    if (eventArgs.Connected )
-		    {
+            this.ReadAfterWriteEnabledSetter( false );
 
-                // from experiments it seems this needs to be set first.
-                _ = this.ReadAfterWriteEnabledGetter();
-
-                // defaults to turning off auto read-after-write
-                this.ReadAfterWriteEnabled = true;
-
-                this.ReadAfterWriteEnabledSetter( false );
-
-            }
         }
-        catch ( Exception ex ) 
-	    {
-            this.ExceptionTracer?.Trace( ex );
-        }	
     }
 
     /// <summary>   Handles the <see cref="TcpSession.ConnectionChanging"/> event. </summary>
@@ -699,35 +684,37 @@ public partial class GpibLanController : ObservableObject, IDisposable
     {
         if ( sender is null || eventArgs is null ) return;
 
-        try
+        // enable the GPIB-Lan controller if the Tcp Session connects to the 
+        // GPIB-Lan controller port
+        this.Enabled = _gpibLanPortNumber == (( TcpSession ) sender)?.PortNumber;
+
+        // the GPIB-Lan controller is enabled only if the Tcp client is
+        // connected to a GPIB-Lan controller such as the Prologix GPIB-Lan controller.
+        if ( !this.Enabled ) return;
+
+        if ( eventArgs.Connected )
         {
-            // enable the GPIB-Lan controller if the Tcp Session connects to the 
-            // GPIB-Lan controller port
-            this.Enabled = _gpibLanPortNumber == ( ( TcpSession ) sender)?.PortNumber;
+            // leave the instrument with auto read-after-write off to prevent
+            // query unterminated errors.
 
-            // the GPIB-Lan controller is enabled only if the Tcp client is
-            // connected to a GPIB-Lan controller such as the Prologix GPIB-Lan controller.
-            if ( !this.Enabled ) return;
+            _ = this.ReadAfterWriteEnabledGetter();
+            this.ReadAfterWriteEnabledSetter( false );
 
-            if ( eventArgs.Connected )
-			{
-                // leave the instrument with auto read-after-write off to prevent
-                // query unterminated errors.
+            // send the instrument back to local.
 
-                _ = this.ReadAfterWriteEnabledGetter();
-                this.ReadAfterWriteEnabledSetter( false );
-
-                // send the instrument back to local.
-
-                this.GoToLocal();
-            }
-        }
-        catch ( Exception ex )
-        {
-            this.ExceptionTracer?.Trace( ex );
+            this.GoToLocal();
         }
 
     }
+
+    /// <summary>   Event handler. Called by Session for event handler exception events. </summary>
+    /// <remarks>   2023-08-15. </remarks>
+    /// <param name="sender">   Source of the event. </param>
+    /// <param name="e">        Thread exception event information. </param>
+    private void TcpSession_EventHandlerException( object sender, ThreadExceptionEventArgs e )
+    {
+    }
+
 
     #endregion
 }

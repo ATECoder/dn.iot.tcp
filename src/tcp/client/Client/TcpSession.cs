@@ -573,6 +573,9 @@ public partial class TcpSession : ObservableObject, IConnectable
 
     #region " connectable implementation "
 
+    /// <summary>   Event queue for all listeners interested in EventHandlerException events. </summary>
+    public event EventHandler<ThreadExceptionEventArgs>? EventHandlerException;
+
     /// <summary>   Event queue for all listeners interested in ConnectionChanged events. </summary>
     public event EventHandler<ConnectionChangedEventArgs>? ConnectionChanged;
 
@@ -581,8 +584,25 @@ public partial class TcpSession : ObservableObject, IConnectable
     /// <param name="e">    Event information to send to registered event handlers. </param>
     protected void OnConnectionChanged( ConnectionChangedEventArgs e )
     {
+
         var handler = this.ConnectionChanged;
-        handler?.Invoke( this, e );
+        try
+        {
+            handler?.Invoke( this, e );
+        }
+        catch ( System.OutOfMemoryException ) { throw; }
+        catch ( System.DllNotFoundException ) { throw; }
+        catch ( System.StackOverflowException ) { throw; }
+        catch ( System.InvalidCastException ) { throw; }
+        catch ( Exception ex )
+        {
+            // https://stackoverflow.com/questions/3114543/should-event-handlers-in-c-sharp-ever-raise-exceptions
+            // other exceptions are to be callers for tracing or further handling.
+
+            ex.Data.Add( $"Method {ex.Data.Count}", $"in {handler?.Method.Name}" );
+            var eventHandlerException = this.EventHandlerException;
+            eventHandlerException?.Invoke( this, new ThreadExceptionEventArgs( ex ) );
+        }
     }
 
     /// <summary>   Event queue for all listeners interested in ConnectionChanging events. </summary>
@@ -594,7 +614,23 @@ public partial class TcpSession : ObservableObject, IConnectable
     protected void OnConnectionChanging( ConnectionChangingEventArgs e )
     {
         var handler = this.ConnectionChanging;
-        handler?.Invoke( this, e );
+        try
+        {
+            handler?.Invoke( this, e );
+        }
+        catch ( System.OutOfMemoryException ) { throw; }
+        catch ( System.DllNotFoundException ) { throw; }
+        catch ( System.StackOverflowException ) { throw; }
+        catch ( System.InvalidCastException ) { throw; }
+        catch ( Exception ex )
+        {
+            // https://stackoverflow.com/questions/3114543/should-event-handlers-in-c-sharp-ever-raise-exceptions
+            // other exceptions are to be callers for tracing or further handling.
+
+            ex.Data.Add( $"Method {ex.Data.Count}", $"in {handler?.Method.Name}" );
+            var eventHandlerException = this.EventHandlerException;
+            eventHandlerException?.Invoke( this, new ThreadExceptionEventArgs( ex ) );
+        }
     }
 
     /// <summary>   Opens a new session. </summary>

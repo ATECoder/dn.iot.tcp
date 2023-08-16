@@ -23,9 +23,12 @@ public interface IConnectable: IDisposable
     public void Disconnect();
 
     /// <summary>   Event queue for all listeners interested in ConnectionChanged events. </summary>
-    public event EventHandler<ConnectionChangedEventArgs> ConnectionChanged;
+    public event EventHandler<ConnectionChangedEventArgs>? ConnectionChanged;
 
     /// <summary>   Event queue for all listeners interested in ConnectionChanging events. </summary>
-    public event EventHandler<ConnectionChangingEventArgs> ConnectionChanging;
+    public event EventHandler<ConnectionChangingEventArgs>? ConnectionChanging;
+
+    /// <summary>   Event queue for all listeners interested in EventHandlerException events. </summary>
+    public event EventHandler<ThreadExceptionEventArgs>? EventHandlerException;
 
 }

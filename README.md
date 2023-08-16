@@ -1,6 +1,6 @@
 ### IOT Tcp
 
-TCP Socket-based control and communication library for LXI-based instruments. 
+TCP Socket-based control and communication library for [LXI]-based instruments. 
 
 * [Description](#Description)
 * [Issues](#Issues)
@@ -8,7 +8,10 @@ TCP Socket-based control and communication library for LXI-based instruments.
 * [Runtime Pre-Requisites](#Runtime-Pre-Requisites)
 * [Known Issues](#Known-Issues)
 * Project README files:
-  * [cc.isr.Iot.Tcp.Server](/src/libs/server/readme.md) 
+  * [cc.isr.Iot.Tcp.Client](./src/tcp/client/readme.md) 
+  * [cc.isr.Iot.Tcp.Client.Ieee488](./src/tcp/client.ieee488/readme.md) 
+  * [cc.isr.Iot.Tcp.Client.Scpi](./src/tcp/client.scpi/readme.md) 
+  * [cc.isr.Iot.Tcp.Server](./src/tcp/server/readme.md) 
 * [Attributions](Attributions.md)
 * [Change Log](./CHANGELOG.md)
 * [Cloning](Cloning.md)
@@ -22,7 +25,7 @@ TCP Socket-based control and communication library for LXI-based instruments.
 
 #### Description
 
-The ISR IOT TCP classes provide rudimentary methods for communicating with LXI instruments in mobile and desktop platforms.
+The ISR IOT TCP classes provide methods for control and communication with LXI instruments in mobile and desktop platforms.
 
 Unlike VXI-11 or HiSlip, these classes do not implement the bus level method for issuing device clear, reading service requests or responding to instrument initiated event. While  control ports for these methods are available in some Keysight instruments, these ports are not part of the standard LXI framework.
 
@@ -69,3 +72,4 @@ Integrated Scientific Resources, Inc., and any contributors reserve all other ri
 [DMM7510 Digitizer Control Tool]: https://github.com/jbrown1234/DMM7510_Digitizer_Control_Tool/
 [TCP Server]: https://learn.microsoft.com/en-us/dotnet/api/system.net.sockets.tcplistener?redirectedfrom=MSDN&view=net-7.0
 [Stopping a TCP Server]: https://stackoverflow.com/questions/1173774/stopping-a-tcplistener-after-calling-beginaccepttcpclient#:~:text=You%20should%20be%20able%20to%20check%20this%20by,EndAcceptTcpClient%20%28%29%20call.%20You%20should%20see%20the%20ObjectDisposedException.
+[Lxi]: https://www.lxi.org

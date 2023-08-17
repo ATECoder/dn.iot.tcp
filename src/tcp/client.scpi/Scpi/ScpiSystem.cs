@@ -15,19 +15,19 @@ public class ScpiSystem
 
     /// <summary>   Constructor. </summary>
     /// <remarks>   2023-08-15. </remarks>
-    /// <param name="session">  The session. </param>
-    public ScpiSystem(ViSession session)
+    /// <param name="ieee488VI">   A reference to the IEEE488 VI. </param>
+    public ScpiSystem(Ieee488VI ieee488VI)
     {
-        this.Session = session;
+        this.Ieee488VI = ieee488VI;
     }
 
     #endregion
 
-    #region " ieee488 session "
+    #region " IEEE488 VI session "
 
     /// <summary>   Gets or sets the session. </summary>
     /// <value> The session. </value>
-    public ViSession? Session {get; set; }
+    public Ieee488VI? Ieee488VI {get; set; }
 
     #endregion
 
@@ -41,7 +41,7 @@ public class ScpiSystem
     public void Beep()
     {
         if ( !String.IsNullOrEmpty( this.BeepCommand ) )
-            _ = (this.Session?.WriteLine( this.BeepCommand ));
+            _ = (this.Ieee488VI?.WriteLine( this.BeepCommand ));
     }
 
     /// <summary>   Gets or sets the 'error queue query' command. </summary>
@@ -54,7 +54,7 @@ public class ScpiSystem
     {
         return String.IsNullOrEmpty( this.ErrorQueueQueryCommand )
             ? string.Empty
-            : this.Session?.QueryLine( ":SYST:ERR?" ) ?? string.Empty;
+            : this.Ieee488VI?.QueryLine( ":SYST:ERR?" ) ?? string.Empty;
     }
 
     /// <summary>   Gets or sets the 'error queue clear' command. </summary>
@@ -65,7 +65,7 @@ public class ScpiSystem
     public void ErrorQueueClear()
     {
         if ( !String.IsNullOrEmpty( this.ErrorQueueClearCommand ) )
-            _ = (this.Session?.WriteLine( this.ErrorQueueClearCommand ));
+            _ = (this.Ieee488VI?.WriteLine( this.ErrorQueueClearCommand ));
     }
 
     /// <summary>   Gets or sets the 'front switch query' command. </summary>
@@ -76,9 +76,8 @@ public class ScpiSystem
     /// <value>   [bool] true if the inputs are set to the front panel. </value>
     public bool FrontSwitch()
     {
-        return String.IsNullOrEmpty( this.FrontSwitchQueryCommand )
-            ? false
-            : (this.Session?.QueryLine(this.FrontSwitchQueryCommand ) ?? string.Empty).StartsWith("1");
+        return !string.IsNullOrEmpty( this.FrontSwitchQueryCommand )
+                && (this.Ieee488VI?.QueryLine(this.FrontSwitchQueryCommand ) ?? string.Empty).StartsWith("1");
     }
 
     /// <summary>   Gets or sets the 'preset' command. </summary>
@@ -89,7 +88,7 @@ public class ScpiSystem
     public void Preset()
     {
         if ( !String.IsNullOrEmpty( this.PresetCommand ) )
-            _ = (this.Session?.WriteLine( this.PresetCommand ));
+            _ = (this.Ieee488VI?.WriteLine( this.PresetCommand ));
     }
 
     #endregion

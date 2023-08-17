@@ -17,7 +17,7 @@ public class ChannelReadingEventArgs: EventArgs
     /// <param name="reading">      The reading. </param>
     public ChannelReadingEventArgs( int channelNo, string reading )
     {
-        this.Initialize(channelNo, reading);
+        _ = this.Initialize( channelNo, reading );
     }
 
     /// <summary>   Initializes and returns the event arguments. </summary>

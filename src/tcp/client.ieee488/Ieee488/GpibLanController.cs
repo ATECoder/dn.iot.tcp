@@ -21,9 +21,8 @@ public partial class GpibLanController : ObservableObject, IDisposable
     /// <param name="writeTermination">         (Optional) The write termination. </param>
     /// <param name="readAfterWriteDelayMs">    (Optional) The read after write delay in
     ///                                         milliseconds. </param>
-    public GpibLanController( TcpSession tcpSession,
-                             char readTermination = '\n', char writeTermination = '\n',
-                             int readAfterWriteDelayMs = 5)
+    public GpibLanController( TcpSession tcpSession, char readTermination = '\n', char writeTermination = '\n',
+                              int readAfterWriteDelayMs = 5)
     {
         this.TcpSession = tcpSession;
         this.ReadTermination = readTermination;

@@ -11,9 +11,6 @@ public class Ieee488VI : ObservableObject, IConnectable
 
     #region " construction and cleanup "
 
-    [SuppressMessage( "CodeQuality", "IDE0051:Remove unused private members", Justification = "<Pending>" )]
-    private const int _gpibLanPortNumber = 1234;
-
     /// <summary>   Constructor. </summary>
     /// <remarks>   2023-08-12. </remarks>
     /// <param name="tcpSession">               The TCP client session. </param>
@@ -25,6 +22,7 @@ public class Ieee488VI : ObservableObject, IConnectable
                       char readTermination = '\n', char writeTermination = '\n',
                       int readAfterWriteDelayMs = 5 )
     {
+        this._options = string.Empty;
         this._identity = string.Empty;
         this.Initialize(tcpSession, readTermination, writeTermination, readAfterWriteDelayMs );
     }
@@ -40,6 +38,7 @@ public class Ieee488VI : ObservableObject, IConnectable
     /// <remarks>   2023-08-15. </remarks>
     public Ieee488VI()
     {
+        this._options = string.Empty;
         this._identity = string.Empty;
     }
 
@@ -298,16 +297,12 @@ public class Ieee488VI : ObservableObject, IConnectable
     /// <value>   [String]. </value>
     public string Identity
     {
-        get
-        {
+        get {
             if ( String.IsNullOrEmpty( this._identity ) && (this.ViSession?.Connected ?? false) )
                 this._identity = this.QueryIdentity();
             return this._identity;
         }
-        private set
-        {
-            this._identity = value;
-        }
+        private set => this._identity = value;
     }
 
     /// <summary>   Returns the instrument identity using the *IDN? query command. </summary>
@@ -332,11 +327,25 @@ public class Ieee488VI : ObservableObject, IConnectable
         return this.QueryLine( Syntax.OperationCompletedQueryCommand );
     }
 
-    /// <summary>   Returns option (instrument specific). </summary>
+    private string _options;
+    /// <summary>   Returns the Options. </summary>
+    /// <value>   [String]. </value>
+    public string Options
+    {
+        get {
+            if ( String.IsNullOrEmpty( this._options ) && (this.ViSession?.Connected ?? false) )
+                this._options = this.QueryOptions();
+            return this._options;
+        }
+        private set => this._options = value;
+    }
+
+    /// <summary>   Returns the instrument Options using the *OPT? query command. </summary>
     /// <returns>   [String]. </returns>
     public string QueryOptions()
-    {   
-        return this.QueryLine(Syntax.OptionsQueryCommand);
+    {
+        this._options = this.QueryLine( Syntax.OptionsQueryCommand );
+        return this._options;
     }
 
     // <summary>   Returns the Service Request status byte using the *STB? query command. </summary>

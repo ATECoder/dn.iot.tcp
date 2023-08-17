@@ -28,7 +28,8 @@ public class K2700VI : Ieee488VI
                     char readTermination = '\n', char writeTermination = '\n',
                     int readAfterWriteDelayMs = 5 ) : base( tcpSession, readTermination, writeTermination, readAfterWriteDelayMs )
     {
-        this.ScpiSystem = new ScpiSystem( base.ViSession! );
+        this.ScpiSystem = new ScpiSystem( this );
+        this.ScpiRoute = new ScpiRoute( this );
     }
 
     /// <summary>   Constructor. </summary>
@@ -40,7 +41,7 @@ public class K2700VI : Ieee488VI
 
     /// <summary>   Default constructor. </summary>
     /// <remarks>   2023-08-15. </remarks>
-    public K2700VI()
+    public K2700VI() : this( "192.168.0.252", 1234 )
     {
     }
 
@@ -51,12 +52,11 @@ public class K2700VI : Ieee488VI
     /// <param name="writeTermination">         (Optional) (The write termination. </param>
     /// <param name="readAfterWriteDelayMs">    (Optional) (The read after write delay in
     ///                                         milliseconds. </param>
-    public override void  Initialize( TcpSession tcpSession,
-                            char readTermination = '\n', char writeTermination = '\n',
-                            int readAfterWriteDelayMs = 5 ) 
+    public override void  Initialize( TcpSession tcpSession, char readTermination = '\n', char writeTermination = '\n',
+                                      int readAfterWriteDelayMs = 5 ) 
     {
         base.Initialize( tcpSession, readTermination, writeTermination, readAfterWriteDelayMs );
-        this.ScpiSystem = new ScpiSystem( base.ViSession! );
+        this.ScpiSystem = new ScpiSystem( this );
     }
 
     /// <summary>   Constructor. </summary>
@@ -96,13 +96,87 @@ public class K2700VI : Ieee488VI
     /// <summary>   The event that is raised upon completion of a reading. </summary>
     public event EventHandler<ChannelReadingEventArgs>? ReadingCompleted;
 
+    /// <summary>   Raises the channel reading event. </summary>
+    /// <remarks>   2023-08-17. </remarks>
+    /// <param name="e">    Event information to send to registered event handlers. </param>
+    private void OnReadingCompleted( ChannelReadingEventArgs e )
+    {
+        var handler = ReadingCompleted;
+        handler?.Invoke( this, e );
+    }
+
     #endregion
 
-    #region " scpi system "
+    #region " subsystems "
 
     /// <summary>   Gets or sets the scpi system. </summary>
     /// <value> The scpi system. </value>
-    public ScpiSystem? ScpiSystem { get; private set; }
+    public ScpiSystem ScpiSystem { get; private set; }
+
+    /// <summary>   Gets or sets the scpi route. </summary>
+    /// <value> The scpi route. </value>
+    public ScpiRoute ScpiRoute{ get; private set; }
+
+    #endregion
+
+    #region " 2700 properties "
+
+    /// <summary>   Gets a value indicating whether this instruments is measuring using its front inputs. </summary>
+    /// <value> True if front inputs, false if not. </value>
+    public bool IsFrontInputs => this.ScpiSystem.FrontSwitch();
+
+    #endregion
+
+    #region " Resistance measurement configurations "
+
+    /// <summary>   Sets the instrument to continuous auto range resistance measurement. </summary>
+    public void ContinuousResistanceAutoRange()
+    {
+        // set resistance defaults
+        _ = this.WriteLine( ":RES:RANG:AUTO ON" );
+        _ = this.WriteLine( ":RES:NPLC 1" );
+
+        // set reading format
+        _ = this.WriteLine( ":FORM:ELEM READ" );
+
+        // turn on continuous mode
+        _ = this.WriteLine( ":FUNC 'FRES'" );
+        _ = this.WriteLine( ":FRES:RANG:AUTO ON" );
+        _ = this.WriteLine( ":FRES:NPLC 1" );
+        _ = this.WriteLine( ":INIT:CONT On" );
+    }
+
+    /// <summary>   Configures single resistance reading. </summary>
+    public void ConfigureSingleResistanceReading()
+    {
+        // set the device to measure 4 wire resistance
+        // _ = this.WriteLine("*RST");
+        _ = this.WriteLine( ":TRIG:SOUR IMM" );
+        _ = this.WriteLine( ":INIT:CONT OFF" );
+        _ = this.WriteLine( ":SAMP:COUN 1" );
+        _ = this.WriteLine( ":TRIG:COUN 1" );
+        _ = this.WriteLine( ":FUNC 'RES'" );
+
+        // set reading format
+        _ = this.WriteLine( ":FORM:ELEM READ" );
+
+    }
+
+    /// <summary>   Performs a single read from the front panel. </summary>
+    /// <remarks>   2023-08-17. </remarks>
+    /// <param name="resistanceNo">   (Optional) (0) The resistance number. </param>
+    /// <returns>   [Double] the measured resistance. </returns>
+    public Double ReadFrontResistance( int resistanceNo = 0 )
+    {
+        _ = this.WriteLine( ":INIT" );
+        _ = this.WriteLine( ":READ?" );
+
+        string reading = this.Read();
+
+        this.OnReadingCompleted( new ChannelReadingEventArgs(  resistanceNo, reading));
+
+        return Convert.ToDouble(reading);    
+    }
 
     #endregion
 

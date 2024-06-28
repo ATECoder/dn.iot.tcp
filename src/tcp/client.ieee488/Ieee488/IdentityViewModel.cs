@@ -157,8 +157,8 @@ public partial class IdentityViewModel: ObservableObject
                     this.ReceivedMessageLength = (this.Identity?.Length ?? 0).ToString();
                 }
 
-                this.AverageElapsedTime = String.Format( this.ElapsedTimeFormat , totalMilliseconds / loopCount ) + " ms";
-                this.ElapsedTime = String.Format( this.ElapsedTimeFormat, totalMilliseconds ) + " ms";
+                this.AverageElapsedTime = string.Format( this.ElapsedTimeFormat , totalMilliseconds / loopCount ) + " ms";
+                this.ElapsedTime = string.Format( this.ElapsedTimeFormat, totalMilliseconds ) + " ms";
             }
             else this.ReceivedMessage = this.RepeatCount <= 0
                 ? "testing connect and disconnect; disconnecting..."

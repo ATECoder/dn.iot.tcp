@@ -298,7 +298,7 @@ public class Ieee488VI : ObservableObject, IConnectable
     public string Identity
     {
         get {
-            if ( String.IsNullOrEmpty( this._identity ) && (this.ViSession?.Connected ?? false) )
+            if ( string.IsNullOrEmpty( this._identity ) && (this.ViSession?.Connected ?? false) )
                 this._identity = this.QueryIdentity();
             return this._identity;
         }
@@ -333,7 +333,7 @@ public class Ieee488VI : ObservableObject, IConnectable
     public string Options
     {
         get {
-            if ( String.IsNullOrEmpty( this._options ) && (this.ViSession?.Connected ?? false) )
+            if ( string.IsNullOrEmpty( this._options ) && (this.ViSession?.Connected ?? false) )
                 this._options = this.QueryOptions();
             return this._options;
         }
@@ -409,7 +409,7 @@ public class Ieee488VI : ObservableObject, IConnectable
     ///                         the <c>*ESE #</c> command by querying <c>*ESE #; *OPC?</c> </param>
     public void EnableStandardEvents( int bitMask, bool awaitOpc = true )
     {
-        string command = String.Format( Syntax.StandardEventEnableCommand, bitMask );
+        string command = string.Format( Syntax.StandardEventEnableCommand, bitMask );
         if ( awaitOpc )
         {
             command = $"{command};{Syntax.OperationCompletedQueryCommand}";
@@ -445,7 +445,7 @@ public class Ieee488VI : ObservableObject, IConnectable
     ///                         the <c>*SRE #</c> command by querying <c>*SRE #; *OPC?</c> </param>
     public void EnableServiceRequest( int bitMask, bool awaitOpc = true )
     {
-        string command = String.Format( Syntax.ServiceRequestEnableCommand, bitMask );
+        string command = string.Format( Syntax.ServiceRequestEnableCommand, bitMask );
         if ( awaitOpc )
         {
             command = $"{command};{Syntax.OperationCompletedQueryCommand}";

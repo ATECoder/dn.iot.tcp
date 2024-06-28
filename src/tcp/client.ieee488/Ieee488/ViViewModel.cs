@@ -173,12 +173,12 @@ public partial class ViViewModel : ObservableObject, IDisposable
             Syntax.OptionsQueryCommand,
             Syntax.ResetKnownStateCommand,
             $"{Syntax.ResetKnownStateCommand};{Syntax.OperationCompletedQueryCommand}",
-            $"{String.Format( Syntax.StandardEventEnableCommand, 0x7F )};{Syntax.OperationCompletedQueryCommand}",
+            $"{string.Format( Syntax.StandardEventEnableCommand, 0x7F )};{Syntax.OperationCompletedQueryCommand}",
             Syntax.StandardEventEnableQueryCommand,
             Syntax.StandardEventStatusQueryCommand,
-            $"{String.Format( Syntax.ServiceRequestEnableCommand, 0x7F )};{Syntax.OperationCompletedQueryCommand}",
-            $"{String.Format( Syntax.StandardServiceEnableCommand, 0x7F, 0x7F )};{Syntax.OperationCompletedQueryCommand}",
-            $"{String.Format( Syntax.StandardServiceEnableCommand, 0x7F, 0x7F )};{Syntax.OperationCompletedQueryCommand}",
+            $"{string.Format( Syntax.ServiceRequestEnableCommand, 0x7F )};{Syntax.OperationCompletedQueryCommand}",
+            $"{string.Format( Syntax.StandardServiceEnableCommand, 0x7F, 0x7F )};{Syntax.OperationCompletedQueryCommand}",
+            $"{string.Format( Syntax.StandardServiceEnableCommand, 0x7F, 0x7F )};{Syntax.OperationCompletedQueryCommand}",
             Syntax.ServiceRequestEnableQueryCommand,
             Syntax.ServiceRequestQueryCommand,
             Syntax.WaitCommand,
@@ -527,14 +527,14 @@ public partial class ViViewModel : ObservableObject, IDisposable
     public void RestartStopWatch()
     {
         this.ElapsedTime = 0;
-        this.ElapsedTimeLabel = String.Empty;
+        this.ElapsedTimeLabel = string.Empty;
         this.Stopwatch.Restart();
     }
 
     /// <summary>   Reads the stop watch and updates the elapsed time cell. </summary>
     public void ReadStopWatch()
     {
-        this.ElapsedTimeLabel = String.Format( this.ElapsedTimeFormat, this.Stopwatch.ElapsedMilliseconds );
+        this.ElapsedTimeLabel = string.Format( this.ElapsedTimeFormat, this.Stopwatch.ElapsedMilliseconds );
     }
 
     #endregion

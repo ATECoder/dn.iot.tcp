@@ -42,7 +42,7 @@ public class MultiplexerCard
     /// <summary>   Builds default scan list. </summary>
     /// <remarks>   2023-08-17. </remarks>
     /// <param name="measurementCode">   The measurement code. </param>
-    /// <returns>   A string. </returns>
+    /// <returns>   A <see cref="string" />. </returns>
     public string BuildDefaultScanList( string measurementCode )
     {
         int firstChannelNumber = this.SlotNumber * 100 + 1;

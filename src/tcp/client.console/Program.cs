@@ -5,14 +5,14 @@ using cc.isr.Iot.Tcp.Client.Helper;
 
 InstrumentId instrumentId = InstrumentId.K2700P;
 
-if ( args is not null && args.Any() && string.Equals( "--instrument", args[0] ) )
+if ( args is not null && args.Any() && string.Equals( "--instrument", args[0], StringComparison.Ordinal ) )
 {
     string instrument = args[1];
     if ( !string.IsNullOrEmpty( instrument ) )
     {
         foreach ( InstrumentId id in Enum.GetValues( typeof( InstrumentId ) ) )
         {
-            if ( string.Equals( instrument, id.ToString() ) )
+            if ( string.Equals( instrument, id.ToString(), StringComparison.Ordinal ) )
             {
                 instrumentId = id;
                 break;

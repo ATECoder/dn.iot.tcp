@@ -40,7 +40,7 @@ public class ScpiSystem
     /// <summary>   Issues a beep. </summary>
     public void Beep()
     {
-        if ( !String.IsNullOrEmpty( this.BeepCommand ) )
+        if ( !string.IsNullOrEmpty( this.BeepCommand ) )
             _ = (this.Ieee488VI?.WriteLine( this.BeepCommand ));
     }
 
@@ -52,7 +52,7 @@ public class ScpiSystem
     /// <value>   [string]. </value>
     public string ErrorDequeue()
     {
-        return String.IsNullOrEmpty( this.ErrorQueueQueryCommand )
+        return string.IsNullOrEmpty( this.ErrorQueueQueryCommand )
             ? string.Empty
             : this.Ieee488VI?.QueryLine( ":SYST:ERR?" ) ?? string.Empty;
     }
@@ -64,7 +64,7 @@ public class ScpiSystem
     /// <summary>   Clears the error queue. </summary>
     public void ErrorQueueClear()
     {
-        if ( !String.IsNullOrEmpty( this.ErrorQueueClearCommand ) )
+        if ( !string.IsNullOrEmpty( this.ErrorQueueClearCommand ) )
             _ = (this.Ieee488VI?.WriteLine( this.ErrorQueueClearCommand ));
     }
 
@@ -87,7 +87,7 @@ public class ScpiSystem
     /// <summary>   Return to system preset defaults. </summary>
     public void Preset()
     {
-        if ( !String.IsNullOrEmpty( this.PresetCommand ) )
+        if ( !string.IsNullOrEmpty( this.PresetCommand ) )
             _ = (this.Ieee488VI?.WriteLine( this.PresetCommand ));
     }
 

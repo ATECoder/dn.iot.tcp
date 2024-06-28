@@ -121,7 +121,7 @@ public static class SessionManager
 
                 _ = reply.TrimEnd( '\r' );
 
-                if ( !string.Equals( reply, "1"))
+                if ( !string.Equals( reply, "1", StringComparison.Ordinal ))
                 {
                     throw new InvalidOperationException( "Operation completed reply is expected" );
                 }

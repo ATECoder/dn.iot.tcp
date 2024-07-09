@@ -10,9 +10,6 @@ namespace cc.isr.Iot.Tcp.Client.Scpi;
 /// <remarks>   2023-08-12. </remarks>
 public class ScpiSystem
 {
-
-    #region " Construction and cleanup "
-
     /// <summary>   Constructor. </summary>
     /// <remarks>   2023-08-15. </remarks>
     /// <param name="ieee488VI">   A reference to the IEEE488 VI. </param>

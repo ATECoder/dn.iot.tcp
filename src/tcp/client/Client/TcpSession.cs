@@ -13,9 +13,6 @@ namespace cc.isr.Iot.Tcp.Client;
 /// <remarks>   2022-11-14. </remarks>
 public partial class TcpSession : ObservableObject, IConnectable
 {
-
-    #region " construction and cleanup "
-
     /// <summary>   Constructor. </summary>
     /// <remarks>   2022-11-14. </remarks>
     /// <param name="ipv4Address">  IPv4 Address in string format. </param>

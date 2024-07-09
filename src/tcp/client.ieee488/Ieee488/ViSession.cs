@@ -9,9 +9,6 @@ namespace cc.isr.Iot.Tcp.Client.Ieee488;
 /// <remarks>   2023-08-12. </remarks>
 public partial class ViSession : ObservableObject, IConnectable
 {
-
-    #region " construction and cleanup "
-
     /// <summary>   (Immutable) the gpib LAN port number. </summary>
     private const int _gpibLanPortNumber = 1234;
 

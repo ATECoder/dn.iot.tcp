@@ -14,9 +14,6 @@ namespace cc.isr.Iot.Tcp.Client.Ieee488;
 /// <remarks>   2023-08-14. </remarks>
 public partial class ViViewModel : ObservableObject, IDisposable
 {
-
-    #region " construction and cleanup "
-
     /// <summary>   Default constructor. </summary>
     /// <remarks>   2023-08-14. </remarks>
     public ViViewModel()

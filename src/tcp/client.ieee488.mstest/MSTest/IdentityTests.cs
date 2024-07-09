@@ -7,6 +7,8 @@ namespace cc.isr.Iot.Tcp.Client.Ieee488.MSTest;
 [TestClass]
 public class IdentityTests
 {
+    #region " construction and cleanup "
+
     /// <summary>   Should read identity. </summary>
     /// <remarks>   2023-08-14. </remarks>
     /// <param name="hostAddress">  The host address. </param>

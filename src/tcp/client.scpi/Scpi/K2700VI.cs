@@ -11,7 +11,6 @@ namespace cc.isr.Iot.Tcp.Client.Scpi;
 /// <remarks>   2023-08-15. </remarks>
 public class K2700VI : Ieee488VI
 {
-
     #region " construction and cleanup "
 
     [SuppressMessage( "CodeQuality", "IDE0051:Remove unused private members", Justification = "<Pending>" )]

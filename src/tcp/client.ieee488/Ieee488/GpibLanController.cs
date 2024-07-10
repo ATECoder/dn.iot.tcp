@@ -9,7 +9,6 @@ namespace cc.isr.Iot.Tcp.Client.Ieee488;
 /// <remarks>   2023-08-12. </remarks>
 public partial class GpibLanController : ObservableObject, IDisposable
 {
-
     #region " construction and cleanup "
 
     private const int _gpibLanPortNumber = 1234;

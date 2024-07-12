@@ -1,7 +1,6 @@
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
-
 using cc.isr.Iot.Tcp.Client;
 
 namespace cc.isr.Iot.Tcp.Client.Helper;

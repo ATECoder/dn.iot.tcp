@@ -1,6 +1,5 @@
 // See https://aka.ms/new-console-template for more information
 using System.Runtime.ConstrainedExecution;
-
 using cc.isr.Iot.Tcp.Client.Helper;
 
 InstrumentId instrumentId = InstrumentId.K2700P;

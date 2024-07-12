@@ -1,5 +1,4 @@
 using System.Diagnostics;
-
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
@@ -9,7 +8,6 @@ namespace cc.isr.Iot.Tcp.Client.Ieee488;
 /// <remarks>   2023-08-14. </remarks>
 public partial class IdentityViewModel: ObservableObject
 {
-
     #region " observable properties "
 
     /// <summary>   Number of repeats. </summary>
@@ -178,5 +176,4 @@ public partial class IdentityViewModel: ObservableObject
     }
 
     #endregion
-
 }

@@ -1,6 +1,5 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace cc.isr.Iot.Tcp.Client.Ieee488;
@@ -712,7 +711,6 @@ public partial class GpibLanController : ObservableObject, IDisposable
     private void TcpSession_EventHandlerException( object sender, ThreadExceptionEventArgs e )
     {
     }
-
 
     #endregion
 }

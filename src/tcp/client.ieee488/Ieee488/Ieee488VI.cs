@@ -1,5 +1,4 @@
 using System.Diagnostics.CodeAnalysis;
-
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace cc.isr.Iot.Tcp.Client.Ieee488;
@@ -626,11 +625,9 @@ public class Ieee488VI : ObservableObject, IConnectable
         handler?.Invoke( this, eventArgs );
     }
 
-
     #endregion
 
     #region " tcp session event handlers "
 
     #endregion
-
 }

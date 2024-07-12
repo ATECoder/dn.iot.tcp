@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
-
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
@@ -58,7 +57,6 @@ public partial class ViViewModel : ObservableObject, IDisposable
             this.Session = null;
         }
     }
-
 
     #endregion
 
@@ -549,5 +547,4 @@ public partial class ViViewModel : ObservableObject, IDisposable
     }
 
     #endregion
-
 }

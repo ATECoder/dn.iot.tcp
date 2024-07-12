@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
-
 using cc.isr.Iot.Tcp.Client.Ieee488;
 
 namespace cc.isr.Iot.Tcp.Client.Scpi;
@@ -178,5 +177,4 @@ public class K2700VI : Ieee488VI
     }
 
     #endregion
-
 }

@@ -6,7 +6,6 @@ namespace cc.isr.VI.Pith.Scpi
     /// David, 2005-01-15, 1.0.1841.x. </para></remarks>
     public static class Syntax
     {
-
         #region " format constants "
 
         /// <summary> Gets the SCPI value for infinity. </summary>

@@ -1,5 +1,4 @@
 using System.Windows;
-
 using cc.isr.Iot.Tcp.Client.Helper;
 
 namespace cc.isr.Iot.Tcp.Client.Wpf.Concept

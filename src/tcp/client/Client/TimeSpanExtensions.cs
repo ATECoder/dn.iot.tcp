@@ -8,7 +8,6 @@ namespace cc.isr.Iot.Tcp.Client;
 /// Licensed under The MIT License.</para> </remarks>
 public static class TimeSpanExtensionMethods
 {
-
     #region " equals "
 
     /// <summary>
@@ -376,5 +375,4 @@ public static class TimeSpanExtensionMethods
     }
 
     #endregion
-
 }

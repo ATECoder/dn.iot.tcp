@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-
 using cc.isr.Iot.Tcp.Client.Ieee488;
 
 namespace cc.isr.Iot.Tcp.Client.Scpi;
@@ -28,7 +27,6 @@ public partial class ScpiRoute
     public Ieee488VI Ieee488VI { get; set; }
 
     #endregion
-
 
     #region " Multiplexer cards "
 
@@ -128,5 +126,4 @@ public partial class ScpiRoute
     }
 
     #endregion
-
 }

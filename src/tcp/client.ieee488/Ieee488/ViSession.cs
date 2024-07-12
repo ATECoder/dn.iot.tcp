@@ -1,6 +1,5 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-
 using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace cc.isr.Iot.Tcp.Client.Ieee488;
@@ -455,5 +454,4 @@ public partial class ViSession : ObservableObject, IConnectable
     }
 
     #endregion
-
 }

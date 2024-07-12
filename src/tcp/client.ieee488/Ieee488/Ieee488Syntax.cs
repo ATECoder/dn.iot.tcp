@@ -10,7 +10,6 @@ namespace cc.isr.Iot.Tcp.Client.Ieee488;
 /// </remarks>
 public static class Syntax
 {
-
     #region " ieee 488.2 standard commands "
 
     /// <summary>   (Immutable) Gets the Clear Status (CLS) command. </summary>
@@ -228,7 +227,6 @@ public static class Syntax
     }
 
     #endregion
-
 }
 
 /// <summary> Values that represent IEEE 488.2 Command Code. </summary>

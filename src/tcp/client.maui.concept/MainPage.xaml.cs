@@ -1,5 +1,4 @@
 namespace cc.isr.Iot.Tcp.Client.Maui.Concept;
-
 using cc.isr.Iot.Tcp.Client;
 using cc.isr.Iot.Tcp.Client.Helper;
 

@@ -1,7 +1,5 @@
 using System;
-
 using cc.isr.Iot.Tcp.Client.Ieee488;
-
 using static System.Collections.Specialized.BitVector32;
 
 namespace cc.isr.Iot.Tcp.Client.Scpi;

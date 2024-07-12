@@ -174,7 +174,7 @@ public partial class GpibLanController : ObservableObject, IDisposable
     {
         int result = 0;
 
-        if ( this.TcpSession != null )
+        if ( this.TcpSession is not null )
         {
 
             if ( appendTermination ) message += this.WriteTermination;
@@ -214,7 +214,7 @@ public partial class GpibLanController : ObservableObject, IDisposable
 
         string reply = string.Empty;
 
-        if ( this.TcpSession != null )
+        if ( this.TcpSession is not null )
         {
             if ( !this.ReadAfterWriteEnabled )
             {

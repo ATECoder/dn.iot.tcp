@@ -159,8 +159,9 @@ public partial class ViSession : ObservableObject, IConnectable
     public TimeSpan? ReceiveTimeout
     {
         get => this.TcpSession?.ReceiveTimeout;
-        set {
-            if ( value is not null && this.TcpSession is not null )
+        set
+        {
+             if ( value is not null && this.TcpSession is not null )
             {
                 _ = this.SetProperty( this.ReceiveTimeout, value,
                                      this.TcpSession, ( model, value ) => model.ReceiveTimeout = value!.Value );

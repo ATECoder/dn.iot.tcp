@@ -77,8 +77,9 @@ public partial class TcpSession : ObservableObject, IConnectable
     public TimeSpan? ReceiveTimeout
     {
         get => this._tcpClient is not null ? TimeSpan.FromMilliseconds( this._tcpClient.ReceiveTimeout ) : null;
-        set {
-            if ( value is not null && this._tcpClient is not null )
+        set
+        {
+             if ( value is not null && this._tcpClient is not null )
             {
                 _= this.SetProperty( this.ReceiveTimeout, value,
                                      this._tcpClient, ( model, value ) => model.ReceiveTimeout = value!.Value.Milliseconds );
@@ -92,8 +93,9 @@ public partial class TcpSession : ObservableObject, IConnectable
     public TimeSpan? SendTimeout
     {
         get => this._tcpClient is not null ? TimeSpan.FromMilliseconds( this._tcpClient.SendTimeout ) : null ;
-        set {
-            if ( value is not null && this._tcpClient is not null )
+        set
+        {
+             if ( value is not null && this._tcpClient is not null )
             {
                 _ = this.SetProperty( this.SendTimeout, value,
                                   this._tcpClient, ( model, value ) => model.SendTimeout = value!.Value.Milliseconds );
@@ -107,8 +109,9 @@ public partial class TcpSession : ObservableObject, IConnectable
     public int? ReceiveBufferSize
     {
         get => this._tcpClient?.ReceiveBufferSize;
-        set {
-            if ( value is not null && this._tcpClient is not null )
+        set
+        {
+             if ( value is not null && this._tcpClient is not null )
             {
                 _ = this.SetProperty( this.ReceiveBufferSize, value,
                                       this._tcpClient, ( model, value ) => model.ReceiveBufferSize = value!.Value );

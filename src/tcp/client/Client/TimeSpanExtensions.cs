@@ -214,7 +214,7 @@ public static class TimeSpanExtensionMethods
     /// <param name="duration"> The duration. </param>
     /// <param name="yield">    (Optional) True to yield between spin waits. </param>
     /// <returns>   A TimeSpan Task. </returns>
-    public static Task<TimeSpan> StartWaitElpasedTask( this TimeSpan duration, bool yield = false )
+    public static Task<TimeSpan> StartWaitElapsedTask( this TimeSpan duration, bool yield = false )
     {
         return Task<TimeSpan>.Factory.StartNew( () => { return SyncWait( duration, yield ); } );
     }
@@ -229,7 +229,7 @@ public static class TimeSpanExtensionMethods
     /// <returns>   A TimeSpan. </returns>
     public static TimeSpan AsyncWaitElapsed( this TimeSpan duration, bool yield = false )
     {
-        System.Threading.Tasks.Task<TimeSpan> t = StartWaitElpasedTask( duration, yield );
+        System.Threading.Tasks.Task<TimeSpan> t = StartWaitElapsedTask( duration, yield );
         t.Wait();
         return t.Result;
     }

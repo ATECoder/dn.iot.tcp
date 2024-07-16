@@ -8,7 +8,6 @@ namespace cc.isr.Iot.Tcp.Client.Scpi;
 /// <remarks>   2023-08-17. </remarks>
 public class MultiplexerCard
 {
-
     /// <summary>   Constructor. </summary>
     /// <remarks>   2023-08-17. </remarks>
     /// <param name="name">         The name. </param>

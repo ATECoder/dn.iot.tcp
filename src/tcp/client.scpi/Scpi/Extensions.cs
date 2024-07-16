@@ -5,7 +5,6 @@ namespace cc.isr.Iot.Tcp.Client.Scpi;
 /// <remarks>   2023-08-17. </remarks>
 public static class Extensions
 {
-
     /// <summary>   A <see cref="string" /> extension method that returns the count of character from the right. </summary>
     /// <remarks>   2023-08-17. </remarks>
     /// <param name="value">       The value to act on. </param>

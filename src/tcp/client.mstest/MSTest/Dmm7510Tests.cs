@@ -4,7 +4,6 @@ namespace cc.isr.Iot.Tcp.Client.MSTest;
 [TestCategory( "dmm7510" )]
 public class Dmm7510Tests
 {
-
     /// <summary>   Assert identity should query. </summary>
     /// <remarks>   2022-11-16. </remarks>
     /// <param name="ipv4Address">  The IPv4 address. </param>

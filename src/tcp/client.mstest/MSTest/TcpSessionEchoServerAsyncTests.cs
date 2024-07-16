@@ -7,7 +7,6 @@ namespace cc.isr.Iot.Tcp.Client.MSTest;
 [TestClass]
 public class TcpSessionEchoServerAsyncTests
 {
-
     /// <summary>   Initializes the test class before running the first test. </summary>
     /// <remarks>
     /// Use <see cref="InitializeTestClass(TestContext)"/> to run code before running the first test

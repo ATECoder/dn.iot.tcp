@@ -8,7 +8,6 @@ namespace cc.isr.Iot.Tcp.Client;
 /// David, 2015-03-19, 2.0.5556 </para></remarks>
 public static class StopwatchExtensionMethods
 {
-
     /// <summary>   Static constructor. </summary>
     /// <remarks>   David, 2021-02-10. </remarks>
     static StopwatchExtensionMethods()

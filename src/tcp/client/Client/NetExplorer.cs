@@ -7,7 +7,6 @@ namespace cc.isr.Iot.Tcp.Client;
 /// <remarks>   2023-08-14. </remarks>
 public static class NetExplorer
 {
-
     /// <summary>   Pings the host at the specified port. </summary>
     /// <remarks>   2022-11-19. </remarks>
     /// <param name="ipv4Address">          The host IPv4 address. </param>

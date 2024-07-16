@@ -9,7 +9,6 @@ public enum InstrumentId
 {
     None, K2450 = 2450, K2600 = 2600, K2700P = 2700, K6510 = 6510, K7510 = 7510
 }
-
 /// <summary>   Manager for sessions. </summary>
 /// <remarks>   2023-05-31. </remarks>
 public static class SessionManager

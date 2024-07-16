@@ -7,7 +7,6 @@ namespace cc.isr.Iot.Tcp.Client.MSTest;
 
 public class Dmm7510AsyncTests
 {
-
     /// <summary>   Writes a line. </summary>
     /// <remarks>   2022-11-16. </remarks>
     /// <param name="session">  The session. </param>

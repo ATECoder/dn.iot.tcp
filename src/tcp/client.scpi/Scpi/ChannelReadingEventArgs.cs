@@ -4,7 +4,6 @@ namespace cc.isr.Iot.Tcp.Client.Scpi;
 /// <remarks>   2023-08-15. </remarks>
 public class ChannelReadingEventArgs: EventArgs
 {
-
     /// <summary>   Default constructor. </summary>
     /// <remarks>   2023-08-15. </remarks>
     public ChannelReadingEventArgs()

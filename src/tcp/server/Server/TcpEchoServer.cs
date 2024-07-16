@@ -9,7 +9,6 @@ namespace cc.isr.Iot.Tcp.Server;
 /// <remarks>   2022-11-16. </remarks>
 public partial class TcpEchoServer : ObservableObject
 {
-
     /// <summary>   Constructor. </summary>
     /// <remarks>   2022-11-17. </remarks>
     /// <param name="ipString">     (Optional) The IP string. </param>

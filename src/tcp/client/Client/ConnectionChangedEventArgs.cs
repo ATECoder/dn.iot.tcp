@@ -4,7 +4,6 @@ namespace cc.isr.Iot.Tcp.Client;
 /// <remarks> 2023-08-10. </remarks>
 public class ConnectionChangedEventArgs : System.EventArgs
 {
-
     /// <summary>   Constructor. </summary>
     /// <remarks>   2023-08-10. </remarks>
     /// <param name="connected">    True if connected, false if not. </param>

@@ -228,11 +228,9 @@ public static class Syntax
 
     #endregion
 }
-
 /// <summary> Values that represent IEEE 488.2 Command Code. </summary>
 public enum CommandCode
 {
-
     /// <summary> An enum constant representing the none option. </summary>
     None = 0,
 
@@ -284,7 +282,6 @@ public enum CommandCode
     [Description( "UNT" )]
     Untalk = 0x5F
 }
-
 /// <summary>   Gets or sets the status byte bits of the service request register. </summary>
 /// <remarks>
 /// Enumerates the Status Byte Register Bits. Use *STB? or status.request_event to read this
@@ -363,7 +360,6 @@ public enum ServiceRequests
     /// </summary>
     Unknown = 0x100
 }
-
 /// <summary>   Enumerates the status byte flags of the standard event register. </summary>
 /// <remarks>
 /// Enumerates the Standard Event Status Register Bits. Read this information using ESR? or

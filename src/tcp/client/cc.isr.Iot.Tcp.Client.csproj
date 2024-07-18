@@ -14,7 +14,6 @@
     <ApplicationTitle>cc.isr.Iot.Tcp.Client</ApplicationTitle>
     <ApplicationId>cc.isr.iot.tcp.client</ApplicationId>
 
-    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <GenerateAssemblyVersionAttribute>true</GenerateAssemblyVersionAttribute>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 

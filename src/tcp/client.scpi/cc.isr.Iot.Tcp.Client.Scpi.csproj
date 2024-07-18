@@ -15,7 +15,6 @@
     <ApplicationTitle>cc.isr.Iot.Tcp.Client.Scpi</ApplicationTitle>
     <ApplicationId>cc.isr.iot.tcp.client.scpi</ApplicationId>
 
-    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <GenerateAssemblyVersionAttribute>true</GenerateAssemblyVersionAttribute>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 

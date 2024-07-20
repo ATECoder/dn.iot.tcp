@@ -18,7 +18,7 @@ public static class TimeSpanExtensionMethods
     /// <param name="leftHand">     The leftHand to act on. </param>
     /// <param name="rightHand">    The right hand. </param>
     /// <param name="epsilon">      The epsilon. </param>
-    /// <returns>   True if it succeeds, false if it fails. </returns>
+    /// <returns>   True if it succeeds; otherwise, false. </returns>
     public static bool Approximates( this TimeSpan leftHand, TimeSpan rightHand, TimeSpan epsilon )
     {
         return Math.Abs( leftHand.Subtract( rightHand ).Ticks ) <= epsilon.Ticks;

@@ -11,7 +11,7 @@ public static class NetExplorer
     /// <remarks>   2022-11-19. </remarks>
     /// <param name="ipv4Address">          The host IPv4 address. </param>
     /// <param name="portNumber">           The port number. </param>
-    /// <returns>   True if it succeeds, false if it fails. </returns>
+    /// <returns>   True if it succeeds; otherwise, false. </returns>
     public static bool PingPort( string ipv4Address, int portNumber )
     {
         try
@@ -31,7 +31,7 @@ public static class NetExplorer
     /// <summary>   Ping host. </summary>
          /// <remarks>   2022-11-04. </remarks>
          /// <param name="nameOrAddress">    The name or address. </param>
-         /// <returns>   True if it succeeds, false if it fails. </returns>
+         /// <returns>   True if it succeeds; otherwise, false. </returns>
     public static bool PingHost( string nameOrAddress )
     {
         bool pingable = false;

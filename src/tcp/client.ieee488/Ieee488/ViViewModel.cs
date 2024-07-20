@@ -331,7 +331,7 @@ public partial class ViViewModel : ObservableObject, IDisposable
 
     /// <summary>   Determines if we can using gpib LAN, which controls the GPIB relay commands. </summary>
     /// <remarks>   2023-08-14. </remarks>
-    /// <returns>   True if it succeeds, false if it fails. </returns>
+    /// <returns>   True if it succeeds; otherwise, false. </returns>
     public bool UsingGpibLan()
     {
         return this.Connected && this.Session!.ViSession!.UsingGpibLan;

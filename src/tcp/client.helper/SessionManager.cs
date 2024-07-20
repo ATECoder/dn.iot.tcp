@@ -310,7 +310,7 @@ public static class SessionManager
     /// <param name="ipv4Address">          The IPv4 address. </param>
     /// <param name="portNumber">           (Optional) The port number. </param>
     /// <param name="timeoutMilliseconds">  (Optional) The timeout in milliseconds. </param>
-    /// <returns>   True if it succeeds, false if it fails. </returns>
+    /// <returns>   True if it succeeds; otherwise, false. </returns>
     public static bool Paping( string ipv4Address, int portNumber = 5025, int timeoutMilliseconds = 10 )
     {
         try
@@ -343,7 +343,7 @@ public static class SessionManager
     /// <summary>   Ping host. </summary>
     /// <remarks>   2022-11-04. </remarks>
     /// <param name="nameOrAddress">    The name or address. </param>
-    /// <returns>   True if it succeeds, false if it fails. </returns>
+    /// <returns>   True if it succeeds; otherwise, false. </returns>
     public static bool PingHost( string nameOrAddress )
     {
         bool pingable = false;

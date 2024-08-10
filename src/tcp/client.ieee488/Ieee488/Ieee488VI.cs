@@ -108,6 +108,7 @@ public class Ieee488VI : ObservableObject, IConnectable
     #region " VI Session "
 
     private char _readTermination;
+
     /// <summary>   Gets or sets the read termination. </summary>
     /// <value> The read termination. </value>
     public char ReadTermination
@@ -117,6 +118,7 @@ public class Ieee488VI : ObservableObject, IConnectable
     }
 
     private char _writeTermination;
+
     /// <summary>   Gets or sets the write termination. </summary>
     /// <value> The write termination. </value>
     public char WriteTermination
@@ -126,6 +128,7 @@ public class Ieee488VI : ObservableObject, IConnectable
     }
 
     private int _readAfterWriteDelay;
+
     /// <summary>   Gets or sets the read after write delay. </summary>
     /// <value> The read after write delay. </value>
     public int ReadAfterWriteDelay
@@ -289,6 +292,7 @@ public class Ieee488VI : ObservableObject, IConnectable
     }
 
     private string _identity;
+
     /// <summary>   Returns the identity. </summary>
     /// <value>   [String]. </value>
     public string Identity
@@ -324,6 +328,7 @@ public class Ieee488VI : ObservableObject, IConnectable
     }
 
     private string _options;
+
     /// <summary>   Returns the Options. </summary>
     /// <value>   [String]. </value>
     public string Options

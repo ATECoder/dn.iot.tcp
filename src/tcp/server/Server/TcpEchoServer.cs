@@ -49,6 +49,7 @@ public partial class TcpEchoServer : ObservableObject
     private static readonly ManualResetEvent _tcpClientConnected = new ( false );
 
     private TcpListener? _listener;
+
     /// <summary>   Starts listening for client connections. </summary>
     /// <remarks>   2022-11-17. </remarks>
     [RelayCommand( CanExecute = nameof( CanStart ) )]
@@ -79,7 +80,6 @@ public partial class TcpEchoServer : ObservableObject
     {
         return this._listener is null || !this._listener.Server.IsBound;
     }
-
 
     /// <summary>   Stops listening. </summary>
     /// <remarks>   2022-11-17. </remarks>

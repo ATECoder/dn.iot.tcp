@@ -381,7 +381,6 @@ public static class StopwatchExtensionMethods
         return (completed, stopwatch.Elapsed);
     }
 
-
     /// <summary>
     /// A Stopwatch extension method that await for the specified elapsed time or until the predicate
     /// signals that it completed its actions.

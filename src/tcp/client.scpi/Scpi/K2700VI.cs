@@ -66,7 +66,6 @@ public class K2700VI : Ieee488VI
         this.Initialize( new TcpSession( ipv4Address, portNumber ) );
     }
 
-
     /// <summary>
     /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged
     /// resources.

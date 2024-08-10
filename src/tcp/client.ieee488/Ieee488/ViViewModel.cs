@@ -435,7 +435,6 @@ public partial class ViViewModel : ObservableObject, IDisposable
         this.ReadStopWatch();
     }
 
-
     /// <summary>   Read timeout setter. </summary>
     /// <remarks>   2023-08-14. </remarks>
     [RelayCommand( CanExecute = nameof( UsingGpibLan ) )]

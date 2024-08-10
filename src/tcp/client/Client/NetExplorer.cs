@@ -27,7 +27,6 @@ public static class NetExplorer
         }
     }
 
-
     /// <summary>   Ping host. </summary>
          /// <remarks>   2022-11-04. </remarks>
          /// <param name="nameOrAddress">    The name or address. </param>

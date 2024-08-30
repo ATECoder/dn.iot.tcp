@@ -104,7 +104,6 @@ public partial class ViSession : ObservableObject, IConnectable
     {
         if ( disposing )
         {
-
             if ( this.TcpSession is not null )
             {
                 if ( this.TcpSession.Connected )
@@ -331,7 +330,6 @@ public partial class ViSession : ObservableObject, IConnectable
     /// <param name="e">    Event information to send to registered event handlers. </param>
     protected void OnConnectionChanged( ConnectionChangedEventArgs e )
     {
-
         var handler = this.ConnectionChanged;
         try
         {
@@ -420,7 +418,6 @@ public partial class ViSession : ObservableObject, IConnectable
     ///                             arguments. </param>
     private void TcpSession_ConnectionChanged( object sender, ConnectionChangedEventArgs eventArgs )
     {
-
         if ( sender is null || eventArgs is null ) return;
     }
 

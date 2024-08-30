@@ -6,7 +6,6 @@ namespace cc.isr.Iot.Tcp.Client.MSTest;
 [TestCategory( "dmm2700P" )]
 public class Dmm2700PrologixTests
 {
-
     const int _prologixPortNo = 1234;
 
     const int _prologixWaitInterval = 5;
@@ -17,7 +16,6 @@ public class Dmm2700PrologixTests
     /// <param name="repeatCount">  Number of repeats. </param>
     private static void AssertIdentityShouldQuery( string ipv4Address, int portNumber, int repeatCount )
     {
-
         string command = string.Empty;
 
         using TcpSession session = new ( ipv4Address, portNumber );
@@ -27,10 +25,8 @@ public class Dmm2700PrologixTests
 
         try
         {
-
             if ( portNumber == _prologixPortNo )
             {
-
                 /* set auto read after write
                    Prologix GPIB-ETHERNET controller can be configured to automatically address
                    instruments to talk after sending them a command in order to read their response. The
@@ -90,14 +86,12 @@ public class Dmm2700PrologixTests
         }
         catch ( Exception )
         {
-
             throw;
         }
         finally
         {
             if ( session.Connected )
             {
-
                 /* clear errors if any so as to leave the instrument without errors.
                    here we add *OPC? to prevent the query unterminated error. */
                 session.WriteLine( "*CLS; *OPC?" );
@@ -107,7 +101,6 @@ public class Dmm2700PrologixTests
 
                 if ( portNumber == _prologixPortNo )
                 {
-
                     // enable front panel operation of the currently addressed instrument.
 
                     _ = session.WriteLine( "++loc" );

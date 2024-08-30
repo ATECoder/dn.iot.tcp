@@ -175,7 +175,6 @@ public partial class GpibLanController : ObservableObject, IDisposable
 
         if ( this.TcpSession is not null )
         {
-
             if ( appendTermination ) message += this.WriteTermination;
 
             // if auto read after write and write control of read after write is enabled,
@@ -210,7 +209,6 @@ public partial class GpibLanController : ObservableObject, IDisposable
     /// <returns>   The received message. </returns>
     public string ReceiveFromDevice( int maxLength = 0x7FFF, bool trimEnd = true )
     {
-
         string reply = string.Empty;
 
         if ( this.TcpSession is not null )
@@ -609,7 +607,6 @@ public partial class GpibLanController : ObservableObject, IDisposable
     /// <returns>   The last status byte read before ending the wait. </returns>
     public int AwaitStatus( TimeSpan timeout, int bitMask, int loopDelay = 5, Action? doEventsAction = null )
     {
-
         // read the status byte
         int statusByte = this.SerialPoll();
 
@@ -643,7 +640,6 @@ public partial class GpibLanController : ObservableObject, IDisposable
     ///                             arguments. </param>
     private void TcpSession_ConnectionChanged( object sender, ConnectionChangedEventArgs eventArgs )
     {
-
         if ( sender is null || eventArgs is null ) return;
 
         this.Enabled = this.TcpSession?.PortNumber == _gpibLanPortNumber;
@@ -660,7 +656,6 @@ public partial class GpibLanController : ObservableObject, IDisposable
 
         if ( eventArgs.Connected )
         {
-
             // from experiments it seems this needs to be set first.
             _ = this.ReadAfterWriteEnabledGetter();
 

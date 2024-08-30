@@ -49,7 +49,6 @@ public static class SessionManager
     /// <returns>   The identity. </returns>
     public static string QueryIdentity( InstrumentId instrumentId, TimeSpan connectionTimeout, bool useAsync )
     {
-
         string command;
 
         string instrument = instrumentId == InstrumentId.None ? "Echo" : instrumentId.ToString();
@@ -75,10 +74,8 @@ public static class SessionManager
 
         try
         {
-
             if ( portNumber == _prologixPortNo )
             {
-
                 /* set auto read after write
                    Prologix GPIB-ETHERNET controller can be configured to automatically address
                    instruments to talk after sending them a command in order to read their response. The
@@ -134,7 +131,6 @@ public static class SessionManager
 
             if ( useAsync  )
             {
-
                 string response = QueryDeviceAsync( session, command, 256, readAfterWriteDelay, true );
                 _ = builder.Append( $"b: {response}\n" );
 
@@ -148,7 +144,6 @@ public static class SessionManager
             }
             else
             {
-
                 string response = QueryDevice( session, command, 256, true );
                 _ = builder.Append( $"b: {response}\n" );
 
@@ -166,14 +161,12 @@ public static class SessionManager
         }
         catch ( Exception )
         {
-
             throw;
         }
         finally
         {
             if ( session.Connected )
             {
-
                 /* clear errors if any so as to leave the instrument without errors.
                    here we add *OPC? to prevent the query unterminated error. */
                 _ = session.WriteLine( "*CLS; *OPC?" );
@@ -183,7 +176,6 @@ public static class SessionManager
 
                 if ( portNumber == _prologixPortNo )
                 {
-
                     // enable front panel operation of the currently addressed instrument.
 
                     _ = session.WriteLine( "++loc" );
@@ -213,7 +205,6 @@ public static class SessionManager
     /// <returns>   The identity asynchronous. </returns>
     public static string QueryIdentityAsync( InstrumentId instrumentId, TimeSpan connectionTimeout )
     {
-
         string command = "*IDN?";
         string instrument = instrumentId == InstrumentId.None ? "Echo" : instrumentId.ToString();
         TimeSpan readAfterWriteDelay = TimeSpan.FromMilliseconds( _instrumentInfo[instrument].ReadAfterWriteDelay );

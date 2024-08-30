@@ -17,7 +17,6 @@ public class ViTests
     [DataRow( "192.168.0.252", 1234, "2700", DisplayName = "2700: 192.168.0.252:1234" )]
     public void ShouldReadIdentity( string hostAddress, int portNumber, string model )
     {
-
         ViViewModel viewModel = new ( ) {
             HostAddress = hostAddress,
             PortNumber = portNumber,

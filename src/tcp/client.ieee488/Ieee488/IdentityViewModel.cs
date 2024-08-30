@@ -103,7 +103,6 @@ public partial class IdentityViewModel: ObservableObject
     [RelayCommand( CanExecute = nameof( CanReadIdentity ) )]
     public void ReadIdentity()
     {
-
         Ieee488VI? session = null;
         try
         {
@@ -137,7 +136,6 @@ public partial class IdentityViewModel: ObservableObject
             double totalMilliseconds = 0;
             if ( this.RepeatCount > 0 && session.Connected )
             {
-
                 this.SentMessage = "*IDN?";
 
                 int loopCount = 0;

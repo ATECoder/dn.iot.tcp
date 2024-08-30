@@ -41,7 +41,6 @@ public partial class ViViewModel : ObservableObject, IDisposable
     {
         if ( disposing )
         {
-
             if ( this.Session is not null )
             {
                 if ( this.Connected )
@@ -466,7 +465,6 @@ public partial class ViViewModel : ObservableObject, IDisposable
     ///                             arguments. </param>
     private void Session_ConnectionChanged( object sender, ConnectionChangedEventArgs eventArgs )
     {
-
         if ( sender is null || eventArgs is null ) return;
 
         this.SocketAddress = eventArgs.Connected

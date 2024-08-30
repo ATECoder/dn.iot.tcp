@@ -4,7 +4,6 @@ using cc.isr.Iot.Tcp.Client.Helper;
 
 public partial class MainPage : ContentPage
 {
-
     public MainPage()
     {
         this.InitializeComponent();

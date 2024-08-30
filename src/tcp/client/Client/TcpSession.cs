@@ -549,7 +549,6 @@ public partial class TcpSession : ObservableObject, IConnectable
     /// </returns>
     public static IEnumerable<IPEndPoint> EnumerateListeners( int portToCheck )
     {
-
         IPGlobalProperties ipProperties = IPGlobalProperties.GetIPGlobalProperties();
         IPEndPoint[] activeListeners = ipProperties.GetActiveTcpListeners();
         List<IPEndPoint> portListeners = new();
@@ -583,7 +582,6 @@ public partial class TcpSession : ObservableObject, IConnectable
     /// <param name="e">    Event information to send to registered event handlers. </param>
     protected void OnConnectionChanged( ConnectionChangedEventArgs e )
     {
-
         var handler = this.ConnectionChanged;
         try
         {
@@ -637,7 +635,6 @@ public partial class TcpSession : ObservableObject, IConnectable
     [RelayCommand( CanExecute = nameof( this.CanConnect ) )]
     public void Connect()
     {
-
         ConnectionChangingEventArgs e = new();
         this.OnConnectionChanging( e );
         if ( !e.Cancel )
@@ -682,7 +679,6 @@ public partial class TcpSession : ObservableObject, IConnectable
         this.OnConnectionChanging( e );
         if ( !e.Cancel )
         {
-
             this._netStream?.Close();
             this._tcpClient?.Close();
 

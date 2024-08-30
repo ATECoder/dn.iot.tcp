@@ -167,12 +167,10 @@ public class Ieee488VI : ObservableObject, IConnectable
         int reply = 0;
         if ( this.ViSession is not null )
         {
-
             reply = this.ViSession.WriteLine( message, appendTermination );
 
             if ( this.ViSession.GpibLan is not null && this.ViSession.UsingGpibLan && queryEAV)
     	    {
-
                 // read the status byte and check for errors.
 
                 int status = this.ViSession.GpibLan.SerialPoll();
@@ -213,7 +211,6 @@ public class Ieee488VI : ObservableObject, IConnectable
         string reply = string.Empty;
         if ( this.ViSession is not null )
         {
-
             if ( this.ViSession.GpibLan is not null && this.ViSession.UsingGpibLan && awaitMAV )
             {
                 // wait for the message available bits.
@@ -232,7 +229,6 @@ public class Ieee488VI : ObservableObject, IConnectable
             // report an error on failure to read.
             if ( string.IsNullOrEmpty( reply ) )
             {
-
                 // check if (message available.
 
                 string errorMessage = this.IsServiceRequest( statusByte , ServiceRequests.MessageAvailable)
@@ -516,7 +512,6 @@ public class Ieee488VI : ObservableObject, IConnectable
     /// <param name="e">    Event information to send to registered event handlers. </param>
     protected void OnConnectionChanged( ConnectionChangedEventArgs e )
     {
-
         var handler = this.ConnectionChanged;
         try
         {

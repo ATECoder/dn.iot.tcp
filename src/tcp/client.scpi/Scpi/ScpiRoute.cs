@@ -88,7 +88,6 @@ public partial class ScpiRoute
     /// <returns>  The channel list to close. </returns>
     public string BuildChannelList( int channelNumber )
     {
-
         string p_routeCommand = string.Empty;
 
         int cumulativeCapacity = 0;

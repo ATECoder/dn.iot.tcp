@@ -25,11 +25,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "cc.isr.Iot.Tcp.Client.WinFo
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "`docs", "`docs", "{A68C6B76-76EF-4BF0-9964-9D20ECBD3C0F}"
 	ProjectSection(SolutionItems) = preProject
-		..\CHANGELOG.md = ..\CHANGELOG.md
-		..\Cloning.md = ..\Cloning.md
-		..\Open-Source.md = ..\Open-Source.md
-		..\README.md = ..\README.md
-		..\TODO.md = ..\TODO.md
+		..\changelog.md = ..\changelog.md
+		..\cloning.md = ..\cloning.md
+		..\open-source.md = ..\open-source.md
+		..\readme.md = ..\readme.md
+		..\todo.md = ..\todo.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "~framework", "~framework", "{D3FAF48A-5459-4A00-BAEA-4D3A9E0AD4BF}"

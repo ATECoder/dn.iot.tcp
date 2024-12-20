@@ -1,4 +1,4 @@
-### Cloning
+# Cloning
 
 - [Source Code](#Source-Code)
   - [Repositories](#Repositories)
@@ -6,10 +6,10 @@
   - [Packages](#Packages)
 
 <a name="Source-Code"></a>
-#### Source Code
+## Source Code
 Clone the repository along with its requisite repositories to their respective relative path.
 
-##### Repositories
+### Repositories
 The repositories listed in [external repositories] are required:
 * [IDE Repository] - IDE support files.
 
@@ -26,7 +26,7 @@ Clone the repositories into the following folders (parents of the .git folder):
 where %dnlib% and %vslib% are  the root folders of the .NET libraries, e.g., %my%\lib\vs 
 and %my%\libraries\vs, respectively, and %my% is the root folder of the .NET solutions
 
-##### Global Configuration Files
+### Global Configuration Files
 ISR libraries use a global editor configuration file and a global test run settings file. 
 These files can be found in the [IDE Repository].
 
@@ -43,7 +43,7 @@ xcopy /Y %vslib%\core\ide\code\.runsettings %userprofile%\.runsettings
 ```
 where %userprofile% is the root user folder.
 
-##### Packages
+### Packages
 TBA
 
 

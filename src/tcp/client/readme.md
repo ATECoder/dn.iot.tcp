@@ -1,12 +1,12 @@
-### About
+# About
 
 [ISR's IoT TCP Client] includes a set of low level classes for control and communication [Lxi] Instruments  or with [GPIB] instruments via the [Prologix] GPIB-lan interface. 
 
-#### How to Use
+## How to Use
 
 For information on using [ISR's IoT TCP Client] see the [ISR's IoT Tcp MSTest] and [ISR's IoT Tcp Console] projects.
 
-#### Feedback
+## Feedback
 
 [ISR's IoT Tcp] is released as open source under the MIT license.
 Bug reports and contributions are welcome at the [ISR's IoT Tcp] repository.

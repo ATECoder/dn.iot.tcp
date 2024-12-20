@@ -1,12 +1,12 @@
-### About
+# About
 
 [ISR's IoT Tcp] contains a set of project for control and communication with [Lxi] Instruments.
 
-#### How to Use
+## How to Use
 
 For information on using [ISR's IoT TCP] see the [ISR's IoT Tcp MSTest] and [ISR's IoT Tcp Console] projects.
 
-#### Feedback
+## Feedback
 
 [ISR's IoT Tcp] is released as open source under the MIT license.
 Bug reports and contributions are welcome at the [ISR's IoT Tcp] repository.

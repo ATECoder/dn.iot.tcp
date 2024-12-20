@@ -1,12 +1,12 @@
-### About
+# About
 
 [ISR's IoT TCP Client SCPI] includes a set of classes for control and communication with [Lxi] Instruments supporting the [SCPI] standard directly or via the [Prologix] GPIB-lan interface.
 
-#### How to Use
+## How to Use
 
 For information on using [ISR's IoT TCP Client SCPI] see the [ISR's IoT Tcp SCPI MSTest] project.
 
-#### Feedback
+## Feedback
 
 [ISR's IoT Tcp] is released as open source under the MIT license.
 Bug reports and contributions are welcome at the [ISR's IoT Tcp] repository.

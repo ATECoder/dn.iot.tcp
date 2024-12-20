@@ -1,4 +1,4 @@
-### IOT Tcp
+# IOT Tcp
 
 TCP Socket-based control and communication library for [LXI]-based instruments. 
 
@@ -23,18 +23,18 @@ TCP Socket-based control and communication library for [LXI]-based instruments.
 * [Repository Owner](#Repository-Owner)
 * [Security](security.md)
 
-#### Description
+## Description
 
 The ISR IOT TCP classes provide methods for control and communication with LXI instruments in mobile and desktop platforms.
 
 Unlike VXI-11 or HiSlip, these classes do not implement the bus level method for issuing device clear, reading service requests or responding to instrument initiated event. While  control ports for these methods are available in some Keysight instruments, these ports are not part of the standard LXI framework.
 
-#### Issues
+## Issues
 
-##### read after write delay is required  for Async methods
+### read after write delay is required  for Async methods
 A delay of 1 ms is required for implementing the asynchronous query method using the TCP Client write and read asynchronous methods. Neither the console nor unit tests are succeptible to this issue. 
 
-#### Supported .NET Releases
+## Supported .NET Releases
 
 * .NET Standard 2.0 - source code framework)
 * .NET 6.0
@@ -43,16 +43,16 @@ A delay of 1 ms is required for implementing the asynchronous query method using
 * Windows Forms
 * WPF
 
-#### Repository Owner
+## Repository Owner
 * [ATE Coder]
 
 <a name="Authors"></a>
-#### Authors
+## Authors
 * [ATE Coder]  
 * [Josh Brown]
 
 <a name="legal-notices"></a>
-#### Legal Notices
+## Legal Notices
 
 Integrated Scientific Resources, Inc., and any contributors grant you a license to the documentation and other content in this repository under the [Creative Commons Attribution 4.0 International Public License], see the [LICENSE](./LICENSE) file, and grant you a license to any code in the repository under the [MIT License], see the [LICENSE-CODE](./LICENSE-CODE) file.
 

@@ -56,7 +56,7 @@ public class MultiplexerCard
 
     /// <summary>   Gets or sets the 'route' command. </summary>
     /// <value> The 'route' command. </value>
-    public string RouteCommand => 
+    public string RouteCommand =>
         20 == this.Capacity
             ? $":ROUT:MULT:CLOS (@{this.SlotNumber}44,{this.SlotNumber}45)"
             : 40 == this.Capacity

@@ -32,9 +32,9 @@ namespace cc.isr.Iot.Tcp.Client.WinForms.Concept
             this.WelcomeLabel = new System.Windows.Forms.Label();
             this.CounterBtn = new System.Windows.Forms.Button();
             this.SuspendLayout();
-            // 
+            //
             // InstrumentLabel
-            // 
+            //
             this.InstrumentLabel.AutoSize = true;
             this.InstrumentLabel.Font = new System.Drawing.Font("Segoe UI", 24F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.InstrumentLabel.Location = new System.Drawing.Point(22, 18);
@@ -42,27 +42,27 @@ namespace cc.isr.Iot.Tcp.Client.WinForms.Concept
             this.InstrumentLabel.Size = new System.Drawing.Size(190, 45);
             this.InstrumentLabel.TabIndex = 0;
             this.InstrumentLabel.Text = "Hello World";
-            // 
+            //
             // WelcomeLabel
-            // 
+            //
             this.WelcomeLabel.AutoSize = true;
             this.WelcomeLabel.Location = new System.Drawing.Point(32, 156);
             this.WelcomeLabel.Name = "WelcomeLabel";
             this.WelcomeLabel.Size = new System.Drawing.Size(150, 15);
             this.WelcomeLabel.TabIndex = 1;
             this.WelcomeLabel.Text = "Welcome to .NET WPF App";
-            // 
+            //
             // CounterBtn
-            // 
+            //
             this.CounterBtn.Location = new System.Drawing.Point(32, 82);
             this.CounterBtn.Name = "CounterBtn";
             this.CounterBtn.Size = new System.Drawing.Size(150, 23);
             this.CounterBtn.TabIndex = 2;
             this.CounterBtn.Text = "Click Me";
             this.CounterBtn.UseVisualStyleBackColor = true;
-            // 
+            //
             // Form1
-            // 
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);

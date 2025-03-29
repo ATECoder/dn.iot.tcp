@@ -23,7 +23,7 @@ Console.WriteLine( $"Talking to {instrumentId}. Press any key to stop..." );
 Random rnd = new( DateTime.Now.Second );
 
 while ( !Console.KeyAvailable )
-{ 
+{
     if ( Console.KeyAvailable )
         break;
 

@@ -127,7 +127,7 @@ public class TcpSessionEchoServerListenTests
     }
 
     /// <summary>   (Unit Test Method) enumerate prologix listeners. </summary>
-    /// <remarks>   2023-08-10. 
+    /// <remarks>   2023-08-10.
     /// Enumerating the listeners does not see the Prologix device. </remarks>
     [TestMethod]
     public void EnumeratePrologixListeners()

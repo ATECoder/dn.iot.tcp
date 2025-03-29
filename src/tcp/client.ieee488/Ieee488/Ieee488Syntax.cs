@@ -40,16 +40,16 @@ public static class Syntax
     /// </remarks>
     public const string OperationCompleteCommand = "*OPC";
 
-	/// <summary>   Gets the operation complete query (*OPC?) command. </summary>
-	/// <remarks>
-	/// Returns 1 to the output buffer after all pending commands complete.
-	/// The purpose of this command is to synchronize your application with the instrument.
-	/// Other commands cannot be executed until this command completes.
-	/// The difference between *OPC and *OPC? is that *OPC? returns "1" to the output buffer when the
-	/// current operation completes. This means that no further commands can be sent after an *OPC?
-	/// until it has responded. In this way an explicit polling loop can be avoided. That is, the IO
-	/// driver will wait for the response.
-	/// </remarks>
+    /// <summary>   Gets the operation complete query (*OPC?) command. </summary>
+    /// <remarks>
+    /// Returns 1 to the output buffer after all pending commands complete.
+    /// The purpose of this command is to synchronize your application with the instrument.
+    /// Other commands cannot be executed until this command completes.
+    /// The difference between *OPC and *OPC? is that *OPC? returns "1" to the output buffer when the
+    /// current operation completes. This means that no further commands can be sent after an *OPC?
+    /// until it has responded. In this way an explicit polling loop can be avoided. That is, the IO
+    /// driver will wait for the response.
+    /// </remarks>
     public const string OperationCompletedQueryCommand = "*OPC?";
 
     /// <summary>   Gets the options query (*OPT?) command. </summary>

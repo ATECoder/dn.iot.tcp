@@ -30,7 +30,7 @@ public partial class ScpiRoute
 
     #region " Multiplexer cards "
 
-    /// <summary>   Gets or sets the dictionary of cards that are available for this 
+    /// <summary>   Gets or sets the dictionary of cards that are available for this
     ///             instrument family as defined by the <see cref="Ieee488VI"/>
     ///             keyed by the card name. </summary>
     /// <value> A dictionary of cards. </value>

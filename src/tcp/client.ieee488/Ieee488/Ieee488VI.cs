@@ -14,7 +14,7 @@ public class Ieee488VI : ObservableObject, IConnectable
     /// <param name="writeTermination">         (Optional) (The write termination. </param>
     /// <param name="readAfterWriteDelayMs">    (Optional) (The read after write delay in
     ///                                         milliseconds. </param>
-    public Ieee488VI( TcpSession tcpSession, 
+    public Ieee488VI( TcpSession tcpSession,
                       char readTermination = '\n', char writeTermination = '\n',
                       int readAfterWriteDelayMs = 5 )
     {
@@ -170,15 +170,15 @@ public class Ieee488VI : ObservableObject, IConnectable
             reply = this.ViSession.WriteLine( message, appendTermination );
 
             if ( this.ViSession.GpibLan is not null && this.ViSession.UsingGpibLan && queryEAV)
-    	    {
+            {
                 // read the status byte and check for errors.
 
                 int status = this.ViSession.GpibLan.SerialPoll();
 
                 // check if we have an error.
 
-                if ( this.IsServiceRequest( status, ServiceRequests.ErrorAvailable ) ) 
-	        	{
+                if ( this.IsServiceRequest( status, ServiceRequests.ErrorAvailable ) )
+                {
                     // raise the write error adding some information
 
                     throw new InvalidOperationException(
@@ -304,7 +304,7 @@ public class Ieee488VI : ObservableObject, IConnectable
     /// <summary>   Returns the instrument identity using the *IDN? query command. </summary>
     /// <returns>   [String]. </returns>
     public string QueryIdentity()
-    { 
+    {
         this._identity = this.QueryLine( Syntax.IdentityQueryCommand);
         return this._identity;
     }
@@ -318,7 +318,7 @@ public class Ieee488VI : ObservableObject, IConnectable
 
     /// <summary>   Returns '1' if (operation was completed; otherwise 0. </summary>
     /// <returns>   [String] 1 if (completed; otherwise 0. </returns>
-    public string QueryOperationCompleted() 
+    public string QueryOperationCompleted()
     {
         return this.QueryLine( Syntax.OperationCompletedQueryCommand );
     }
@@ -366,7 +366,7 @@ public class Ieee488VI : ObservableObject, IConnectable
         // a query unterminated error.
 
         return this.ViSession?.UsingGpibLan ?? false
-            ? this.ViSession?.GpibLan?.SerialPoll() ?? 0 
+            ? this.ViSession?.GpibLan?.SerialPoll() ?? 0
             : canQuery
                 ? this.QueryServiceRequestStatus()
                 : 0;

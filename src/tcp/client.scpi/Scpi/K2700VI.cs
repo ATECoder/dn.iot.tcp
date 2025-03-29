@@ -51,7 +51,7 @@ public class K2700VI : Ieee488VI
     /// <param name="readAfterWriteDelayMs">    (Optional) (The read after write delay in
     ///                                         milliseconds. </param>
     public override void  Initialize( TcpSession tcpSession, char readTermination = '\n', char writeTermination = '\n',
-                                      int readAfterWriteDelayMs = 5 ) 
+                                      int readAfterWriteDelayMs = 5 )
     {
         base.Initialize( tcpSession, readTermination, writeTermination, readAfterWriteDelayMs );
         this.ScpiSystem = new ScpiSystem( this );
@@ -172,7 +172,7 @@ public class K2700VI : Ieee488VI
 
         this.OnReadingCompleted( new ChannelReadingEventArgs(  resistanceNo, reading));
 
-        return Convert.ToDouble(reading);    
+        return Convert.ToDouble(reading);
     }
 
     #endregion

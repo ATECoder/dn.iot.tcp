@@ -42,7 +42,7 @@ public class Dmm7510AsyncTests
     /// <param name="repeatCount">  Number of repeats. </param>
     private static void AssertIdentityShouldQuery( string ipv4Address, TimeSpan readDelay, int repeatCount )
     {
-        using CancellationTokenSource cancellationTokenSource = new ();    
+        using CancellationTokenSource cancellationTokenSource = new ();
         using TcpSession session = new ( ipv4Address );
         string identity = string.Empty;
         string command = "*IDN?";
@@ -53,7 +53,7 @@ public class Dmm7510AsyncTests
         while ( repeatCount > 0 )
         {
             repeatCount--;
-            string response = QueryLine( session, command, readDelay, trimEnd, cancellationTokenSource ); 
+            string response = QueryLine( session, command, readDelay, trimEnd, cancellationTokenSource );
             Assert.AreEqual( identity, response, $"@count = {count - repeatCount}" );
         }
     }

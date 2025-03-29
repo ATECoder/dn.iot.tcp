@@ -29,7 +29,7 @@ public partial class ViSession : ObservableObject, IConnectable
     /// <param name="writeTermination">          The write termination. </param>
     /// <param name="readAfterWriteDelayMs">     The read after write delay in
     ///                                         milliseconds. </param>
-    public ViSession( TcpSession tcpSession, 
+    public ViSession( TcpSession tcpSession,
                       char readTermination = '\n', char writeTermination = '\n',
                       int readAfterWriteDelayMs = _readAfterWriteDelayDefault )
     {
@@ -46,7 +46,7 @@ public partial class ViSession : ObservableObject, IConnectable
 
     /// <summary>   Default constructor. </summary>
     /// <remarks>   2023-08-15. </remarks>
-    public ViSession() 
+    public ViSession()
     { }
 
     /// <summary>   Initializes this object. </summary>
@@ -229,7 +229,7 @@ public partial class ViSession : ObservableObject, IConnectable
     ///                                 string without the termination. </param>
     /// <param name="doEventsAction">   The do events action. </param>
     /// <returns>   The reading. </returns>
-    public string AwaitReading( int timeout, int maxLength = 0x7FFF, bool trimEnd = true, Action? doEventsAction = null ) 
+    public string AwaitReading( int timeout, int maxLength = 0x7FFF, bool trimEnd = true, Action? doEventsAction = null )
     {
         string reading = string.Empty;
 
@@ -429,7 +429,7 @@ public partial class ViSession : ObservableObject, IConnectable
     private void TcpSession_ConnectionChanging( object sender, ConnectionChangingEventArgs eventArgs )
     {
         if ( sender is null || eventArgs is null ) return;
-        // enable the GPIB-Lan controller if the Tcp Session connects to the 
+        // enable the GPIB-Lan controller if the Tcp Session connects to the
         // GPIB-Lan controller port
         if ( this.GpibLan is not null )
         {

@@ -500,7 +500,7 @@ public partial class TcpSession : ObservableObject, IConnectable
         readDelay = TimeSpan.FromMilliseconds( Math.Max( 1, readDelay.TotalMilliseconds ) );
         var dataAvailableTask = Task.Run( () => this.QueryDataAvailable( readDelay ), tokenSource.Token );
 
-        // two checks on data available are needed for some reason. 
+        // two checks on data available are needed for some reason.
         _ = dataAvailableTask.Wait( readDelay );
 
         var completed = dataAvailableTask.Wait( readDelay );
@@ -541,7 +541,7 @@ public partial class TcpSession : ObservableObject, IConnectable
     #region " listeners "
 
     /// <summary>   Enumerates the listeners in this collection. </summary>
-    /// <remarks>   2023-08-10. 
+    /// <remarks>   2023-08-10.
     /// This does finds neither Prologix or LXI instruments. </remarks>
     /// <param name="portToCheck">  The port to check. </param>
     /// <returns>

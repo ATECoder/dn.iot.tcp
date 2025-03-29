@@ -255,7 +255,7 @@ public partial class GpibLanController : ObservableObject, IDisposable
     ///                                     <see cref="WriteTermination"/> to the message. </param>
     /// <returns>   [Long] The number of sent characters. </returns>
     public int SendToController( string message, bool appendTermination = true )
-    { 
+    {
         if (appendTermination ) message += this.WriteTermination;
 
         int result = this.TcpSession!.Write( message );
@@ -270,7 +270,7 @@ public partial class GpibLanController : ObservableObject, IDisposable
     /// <param name="maxLength">    [32767] The maximum length of the. </param>
     /// <param name="trimEnd">      [true] true to trim the end termination. </param>
     /// <returns>   The received message. </returns>
-    public string ReceiveFromController( int maxLength = 0x7FFF, bool trimEnd = true ) 
+    public string ReceiveFromController( int maxLength = 0x7FFF, bool trimEnd = true )
     {
         if ( this.TcpSession is null ) return string.Empty;
 
@@ -286,7 +286,7 @@ public partial class GpibLanController : ObservableObject, IDisposable
             reply = reply.TrimEnd( '\n' );
         }
 
-        return reply;   
+        return reply;
     }
 
     /// <summary>   Sends a message to the controller and read back the reply. </summary>
@@ -358,7 +358,7 @@ public partial class GpibLanController : ObservableObject, IDisposable
     /// </remarks>
     /// <param name="value">    The status byte mask. </param>
     public void StatusByteSetter( int value )
-    { 
+    {
         if ( !this.ControllerMode )
         {
             value = this.Delimit(value, 0, 255);
@@ -478,13 +478,13 @@ public partial class GpibLanController : ObservableObject, IDisposable
     /// <summary>
     /// Configure the GPIB address of the GPIB Lan Controller. The meaning of the GPIB address
     /// depends on the operating mode of the controller.
-    /// 
+    ///
     /// In Controller mode, it refers to the GPIB address of the instrument being controlled. In
     /// DEVICE mode, it is the address of the GPIB peripheral that the controller is emulating.
     /// </summary>
     /// <remarks>
     /// An optional secondary address may also be specified.
-    /// 
+    ///
     /// Internally, the secondary address, which is offset by 96, must be separated from the primary
     /// address by a space character. Specifying secondary address has no effect in DEVICE mode.
     /// </remarks>
@@ -522,7 +522,7 @@ public partial class GpibLanController : ObservableObject, IDisposable
     public void ReadTimeoutSetter( int timeoutMs )
     {
         timeoutMs = this.Delimit( timeoutMs, 1, 3000 );
-    
+
         if ( timeoutMs != this.ReadTimeout )
             _ = this.SendToController( $"++read_tmo_ms {timeoutMs}" );
 
@@ -562,7 +562,7 @@ public partial class GpibLanController : ObservableObject, IDisposable
     /// (hex 40) of any serial poll status byte indicates whether a device requested service by
     /// asserting the SRQ line. The device uses the other seven bits of the status byte to specify
     /// why it needs attention.
-    /// 
+    ///
     /// After the Controller reads the status byte, it sends another command message, Serial Poll
     /// Disable (SPD), to the device. The SPD message terminates the serial poll mode, thus returning
     /// the device to its normal Talker/Listener state. Once a device requesting service is serial
@@ -574,7 +574,7 @@ public partial class GpibLanController : ObservableObject, IDisposable
     ///                                 30. </param>
     /// <returns>   The status byte. </returns>
     public int SerialPoll( int primaryAddress = -1, int secondaryAddress = -1 )
-    { 
+    {
         string command = "++spoll";
 
         if  (primaryAddress >= 0 && secondaryAddress< 0 )
@@ -611,7 +611,7 @@ public partial class GpibLanController : ObservableObject, IDisposable
         int statusByte = this.SerialPoll();
 
         Stopwatch stopwatch = Stopwatch.StartNew();
-    
+
         if ( timeout > TimeSpan.Zero )
         {
             bool completed = bitMask == (statusByte & bitMask);
@@ -676,7 +676,7 @@ public partial class GpibLanController : ObservableObject, IDisposable
     {
         if ( sender is null || eventArgs is null ) return;
 
-        // enable the GPIB-Lan controller if the Tcp Session connects to the 
+        // enable the GPIB-Lan controller if the Tcp Session connects to the
         // GPIB-Lan controller port
         this.Enabled = _gpibLanPortNumber == (( TcpSession ) sender)?.PortNumber;
 

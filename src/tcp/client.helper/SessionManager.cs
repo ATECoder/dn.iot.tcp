@@ -325,7 +325,7 @@ public static class SessionManager
                 return false;
             }
         }
-        catch 
+        catch
         {
             return false;
         }

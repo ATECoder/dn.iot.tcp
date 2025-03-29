@@ -286,7 +286,7 @@ public partial class ViViewModel : ObservableObject, IDisposable
 
         bool isQuery = this.SentMessage.EndsWith( "?" );
         if ( !isQuery && this.AutoStatusRead )
-	    {
+        {
             this.StatusByte = this.Session!.QueryServiceRequestStatus();
             this.StandardByte = this.Session!.QueryStandardEventsStatus();
         }

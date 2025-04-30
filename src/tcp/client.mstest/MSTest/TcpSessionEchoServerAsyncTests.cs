@@ -31,7 +31,7 @@ public class TcpSessionEchoServerAsyncTests
         }
         catch ( Exception ex )
         {
-            Console.WriteLine( $"Failed initializing the test class: {ex}" );
+            Console.WriteLine( $"{methodFullName} failed initializing:\r\n\t{ex}" );
 
             // cleanup to meet strong guarantees
 

@@ -1,12 +1,12 @@
 <Project Sdk="MSTest.Sdk">
-
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <LangVersion>latest</LangVersion>
-    <IsTestProject>true</IsTestProject>    
+    <TargetFramework>net9.0</TargetFramework>
+    <LangVersion>preview</LangVersion>
     
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 
     <!-- Assembly Info -->
     <RootNamespace>cc.isr.Iot.Tcp.Client</RootNamespace>

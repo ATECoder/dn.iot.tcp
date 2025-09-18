@@ -133,11 +133,11 @@ public partial class ViViewModel : ObservableObject, IDisposable
     [ObservableProperty]
     private bool _requestingService;
 
-    /// <summary>   The gpib address. </summary>
+    /// <summary>   The GPIB address. </summary>
     [ObservableProperty]
     private int _gpibAddress;
 
-    /// <summary>   The gpib LAN read timeout. </summary>
+    /// <summary>   The GPIB LAN read timeout. </summary>
     [ObservableProperty]
     private int _gpibLanReadTimeout;
 
@@ -155,7 +155,7 @@ public partial class ViViewModel : ObservableObject, IDisposable
 
     /// <summary>   Populates the commands. </summary>
     /// <remarks>   2023-08-14. </remarks>
-    [MemberNotNull(nameof(AvailableCommands))]
+    [System.Diagnostics.CodeAnalysis.MemberNotNull(nameof(AvailableCommands))]
     private void PopulateCommands()
     {
         this.AvailableCommands = new() {
@@ -326,9 +326,9 @@ public partial class ViViewModel : ObservableObject, IDisposable
 
     #endregion
 
-    #region " gpib lan relay commands "
+    #region " GPIB lan relay commands "
 
-    /// <summary>   Determines if we can using gpib LAN, which controls the GPIB relay commands. </summary>
+    /// <summary>   Determines if we can using GPIB LAN, which controls the GPIB relay commands. </summary>
     /// <remarks>   2023-08-14. </remarks>
     /// <returns>   True if it succeeds; otherwise, false. </returns>
     public bool UsingGpibLan()
@@ -414,7 +414,7 @@ public partial class ViViewModel : ObservableObject, IDisposable
         this.ReadStopWatch();
     }
 
-    /// <summary>   Gpib address setter. </summary>
+    /// <summary>   GPIB address setter. </summary>
     /// <remarks>   2023-08-14. </remarks>
     [RelayCommand( CanExecute = nameof( UsingGpibLan ) )]
     public void GpibAddressSetter()
@@ -424,7 +424,7 @@ public partial class ViViewModel : ObservableObject, IDisposable
         this.ReadStopWatch();
     }
 
-    /// <summary>   Gpib address getter. </summary>
+    /// <summary>   GPIB address getter. </summary>
     /// <remarks>   2023-08-14. </remarks>
     [RelayCommand( CanExecute = nameof( UsingGpibLan ) )]
     public void GpibAddressGetter()

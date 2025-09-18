@@ -4,7 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace cc.isr.Iot.Tcp.Client.Ieee488;
 
-/// <summary>   A gpib lan controller. </summary>
+/// <summary>   A GPIB lan controller. </summary>
 /// <remarks>   2023-08-12. </remarks>
 public partial class GpibLanController : ObservableObject, IDisposable
 {
@@ -72,7 +72,7 @@ public partial class GpibLanController : ObservableObject, IDisposable
 
     #endregion
 
-    #region " gpib lan controller implementation "
+    #region " GPIB lan controller implementation "
 
     /// <summary>   Gets or sets a value indicating whether this object is enabled. </summary>
     /// <remarks>
@@ -449,7 +449,7 @@ public partial class GpibLanController : ObservableObject, IDisposable
         return reply;
     }
 
-    /// <summary>   Gpib addresses getter. </summary>
+    /// <summary>   GPIB addresses getter. </summary>
     /// <remarks>   2023-08-14. </remarks>
     /// <returns>   A Tuple. </returns>
     public (int Primary, int Secondary) GpibAddressesGetter()

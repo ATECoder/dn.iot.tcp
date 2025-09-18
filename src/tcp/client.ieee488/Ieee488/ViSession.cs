@@ -8,7 +8,7 @@ namespace cc.isr.Iot.Tcp.Client.Ieee488;
 /// <remarks>   2023-08-12. </remarks>
 public partial class ViSession : ObservableObject, IConnectable
 {
-    /// <summary>   (Immutable) the gpib LAN port number. </summary>
+    /// <summary>   (Immutable) the GPIB LAN port number. </summary>
     private const int _gpibLanPortNumber = 1234;
 
     /// <summary>   (Immutable) the read after write delay default. </summary>
@@ -56,7 +56,7 @@ public partial class ViSession : ObservableObject, IConnectable
     /// <param name="writeTermination">         (Optional) The write termination. </param>
     /// <param name="readAfterWriteDelayMs">    (Optional) The read after write delay in
     ///                                         milliseconds. </param>
-    [MemberNotNull( nameof( GpibLan ) )]
+    [System.Diagnostics.CodeAnalysis.MemberNotNull( nameof( GpibLan ) )]
     public void Initialize( [DisallowNull] TcpSession tcpSession,
                             char readTermination = '\n', char writeTermination = '\n',
                             int readAfterWriteDelayMs = _readAfterWriteDelayDefault )
@@ -173,10 +173,10 @@ public partial class ViSession : ObservableObject, IConnectable
 
     #endregion
 
-    #region " gpib lan controller "
+    #region " GPIB lan controller "
 
-    /// <summary>   Gets or sets the gpib LAN. </summary>
-    /// <value> The gpib LAN. </value>
+    /// <summary>   Gets or sets the GPIB LAN. </summary>
+    /// <value> The GPIB LAN. </value>
     [ObservableProperty]
     private GpibLanController? _gpibLan;
 

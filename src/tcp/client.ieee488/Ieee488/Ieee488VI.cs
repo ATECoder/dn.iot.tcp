@@ -45,7 +45,7 @@ public class Ieee488VI : ObservableObject, IConnectable
     /// <param name="writeTermination">         (Optional) (The write termination. </param>
     /// <param name="readAfterWriteDelayMs">    (Optional) (The read after write delay in
     ///                                         milliseconds. </param>
-    [MemberNotNull( nameof( Identity ) )]
+    [System.Diagnostics.CodeAnalysis.MemberNotNull( nameof( Identity ) )]
     public virtual void Initialize( TcpSession tcpSession,
                             char readTermination = '\n', char writeTermination = '\n',
                             int readAfterWriteDelayMs = 5 )

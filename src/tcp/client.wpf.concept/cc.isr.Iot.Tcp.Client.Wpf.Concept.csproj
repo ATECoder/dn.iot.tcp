@@ -2,13 +2,15 @@
 
   <PropertyGroup>
     <TargetFramework>net9.0-windows</TargetFramework>
+    <LangVersion>preview</LangVersion>
+
     <OutputType>WinExe</OutputType>
     <UseWPF>true</UseWPF>
 
-    <LangVersion>latest</LangVersion>
-
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 
     <!-- Assembly Info -->
     <RootNamespace>cc.isr.Iot.Tcp.Client.Wpf.Concept</RootNamespace>

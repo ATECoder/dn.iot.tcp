@@ -2,13 +2,15 @@
 
   <PropertyGroup>
     <TargetFramework>net9.0-windows</TargetFramework>
+    <LangVersion>preview</LangVersion>
+
     <OutputType>WinExe</OutputType>
     <UseWindowsForms>true</UseWindowsForms>
 
-    <LangVersion>latest</LangVersion>
-
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 
     <!-- Assembly Info -->
     <RootNamespace>cc.isr.Iot.Tcp.Client.WinForms.Concept</RootNamespace>

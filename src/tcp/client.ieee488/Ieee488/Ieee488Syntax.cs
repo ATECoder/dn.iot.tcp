@@ -212,7 +212,7 @@ public static class Syntax
     }
 
     /// <summary> Builds selective device clear (SDC) in this collection. </summary>
-    /// <param name="gpibAddress"> The gpib address. </param>
+    /// <param name="gpibAddress"> The GPIB address. </param>
     /// <returns>
     /// An enumerator that allows for-each to be used to process build selective device clear in this
     /// collection.

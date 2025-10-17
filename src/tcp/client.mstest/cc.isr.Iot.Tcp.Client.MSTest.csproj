@@ -23,8 +23,6 @@
     <DefineConstants>$(DefineConstants);MYPROJREF;</DefineConstants>
   </PropertyGroup>
 
-  <Import Project="..\client\version.build.props" />
-
   <Choose>
     <When Condition="$(DefineConstants.Contains(';PROJREF;')) OR $(DefineConstants.Contains(';MYPROJREF;'))">
       <ItemGroup>
@@ -39,5 +37,7 @@
       </ItemGroup>
     </Otherwise>
   </Choose>
+
+  <Import Project="..\client\version.build.props" />
 
 </Project>

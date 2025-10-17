@@ -56,7 +56,7 @@ public class TcpSessionEchoServerListenTests
 
     /// <summary> Cleans up the test class after all tests in the class have run. </summary>
     /// <remarks> Use <see cref="CleanupTestClass"/> to run code after all tests in the class have run. </remarks>
-    [ClassCleanup( ClassCleanupBehavior.EndOfClass )]
+    [ClassCleanup]
     public static void CleanupTestClass()
     {
         if ( _server is not null )

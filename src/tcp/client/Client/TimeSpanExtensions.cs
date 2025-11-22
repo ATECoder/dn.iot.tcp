@@ -6,7 +6,7 @@ namespace cc.isr.Iot.Tcp.Client;
 /// <remarks> Requires: DispatcherExtensions; Reference to Windows Base DLL. <para>
 /// (c) 2018 Integrated Scientific Resources, Inc. All rights reserved.</para><para>
 /// Licensed under The MIT License.</para> </remarks>
-public static class TimeSpanExtensionMethods
+public static class TimeSpanMethods
 {
     #region " equals "
 
@@ -134,7 +134,7 @@ public static class TimeSpanExtensionMethods
     /// <param name="delayMilliseconds"> The delay in milliseconds. </param>
     public static void AsyncDelay( double delayMilliseconds )
     {
-        TimeSpanExtensionMethods.AsyncDelay( TimeSpanExtensionMethods.FromMilliseconds( delayMilliseconds ) );
+        TimeSpanMethods.AsyncDelay( TimeSpanMethods.FromMilliseconds( delayMilliseconds ) );
     }
 
     /// <summary>   Delays operations by the given delay time on another thread. </summary>
@@ -142,7 +142,7 @@ public static class TimeSpanExtensionMethods
     /// <param name="duration"> The duration. </param>
     public static void AsyncDelay( this TimeSpan duration )
     {
-        TimeSpanExtensionMethods.AsyncWait( duration );
+        TimeSpanMethods.AsyncWait( duration );
     }
 
     #endregion

@@ -6,13 +6,13 @@ namespace cc.isr.Iot.Tcp.Client;
 /// <remarks> (c) 2015 Integrated Scientific Resources, Inc. All rights reserved. <para>
 /// Licensed under The MIT License.</para><para>
 /// David, 2015-03-19, 2.0.5556 </para></remarks>
-public static class StopwatchExtensionMethods
+public static class StopwatchMethods
 {
     /// <summary>   Static constructor. </summary>
     /// <remarks>   David, 2021-02-10. </remarks>
-    static StopwatchExtensionMethods()
+    static StopwatchMethods()
     {
-        StopwatchExtensionMethods.SystemClockResolution = StopwatchExtensionMethods.EstimateSystemClockResolution( StopwatchExtensionMethods.SystemClockResolution );
+        StopwatchMethods.SystemClockResolution = StopwatchMethods.EstimateSystemClockResolution( StopwatchMethods.SystemClockResolution );
     }
 
     #region " constants "
@@ -34,7 +34,7 @@ public static class StopwatchExtensionMethods
 
     /// <summary> The system clock resolution. </summary>
     /// <value> The system clock resolution. </value>
-    public static TimeSpan SystemClockResolution { get; private set; } = TimeSpan.FromMilliseconds( 1000 / StopwatchExtensionMethods.SystemClockRate );
+    public static TimeSpan SystemClockResolution { get; private set; } = TimeSpan.FromMilliseconds( 1000 / StopwatchMethods.SystemClockRate );
 
     /// <summary>   The thread clock resolution. </summary>
     /// <remarks>
@@ -278,14 +278,14 @@ public static class StopwatchExtensionMethods
     {
         var yieldCount = 100;
         var counter = yieldCount;
-        int systemClockCycles = ( int ) Math.Floor( ( double ) duration.Ticks / StopwatchExtensionMethods.SystemClockResolution.Ticks );
+        int systemClockCycles = ( int ) Math.Floor( ( double ) duration.Ticks / StopwatchMethods.SystemClockResolution.Ticks );
         if ( systemClockCycles >= clockCycles )
         {
             if ( yield )
             {
-                while ( duration.Subtract( stopWatch.Elapsed ) < StopwatchExtensionMethods.SystemClockResolution )
+                while ( duration.Subtract( stopWatch.Elapsed ) < StopwatchMethods.SystemClockResolution )
                 {
-                    var ms = ( int ) Math.Floor( StopwatchExtensionMethods.SystemClockResolution.TotalMilliseconds );
+                    var ms = ( int ) Math.Floor( StopwatchMethods.SystemClockResolution.TotalMilliseconds );
                     Thread.Sleep( ms );
                     _ = Thread.Yield();
                 }
